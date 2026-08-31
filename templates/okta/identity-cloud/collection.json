@@ -1,21 +1,21 @@
 {
-  "name": "okta-identity-cloud",
-  "version": "1.0.0",
-  "description": "Okta Identity Cloud authentication and access management templates",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "identity",
-    "authentication",
-    "access-management",
-    "sso",
-    "security"
-  ],
-  "templates": [
-    "authentication/login_failure"
-  ]
+    "name": "okta-identity-cloud",
+    "version": "1.1.0",
+    "description": "Okta Identity Cloud authentication and access management templates",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "identity",
+        "authentication",
+        "access-management",
+        "sso",
+        "security"
+    ],
+    "templates": [
+        "authentication/login_failure"
+    ]
 }

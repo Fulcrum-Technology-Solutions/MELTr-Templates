@@ -1,25 +1,25 @@
 {
-  "name": "claroty-xdome",
-  "version": "1.0.0",
-  "description": "MELTr templates for Claroty xDome security alerts and events",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "claroty",
-    "xdome",
-    "ot-security",
-    "ics",
-    "industrial",
-    "iot",
-    "medical-devices",
-    "scada",
-    "alerts"
-  ],
-  "templates": [
-    "alerts/device_alert"
-  ]
+    "name": "claroty-xdome",
+    "version": "1.1.0",
+    "description": "MELTr templates for Claroty xDome security alerts and events",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "claroty",
+        "xdome",
+        "ot-security",
+        "ics",
+        "industrial",
+        "iot",
+        "medical-devices",
+        "scada",
+        "alerts"
+    ],
+    "templates": [
+        "alerts/device_alert"
+    ]
 }

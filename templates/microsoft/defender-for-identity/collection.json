@@ -1,24 +1,24 @@
 {
-  "name": "defender-for-identity",
-  "version": "1.0.0",
-  "description": "Microsoft Defender for Identity security alert and threat detection templates",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "microsoft",
-    "defender",
-    "identity",
-    "security",
-    "alerts",
-    "atp",
-    "activedirectory",
-    "kerberos"
-  ],
-  "templates": [
-    "security-alerts/pass_the_ticket"
-  ]
+    "name": "defender-for-identity",
+    "version": "1.1.0",
+    "description": "Microsoft Defender for Identity security alert and threat detection templates",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "microsoft",
+        "defender",
+        "identity",
+        "security",
+        "alerts",
+        "atp",
+        "activedirectory",
+        "kerberos"
+    ],
+    "templates": [
+        "security-alerts/pass_the_ticket"
+    ]
 }
