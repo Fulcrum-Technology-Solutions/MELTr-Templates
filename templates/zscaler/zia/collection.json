@@ -1,21 +1,21 @@
 {
-  "name": "zscaler-zia",
-  "version": "1.0.0",
-  "description": "Zscaler Internet Access (ZIA) log templates for web security events",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "web-security",
-    "proxy",
-    "cloud-security",
-    "threat-detection",
-    "web-gateway"
-  ],
-  "templates": [
-    "web_security/web_traffic"
-  ]
+    "name": "zscaler-zia",
+    "version": "1.1.0",
+    "description": "Zscaler Internet Access (ZIA) log templates for web security events",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "web-security",
+        "proxy",
+        "cloud-security",
+        "threat-detection",
+        "web-gateway"
+    ],
+    "templates": [
+        "web_security/web_traffic"
+    ]
 }

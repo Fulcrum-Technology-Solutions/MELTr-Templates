@@ -1,24 +1,24 @@
 {
-  "name": "azure-active-directory",
-  "version": "1.0.0",
-  "description": "Microsoft Azure Active Directory authentication and identity management event templates",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "microsoft",
-    "azure",
-    "active-directory",
-    "authentication",
-    "signin",
-    "identity",
-    "mfa",
-    "conditional-access"
-  ],
-  "templates": [
-    "authentication/signin_logs"
-  ]
+    "name": "azure-active-directory",
+    "version": "1.1.0",
+    "description": "Microsoft Azure Active Directory authentication and identity management event templates",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "microsoft",
+        "azure",
+        "active-directory",
+        "authentication",
+        "signin",
+        "identity",
+        "mfa",
+        "conditional-access"
+    ],
+    "templates": [
+        "authentication/signin_logs"
+    ]
 }
