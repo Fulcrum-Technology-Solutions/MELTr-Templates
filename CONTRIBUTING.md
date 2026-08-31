@@ -1,6 +1,6 @@
-# Contributing to LogForge Templates
+# Contributing to MELTr Templates
 
-Thank you for your interest in contributing to LogForge Templates! This document provides guidelines for creating and submitting new templates.
+Thank you for your interest in contributing to MELTr Templates! This document provides guidelines for creating and submitting new templates.
 
 ## Table of Contents
 - [Repository Structure](#repository-structure)
@@ -73,9 +73,9 @@ This will check:
 
 ### Testing Template Rendering
 
-1. **Install LogForge CLI** (if not already installed):
+1. **Install MELTr CLI** (if not already installed):
    ```bash
-   pip install logforge
+   pip install meltr
    ```
 
 2. **Create a test entity file** (`test_entities.yaml`):
@@ -96,10 +96,10 @@ This will check:
 3. **Test your template**:
    ```bash
    # View template info
-   logforge templates info <vendor>/<product>/<data_source>/<template_name>
+   meltr templates info <vendor>/<product>/<data_source>/<template_name>
    
-   # Generate sample output (if LogForge supports direct generation)
-   # Check main LogForge documentation for current CLI commands
+   # Generate sample output (if MELTr supports direct generation)
+   # Check main MELTr documentation for current CLI commands
    ```
 
 4. **Verify output format**:
@@ -335,4 +335,4 @@ Before submitting your PR, ensure:
 - **Found a bug?** Report it with steps to reproduce
 - **Need clarification?** Ask in your PR and maintainers will help
 
-Thank you for helping make LogForge Templates better! 
+Thank you for helping make MELTr Templates better! 

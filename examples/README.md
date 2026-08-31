@@ -1,6 +1,6 @@
 # Examples Directory
 
-This directory contains example templates and metadata files to help you get started with creating your own LogForge templates.
+This directory contains example templates and metadata files to help you get started with creating your own MELTr templates.
 
 ## Structure
 - Example vendor, product, and data source directories

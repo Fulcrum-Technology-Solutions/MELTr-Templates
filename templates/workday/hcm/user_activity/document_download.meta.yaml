@@ -193,9 +193,9 @@ documentation:
         url: "https://gdpr-info.eu/art-15-gdpr/"
         type: "reference"
     tools:
-      - name: "LogForge CLI"
+      - name: "MELTr CLI"
         description: "Command-line tool for template validation and log generation"
-        url: "https://github.com/Fulcrum-Technology-Solutions/LogForge"
+        url: "https://github.com/Fulcrum-Technology-Solutions/MELTr"
       - name: "Workday Studio"
         description: "Eclipse-based IDE for Workday integrations and custom development"
         url: "https://doc.workday.com"

@@ -163,5 +163,5 @@ cython_debug/
 !.github/scripts/
 
 # SQLite database files
-logforge_registry.db
+meltr_registry.db
 *.db

@@ -25,7 +25,7 @@ Global review gate: `~/.cursor/rules/review-gate.mdc` (≥2 specialists by risk)
 
 ## Project overview
 
-Community-contributed Jinja2 templates and metadata for [LogForge OSS](https://github.com/Fulcrum-Technology-Solutions/LogForge). Templates are consumed by the LogForge CLI and entity registry. **LLM-assisted template creation is Enterprise-only** (web UI) — not available in OSS or this repo.
+Community-contributed Jinja2 templates and metadata for [MELTr OSS](https://github.com/Fulcrum-Technology-Solutions/MELTr). Templates are consumed by the MELTr CLI and entity registry. **LLM-assisted template creation is Enterprise-only** (web UI) — not available in OSS or this repo.
 
 ## 4-tier hierarchy
 
@@ -76,9 +76,8 @@ See `CONTRIBUTING.md` for full process. Key requirements:
 
 | Repo | Role |
 |------|------|
-| [LogForge](../LogForge) | OSS engine that renders templates |
-| [LogForge-Templates-UI](../LogForge-Templates-UI) | Public registry (`logforge.io`) syncs from this repo |
-| [LogForge-Enterprise](../LogForge-Enterprise) | Installs community templates via Manager API |
+| [MELTr](../MELTr) | OSS engine that renders templates |
+| [MELTr-Templates-UI](../MELTr-Templates-UI) | Public registry (`meltr.ftsc.cloud`) syncs from this repo |
 
 ## Non-obvious caveats
 

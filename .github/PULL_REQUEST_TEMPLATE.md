@@ -16,5 +16,5 @@ Fixes # (issue)
 ## Checklist
 - [ ] My code follows the repository structure and guidelines
 - [ ] I have validated my metadata files
-- [ ] I have tested my template(s) with LogForge
+- [ ] I have tested my template(s) with MELTr
 - [ ] I have added necessary documentation (if appropriate) 

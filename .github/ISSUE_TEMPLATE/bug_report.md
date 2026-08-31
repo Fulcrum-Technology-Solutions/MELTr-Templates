@@ -22,7 +22,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment (please complete the following information):**
 - OS: [e.g. Windows, MacOS, Linux]
 - Python version: [e.g. 3.10]
-- LogForge version: [e.g. 1.0.0]
+- MELTr version: [e.g. 1.0.0]
 
 **Additional context**
 Add any other context about the problem here. 

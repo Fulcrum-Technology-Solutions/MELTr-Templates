@@ -1,14 +1,14 @@
-# LogForge Templates
+# MELTr Templates
 
-This repository contains community-contributed templates for [LogForge](https://github.com/Fulcrum-Technology-Solutions/LogForge), a synthetic event log generator.
+This repository contains community-contributed templates for [MELTr](https://github.com/Fulcrum-Technology-Solutions/MELTr), a synthetic event log generator.
 
 > **Note:** LLM-powered (AI-assisted) template creation, analysis, and metadata generation are only available in the Enterprise version (future separate repository), and only via the web UI (not CLI). The open-source version does not include any Enterprise-only features.
 
 ---
 
-## LogForge Template Hierarchy: 4-Tier System
+## MELTr Template Hierarchy: 4-Tier System
 
-LogForge Templates are organized in a strict 4-level hierarchy, which is reflected in both the directory structure and the API/UI:
+MELTr Templates are organized in a strict 4-level hierarchy, which is reflected in both the directory structure and the API/UI:
 
 1. **Vendor**: The organization or company that produces the product (e.g., `paloalto`, `microsoft`, `acme`).
    - Directory: `vendor/`
@@ -32,7 +32,7 @@ Each level has its own metadata file (see `schemas/`), and the template-level me
 ---
 
 ## Overview
-LogForge Templates is a community-driven collection of Jinja2-based templates and metadata for generating realistic synthetic logs from a variety of systems (e.g., Windows Event Log, Palo Alto Firewall, Azure AD). Templates are designed for use with the LogForge CLI and entity registry, enabling customizable, high-fidelity log generation for testing, demos, and development.
+MELTr Templates is a community-driven collection of Jinja2-based templates and metadata for generating realistic synthetic logs from a variety of systems (e.g., Windows Event Log, Palo Alto Firewall, Azure AD). Templates are designed for use with the MELTr CLI and entity registry, enabling customizable, high-fidelity log generation for testing, demos, and development.
 
 ---
 
@@ -143,8 +143,8 @@ To contribute a new template:
   # Validate metadata files
   python .github/scripts/validate_templates.py
   
-  # Test template rendering (requires LogForge CLI)
-  logforge templates info <vendor>/<product>/<data_source>/<template_name>
+  # Test template rendering (requires MELTr CLI)
+  meltr templates info <vendor>/<product>/<data_source>/<template_name>
   ```
 
 **Minimal Example:**
@@ -169,7 +169,7 @@ time_patterns:
 documentation:
   display:
     title: "Example Log Event"
-    subtitle: "Demonstration of LogForge Template Structure"
+    subtitle: "Demonstration of MELTr Template Structure"
     icon: "📝"
     color_scheme: "info"
     tags:
@@ -178,7 +178,7 @@ documentation:
   overview:
     summary: "This event is generated for demonstration purposes."
     when_generated:
-      - "When running LogForge in demo mode."
+      - "When running MELTr in demo mode."
     security_relevance: "Low"
     compliance_frameworks:
       - "N/A"
@@ -199,13 +199,13 @@ documentation:
       template_source: "device_id"
   resources:
     documentation:
-      - title: "LogForge Template Authoring Guide"
-        url: "https://github.com/Fulcrum-Technology-Solutions/LogForge"
+      - title: "MELTr Template Authoring Guide"
+        url: "https://github.com/Fulcrum-Technology-Solutions/MELTr"
         type: "official"
     tools:
-      - name: "LogForge CLI"
+      - name: "MELTr CLI"
         description: "Command-line tool for template validation and log generation."
-        url: "https://github.com/Fulcrum-Technology-Solutions/LogForge"
+        url: "https://github.com/Fulcrum-Technology-Solutions/MELTr"
 ```
 
 For more details and advanced authoring tips, see [CONTRIBUTING.md](./CONTRIBUTING.md).
@@ -214,7 +214,7 @@ For more details and advanced authoring tips, see [CONTRIBUTING.md](./CONTRIBUTI
 
 ## Entity Files & Dynamic Fallbacks
 
-Templates reference fields from an entity YAML file (e.g., `entities/entities.yaml`). LogForge will automatically fill in missing entity fields with standard values for common fields, making template rendering more robust and user-friendly.
+Templates reference fields from an entity YAML file (e.g., `entities/entities.yaml`). MELTr will automatically fill in missing entity fields with standard values for common fields, making template rendering more robust and user-friendly.
 
 **Example entity file:**
 ```yaml
@@ -226,7 +226,7 @@ source_ip:
   - 10.0.0.5
 ```
 
-If a template references a registry function (e.g., `registry.get_random_user()`) and no users are defined in your `entities.yaml`, LogForge will return an empty dict `{}` and print a warning. Ensure your `entities.yaml` file includes the required entities (users, devices, services) for your templates to work correctly.
+If a template references a registry function (e.g., `registry.get_random_user()`) and no users are defined in your `entities.yaml`, MELTr will return an empty dict `{}` and print a warning. Ensure your `entities.yaml` file includes the required entities (users, devices, services) for your templates to work correctly.
 
 ---
 
@@ -257,52 +257,52 @@ If validation fails, GitHub Actions will report the errors. Common issues:
 
 ---
 
-## Using Templates with LogForge CLI
+## Using Templates with MELTr CLI
 
 ### Search for Templates
 ```bash
 # Search all templates
-logforge templates search "windows"
+meltr templates search "windows"
 
 # Search by vendor
-logforge templates search --vendor paloalto "firewall"
+meltr templates search --vendor paloalto "firewall"
 
 # Browse templates interactively
-logforge templates browse
+meltr templates browse
 ```
 
 ### Install Templates
 ```bash
 # Install entire vendor package
-logforge templates install paloalto
+meltr templates install paloalto
 
 # Install specific product
-logforge templates install aws/cloudtrail
+meltr templates install aws/cloudtrail
 
 # List available vendors
-logforge templates install --list-vendors
+meltr templates install --list-vendors
 ```
 
 ### View Template Information
 ```bash
 # Get template details
-logforge templates info paloalto/wildfire/threats/wildfire_threat_detected
+meltr templates info paloalto/wildfire/threats/wildfire_threat_detected
 
 # List all local templates
-logforge templates list
+meltr templates list
 
 # Compare local vs remote templates
-logforge templates compare
+meltr templates compare
 ```
 
 ### Generate Logs
-Templates are used via LogForge generators configured in `config.yaml`. See the [main LogForge documentation](https://github.com/Fulcrum-Technology-Solutions/LogForge) for generator configuration.
+Templates are used via MELTr generators configured in `config.yaml`. See the [main MELTr documentation](https://github.com/Fulcrum-Technology-Solutions/MELTr) for generator configuration.
 
 ---
 
 ## Advanced Template Helpers
 
-LogForge provides a rich set of helper functions for use in your Jinja2 templates. These helpers make it easy to generate realistic, randomized data for your synthetic logs.
+MELTr provides a rich set of helper functions for use in your Jinja2 templates. These helpers make it easy to generate realistic, randomized data for your synthetic logs.
 
 **Available Helpers:**
 
@@ -378,7 +378,7 @@ Email: {{ fake.email() }}
 
 ## Event Generation Frequency and Time Patterns
 
-LogForge uses metadata fields in each template's `.meta.yaml` to control how often events are generated. **Time calculations use the organization's timezone (from `entities.yaml`), defaulting to UTC if not specified.**
+MELTr uses metadata fields in each template's `.meta.yaml` to control how often events are generated. **Time calculations use the organization's timezone (from `entities.yaml`), defaulting to UTC if not specified.**
 
 **Key Fields for Event Generation Frequency:**
 
@@ -412,7 +412,7 @@ weekend_multiplier: 0.1           # 0.1x during weekends (12 events/hour)
 
 ## Template Helper Functions
 
-LogForge templates support a wide range of **helper functions** to make your synthetic logs more realistic and dynamic. These helpers allow you to easily generate random data, look up entities, and simulate real-world log patterns—without writing custom Python code.
+MELTr templates support a wide range of **helper functions** to make your synthetic logs more realistic and dynamic. These helpers allow you to easily generate random data, look up entities, and simulate real-world log patterns—without writing custom Python code.
 
 ### Why Use Helper Functions?
 
@@ -490,18 +490,18 @@ CI runs TruffleHog via `.github/workflows/security-checks.yml` on push and pull 
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## LogForge Template Package Format (.forge)
+## MELTr Template Package Format (.mtb)
 
-When you download a vendor package from the registry, you will receive a file with the `.forge` extension (e.g., `crowdstrike.forge`). This is a **LogForge Template package**—a gzipped tar archive containing all templates, metadata, and subfolders for the vendor.
+When you download a vendor package from the registry, you will receive a file with the `.mtb` extension (e.g., `crowdstrike.mtb`). This is a **MELTr Template package**—a gzipped tar archive containing all templates, metadata, and subfolders for the vendor.
 
-- `.forge` files are fully compatible with standard archive tools (e.g., `tar`, `7-Zip`, `WinRAR`).
+- `.mtb` files are fully compatible with standard archive tools (e.g., `tar`, `7-Zip`, `WinRAR`).
 - To extract on the command line:
   ```bash
-  tar -xzf crowdstrike.forge
+  tar -xzf crowdstrike.mtb
   # or rename to .tar.gz and extract as usual
-  mv crowdstrike.forge crowdstrike.tar.gz
+  mv crowdstrike.mtb crowdstrike.tar.gz
   tar -xzf crowdstrike.tar.gz
   ```
-- The `.forge` extension helps users and tools recognize LogForge Template packages.
+- The `.mtb` extension helps users and tools recognize MELTr Template packages.
 
-> **Tip:** You can import `.forge` files directly into LogForge or extract them manually for inspection.
+> **Tip:** You can import `.mtb` files directly into MELTr or extract them manually for inspection.
