@@ -1,15 +1,19 @@
 {
-    "name": "proofpoint-email-protection",
-    "version": "1.0.0",
+  "name": "proofpoint-email-protection",
+  "version": "1.0.0",
   "description": "Proofpoint Email Protection security event templates",
   "maintainers": [
     {
-      "name": "LogForge Community",
-      "email": "community@logforge.com"
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
     }
   ],
-  "tags": ["email-security", "threat-detection", "proofpoint"],
-    "templates": [
-      "security/messages_blocked"
-    ]
-  }
+  "tags": [
+    "email-security",
+    "threat-detection",
+    "proofpoint"
+  ],
+  "templates": [
+    "security/messages_blocked"
+  ]
+}

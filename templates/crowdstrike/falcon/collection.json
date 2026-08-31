@@ -4,8 +4,8 @@
   "description": "CrowdStrike Falcon Platform log templates for API audit events and security telemetry",
   "maintainers": [
     {
-      "name": "LogForge Community",
-      "email": "community@logforge.com"
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
     }
   ],
   "tags": [

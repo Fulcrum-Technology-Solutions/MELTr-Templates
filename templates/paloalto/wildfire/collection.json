@@ -1,7 +1,7 @@
 {
   "name": "paloalto-wildfire",
   "version": "1.0.0",
-  "description": "LogForge templates for Palo Alto WildFire threat detection logs",
+  "description": "MELTr templates for Palo Alto WildFire threat detection logs",
   "maintainers": [
     {
       "name": "John Owen",
@@ -9,8 +9,13 @@
       "github": "jowen-ftsc"
     }
   ],
-  "tags": ["wildfire", "threat", "malware", "security"],
+  "tags": [
+    "wildfire",
+    "threat",
+    "malware",
+    "security"
+  ],
   "templates": [
     "threats/wildfire_threat_detected"
   ]
-} 
+}

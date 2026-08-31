@@ -4,8 +4,8 @@
   "description": "Zscaler Internet Access (ZIA) log templates for web security events",
   "maintainers": [
     {
-      "name": "LogForge Community",
-      "email": "community@logforge.io"
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
     }
   ],
   "tags": [

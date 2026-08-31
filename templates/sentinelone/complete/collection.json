@@ -1,21 +1,21 @@
 {
-    "name": "sentinelone-complete",
-    "version": "1.0.0",
+  "name": "sentinelone-complete",
+  "version": "1.0.0",
   "description": "SentinelOne Complete Platform security event templates",
   "maintainers": [
     {
-      "name": "LogForge Community",
-      "email": "community@logforge.com"
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
     }
   ],
-    "tags": [
-      "security",
-      "edr",
-      "endpoint-protection",
-      "threat-detection",
-      "incident-response"
+  "tags": [
+    "security",
+    "edr",
+    "endpoint-protection",
+    "threat-detection",
+    "incident-response"
   ],
   "templates": [
-      "security/threat_detection"
-    ]
-  }
+    "security/threat_detection"
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "name": "acme-widget",
   "version": "1.0.0",
-  "description": "LogForge templates for Acme Widget telemetry events",
+  "description": "MELTr templates for Acme Widget telemetry events",
   "maintainers": [
     {
       "name": "Jane Example",
@@ -9,8 +9,12 @@
       "github": "janedoe"
     }
   ],
-  "tags": ["telemetry", "widget", "acme"],
+  "tags": [
+    "telemetry",
+    "widget",
+    "acme"
+  ],
   "templates": [
     "telemetry/device_online"
   ]
-} 
+}
