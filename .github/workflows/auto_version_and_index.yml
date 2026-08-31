@@ -1,0 +1,70 @@
+# Sync collection.json versions and TEMPLATES.yaml after template edits.
+# Opens a PR instead of pushing to main (satisfies rulesets that require pull requests).
+# GitHub Releases run separately when bumped collection.json lands on main — see template_collection_release.yml.
+name: Auto Version and Update Index
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'templates/**/*.j2'
+      - 'templates/**/*.meta.yaml'
+      - 'templates/**/vendor.meta.yaml'
+      - 'templates/**/product.meta.yaml'
+      - 'templates/**/collection.json'
+  workflow_dispatch:
+
+concurrency:
+  group: template-auto-sync-pr
+  cancel-in-progress: false
+
+jobs:
+  sync-versions-and-index:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2  # auto_version.py compares HEAD~1..HEAD
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      # Bump templates/**/collection.json when .j2 / meta / etc. changed on this push.
+      - name: Auto-version collections
+        run: python .github/scripts/auto_version.py
+        continue-on-error: true
+
+      - name: Install dependencies for index
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml
+
+      - name: Update TEMPLATES.yaml
+        run: python .github/scripts/update_templates_index.py
+
+      # Post-merge of this bot PR, this workflow may run again with only collection.json
+      # changes; auto_version usually no-ops and there is no PR to open — no harm.
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: sync collection versions and TEMPLATES index"
+          title: "chore: sync collection versions and TEMPLATES index"
+          body: |
+            Automated sync after template changes on `main`.
+
+            - `auto_version.py` may bump `templates/**/collection.json`
+            - `update_templates_index.py` refreshes `TEMPLATES.yaml`
+
+            Merge when checks pass.
+          branch: bot/auto-sync-templates
+          delete-branch: false
+          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
