@@ -1,0 +1,2 @@
+# Hard cut: no LogForge product strings. Empty allowlist.
+# Format (unused): path-prefix:needle   or  re:<regex>
