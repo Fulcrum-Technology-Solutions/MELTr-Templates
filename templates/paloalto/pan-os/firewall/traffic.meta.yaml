@@ -1,7 +1,7 @@
 vendor: paloalto
 product: pan-os
 data_source: firewall
-description: "Network traffic flow logs from PAN-OS Next-Generation Firewall showing connection details, policy decisions, and session information"
+description: "Network traffic flow logs from PAN-OS 11.x Next-Generation Firewall (130 CSV fields) showing connection details, policy decisions, and session information"
 format: "CSV"
 frequency: "critical"
 is_generator: true
@@ -75,8 +75,8 @@ documentation:
       type: "String"
       required: true
       description: "Firewall device serial number"
-      example_value: "PA-5250-1234"
-      template_source: "PA-5250-{{ random_int(1000, 9999) }}"
+      example_value: "44A1B3FC68F5304"
+      template_source: "random_string(16, '0123456789ABCDEF')"
 
     - name: "log_type"
       type: "String"
@@ -205,13 +205,13 @@ documentation:
       type: "String"
       required: true
       description: "Zones are selected to create realistic traffic patterns based on action"
-      example_value: "Trust"
+      example_value: "trust"
       possible_values:
-        - value: "Trust"
+        - value: "trust"
           description: "Trusted internal zone"
-        - value: "LAN"
+        - value: "lan"
           description: "Local area network zone"
-        - value: "Internal"
+        - value: "internal"
           description: "Internal network zone"
         - value: "DMZ-In"
           description: "DMZ ingress zone"
@@ -223,15 +223,15 @@ documentation:
       type: "String"
       required: true
       description: "Zones are selected to create realistic traffic patterns based on action"
-      example_value: "Untrust"
+      example_value: "untrust"
       possible_values:
-        - value: "Untrust"
+        - value: "untrust"
           description: "Untrusted external zone"
-        - value: "DMZ"
+        - value: "dmz"
           description: "Demilitarized zone"
-        - value: "External"
+        - value: "external"
           description: "External network zone"
-        - value: "Internet"
+        - value: "internet"
           description: "Internet zone"
         - value: "Partner"
           description: "Partner network zone"
@@ -255,7 +255,7 @@ documentation:
       type: "String"
       required: true
       description: "Log forwarding action"
-      example_value: "LogForward"
+      example_value: "log-forwarding-default"
       template_source: "Static value"
 
     - name: "session_id"
@@ -419,17 +419,17 @@ documentation:
       type: "String"
       required: false
       description: "Source IP geolocation country code"
-      example_value: "US"
-      format: "ISO 3166-1 alpha-2"
-      template_source: "Static value (US)"
+      example_value: "United States"
+      format: "Full country name or internal IP range"
+      template_source: "country_names | random"
 
     - name: "destination_country"
       type: "String"
       required: false
       description: "Destination IP geolocation country code"
-      example_value: "CN"
-      format: "ISO 3166-1 alpha-2"
-      template_source: "src_countries | random"
+      example_value: "10.0.0.0-10.255.255.255"
+      format: "Full country name or internal IP range for private addresses"
+      template_source: "country_names | random, or private range for RFC1918 destinations"
 
     - name: "packets_sent_total"
       type: "Integer"
@@ -487,19 +487,19 @@ documentation:
       type: "String"
       required: false
       description: "Application risk assessment level"
-      example_value: "low"
+      example_value: "3"
       possible_values:
-        - value: "low"
+        - value: "1"
           description: "Low risk application"
-        - value: "medium"
+        - value: "2"
+          description: "Low-medium risk application"
+        - value: "3"
           description: "Medium risk application"
-        - value: "high"
+        - value: "4"
           description: "High risk application"
-        - value: "critical"
+        - value: "5"
           description: "Critical risk application"
-        - value: "informational"
-          description: "Informational only"
-      template_source: "risks | random"
+      template_source: "group.app_risk (1-5 per PAN-OS application metadata)"
 
     - name: "proxy_traffic"
       type: "String"
@@ -511,21 +511,21 @@ documentation:
           description: "Traffic through proxy"
         - value: "NonProxyTraffic"
           description: "Direct traffic"
-      template_source: "proxy_traffic_values | random"
+      template_source: "flow_type | random (PAN-OS 11.1+ flow_type field)"
 
     - name: "tunnel_type"
-      type: "String"
+      type: "Integer"
       required: false
       description: "VPN tunnel type"
-      example_value: "primary"
+      example_value: "0"
       possible_values:
-        - value: "primary"
-          description: "Primary tunnel"
-        - value: "secondary"
-          description: "Secondary tunnel"
-        - value: "backup"
-          description: "Backup tunnel"
-      template_source: "tunnel_types | random"
+        - value: "0"
+          description: "N/A or non-tunneled session"
+        - value: "1"
+          description: "GRE tunnel"
+        - value: "2"
+          description: "IPSec tunnel"
+      template_source: "Static 0 for standard traffic sessions"
   resources:
     documentation:
       - title: "PAN-OS Administrator's Guide - Traffic Logs"
