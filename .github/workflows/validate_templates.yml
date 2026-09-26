@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main ]
     paths:
+      - '.github/workflows/validate_templates.yml'
+      - 'tests/**'
       - 'templates/**/*.j2'
       - 'templates/**/*.meta.yaml'
       - 'templates/**/vendor.meta.yaml'
@@ -12,6 +14,8 @@ on:
   pull_request:
     branches: [ main ]
     paths:
+      - '.github/workflows/validate_templates.yml'
+      - 'tests/**'
       - 'templates/**/*.j2'
       - 'templates/**/*.meta.yaml'
       - 'templates/**/vendor.meta.yaml'
@@ -35,4 +39,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml jsonschema jinja2
       - name: Validate template metadata
-        run: python .github/scripts/validate_templates.py 
+        run: python .github/scripts/validate_templates.py
+      - name: Test template rendering
+        run: python -m unittest discover -s tests -v
