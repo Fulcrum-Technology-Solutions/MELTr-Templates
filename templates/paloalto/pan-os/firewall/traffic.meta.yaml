@@ -69,7 +69,7 @@ documentation:
       description: "Log entry reception timestamp"
       example_value: "2024/01/15 14:30:25"
       format: "YYYY/MM/DD HH:MM:SS"
-      template_source: "current_timestamp() | format_timestamp('%Y/%m/%d %H:%M:%S')"
+      template_source: "ts | format_timestamp('%Y/%m/%d %H:%M:%S'), where ts = now()"
 
     - name: "serial_number"
       type: "String"
@@ -114,7 +114,15 @@ documentation:
       description: "Event generation timestamp"
       example_value: "2024/01/15 14:30:25"
       format: "YYYY/MM/DD HH:MM:SS"
-      template_source: "current_timestamp() | format_timestamp('%Y/%m/%d %H:%M:%S')"
+      template_source: "ts | format_timestamp('%Y/%m/%d %H:%M:%S'), where ts = now()"
+
+    - name: "high_res_timestamp"
+      type: "DateTime"
+      required: true
+      description: "Log reception time with millisecond precision and the configured timezone offset, derived from the same event clock as receive_time and time_generated."
+      example_value: "2026-09-04T21:06:31.128-05:00"
+      format: "YYYY-MM-DDTHH:mm:ss.sss+/-HH:mm"
+      template_source: "ts.isoformat(timespec='milliseconds'), where ts = now()"
 
     - name: "source_ip"
       type: "IP Address"
@@ -383,7 +391,7 @@ documentation:
       description: "Session start timestamp"
       example_value: "2024/01/15 14:30:20"
       format: "YYYY/MM/DD HH:MM:SS"
-      template_source: "current_timestamp() | format_timestamp('%Y/%m/%d %H:%M:%S')"
+      template_source: "ts | subtract_seconds(random_int(1, 3600)) | format_timestamp('%Y/%m/%d %H:%M:%S'), where ts = now()"
 
     - name: "elapsed_time"
       type: "Integer"

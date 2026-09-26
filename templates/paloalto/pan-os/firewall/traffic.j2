@@ -110,11 +110,11 @@
 {%- set categories = ['any', 'business-and-economy', 'computer-and-internet-info', 'social-networking', 'search-engines', 'private-ip-addresses'] -%}
 {%- set category = categories | random -%}
 
-{%- set ts = current_timestamp() -%}
+{%- set ts = now() -%}
 {%- set pa_time = ts | format_timestamp('%Y/%m/%d %H:%M:%S') -%}
 {%- set start_time = ts | subtract_seconds(random_int(1, 3600)) | format_timestamp('%Y/%m/%d %H:%M:%S') -%}
-{%- set high_res_ms = '%03d' | format(random_int(0, 999)) -%}
-{%- set high_res_timestamp = (ts | format_timestamp('%Y-%m-%dT%H:%M:%S')) ~ '.' ~ high_res_ms ~ '+00:00' -%}
+{# Keep the configured offset and milliseconds from the same event clock. #}
+{%- set high_res_timestamp = ts.isoformat(timespec='milliseconds') -%}
 
 {%- set fw_serial = random_string(16, '0123456789ABCDEF') -%}
 {%- set fw_hostname = 'PA-VM' -%}
