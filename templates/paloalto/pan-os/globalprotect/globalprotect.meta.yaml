@@ -25,7 +25,7 @@ documentation:
       - "remote-access"
       - "security"
   overview:
-    summary: "GlobalProtect events capture VPN client authentication attempts, connection establishment, and tunnel status changes for remote users accessing corporate networks."
+    summary: "GlobalProtect events capture VPN client authentication attempts, connection establishment, and tunnel status changes for remote users accessing corporate networks. This template retains the 50-field layout including the PAN-OS 11.1+ Cluster Name slot; the product-level version is not a per-template compatibility guarantee."
     when_generated:
       - "User attempts to connect to GlobalProtect VPN"
       - "Authentication events (success/failure)"
@@ -428,12 +428,11 @@ documentation:
       type: "DateTime"
       required: true
       description: >
-        High resolution timestamp. Fractional seconds MUST appear before the timezone offset.
-        Correct format: YYYY-MM-DD HH:MM:SS.ffffff-HH:MM
-        Incorrect format: YYYY-MM-DD HH:MM:SS-HH:MM.ffffff (causes pipeline parse error)
-      example_value: "2026-02-19 15:15:30.274238-06:00"
-      format: "YYYY-MM-DD HH:MM:SS.ffffff-HH:MM"
-      template_source: "timestamp | format_timestamp('%Y-%m-%d %H:%M:%S') + '.' + random_int(100000, 999999) + '-06:00'"
+        ISO 8601 timestamp from the same clock value as Receive Time and Generated Time.
+        Milliseconds precede the actual timezone offset; no fixed offset or random fraction.
+      example_value: "2026-02-19T15:15:30.274-06:00"
+      format: "YYYY-MM-DDTHH:MM:SS.sss±HH:MM"
+      template_source: "timestamp.isoformat(timespec='milliseconds')"
 
     # ── F38 ─────────────────────────────────────────────────────────────────
     - name: "selection_type"
@@ -486,11 +485,12 @@ documentation:
       type: "String"
       required: true
       description: >
-        Gateway connection attempts. Single gateway format: gateway-name.
-        Multiple gateway format: gateway-name,response_ms,priority;gateway-name2,response_ms,priority
-        Maps to panw.panos.attempted_gateways in ECS.
-      example_value: "gp-gateway-105"
-      template_source: "gateway_name (same variable as F42)"
+        Gateway connection attempts: gateway-name,response_ms,priority for each attempt;
+        separate multiple attempts with semicolons. The entire value is CSV-quoted
+        because it contains commas. This template emits one attempt matching F39, F40 and F42.
+        The Elastic PANW integration stores it as panw.panos.attempted_gateways.
+      example_value: "gp-gateway-105,42,3"
+      template_source: "CSV-quoted gateway_name,response_time,priority"
 
     # ── F42 ─────────────────────────────────────────────────────────────────
     - name: "gateway"
@@ -576,6 +576,9 @@ documentation:
     documentation:
       - title: "GlobalProtect Log Fields — Official PAN-OS Spec"
         url: "https://docs.paloaltonetworks.com/ngfw/administration/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/globalprotect-log-fields"
+        type: "official"
+      - title: "PAN-OS Syslog CSV Escape Sequences"
+        url: "https://docs.paloaltonetworks.com/ngfw/administration/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/escape-sequences"
         type: "official"
       - title: "GlobalProtect Administrator's Guide"
         url: "https://docs.paloaltonetworks.com/globalprotect"
