@@ -92,11 +92,11 @@
   F34  Portal              → portal name
   F35  Sequence Number     → random 7-digit int
   F36  Action Flags        → 0x0
-  F37  High Res Timestamp  → YYYY-MM-DD HH:MM:SS.ffffff-HH:MM  ← fractional BEFORE tz offset
+  F37  High Res Timestamp  → ISO 8601 milliseconds and actual timestamp offset
   F38  Selection Type      → manual | preferred | auto
   F39  Response Time       → ms integer
   F40  Priority            → 1-5
-  F41  Attempted Gateways  → gateway_name (single gateway; use semicolon for multiples)
+  F41  Attempted Gateways  → quoted gateway_name,response_time,priority (one CSV field)
   F42  Gateway             → gateway_name  ← must be a NAME string, not a number
   F43  DG Hierarchy L1     → numeric
   F44  DG Hierarchy L2     → numeric
@@ -106,5 +106,5 @@
   F48  Device Name         → hostname string
   F49  Virtual System ID   → numeric
   F50  Cluster Name        → empty (not CN-Series)
-#}
-,{{ timestamp | format_timestamp('%Y/%m/%d %H:%M:%S') }},{{ serial_number }},GLOBALPROTECT,portal-auth,,{{ timestamp | format_timestamp('%Y/%m/%d %H:%M:%S') }},vsys{{ vsys_num }},{{ event_id }},{{ stage }},{{ auth_method }},{{ tunnel_type }},{{ user.user_id }},US,{{ device.hostname }},{{ random_public_ip() }},,{{ device.ip_address }},,{{ random_guid() }},{{ device_serial }},5.3.{{ random_int(0, 9) }},{{ client_os }},{{ client_os_ver }},1,,{% if status == "failure" %}Authentication failed{% endif %},GlobalProtect {{ event_id }} {{ status }},{{ status }},remote,{{ random_int(0, 3600) }},on-demand,{% if status == "failure" %}401{% endif %},{{ portal }},{{ random_int(1000000, 9999999) }},0x0,{{ timestamp | format_timestamp('%Y-%m-%dT%H:%M:%S') }}.{{ random_int(100000, 999999) }}-06:00,{{ selection_type }},{{ response_time }},{{ priority }},{{ gateway_name }},{{ gateway_name }},{{ dg1 }},{{ dg2 }},{{ dg3 }},{{ dg4 }},vsys{{ vsys_num }},{{ device_name }},{{ vsys_id }},
+-#}
+,{{ timestamp | format_timestamp('%Y/%m/%d %H:%M:%S') }},{{ serial_number }},GLOBALPROTECT,portal-auth,,{{ timestamp | format_timestamp('%Y/%m/%d %H:%M:%S') }},vsys{{ vsys_num }},{{ event_id }},{{ stage }},{{ auth_method }},{{ tunnel_type }},{{ user.user_id }},US,{{ device.hostname }},{{ random_public_ip() }},,{{ device.ip_address }},,{{ random_guid() }},{{ device_serial }},5.3.{{ random_int(0, 9) }},{{ client_os }},{{ client_os_ver }},1,,{% if status == "failure" %}Authentication failed{% endif %},GlobalProtect {{ event_id }} {{ status }},{{ status }},remote,{{ random_int(0, 3600) }},on-demand,{% if status == "failure" %}401{% endif %},{{ portal }},{{ random_int(1000000, 9999999) }},0x0,{{ timestamp.isoformat(timespec='milliseconds') }},{{ selection_type }},{{ response_time }},{{ priority }},"{{ gateway_name }},{{ response_time }},{{ priority }}",{{ gateway_name }},{{ dg1 }},{{ dg2 }},{{ dg3 }},{{ dg4 }},vsys{{ vsys_num }},{{ device_name }},{{ vsys_id }},
