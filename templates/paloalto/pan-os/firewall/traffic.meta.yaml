@@ -1,7 +1,7 @@
 vendor: paloalto
 product: pan-os
 data_source: firewall
-description: "Network traffic flow logs from PAN-OS 11.2 target profile (128 CSV fields; internal telemetry tail pending release-specific verification) showing connection details, policy decisions, and session information"
+description: "Network traffic flow logs from PAN-OS 11.2 baseline (117 CSV fields through Cluster Name) showing connection details, policy decisions, and session information"
 format: "CSV"
 frequency: "critical"
 is_generator: true

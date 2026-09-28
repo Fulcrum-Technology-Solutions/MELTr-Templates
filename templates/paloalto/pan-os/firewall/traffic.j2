@@ -1,4 +1,4 @@
-{# PAN-OS 11.2 target: 128-field CSV profile; see docs/panos-11.2-contract.md #}
+{# PAN-OS 11.2 baseline: 117-field CSV; see docs/panos-11.2-contract.md #}
 {%- set app_groups = {
     'web': {
         'apps': ['web-browsing', 'ssl', 'http-proxy'],
@@ -296,17 +296,6 @@
     0,
     0,
     flow_type,
-    '',
-    0,
-    0,
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
+    ''
 ] -%}
 {{ fields | join(',') }}
