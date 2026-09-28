@@ -25,7 +25,7 @@ documentation:
       - "remote-access"
       - "security"
   overview:
-    summary: "GlobalProtect events capture VPN client authentication attempts, connection establishment, and tunnel status changes for remote users accessing corporate networks. This template retains the 50-field layout including the PAN-OS 11.1+ Cluster Name slot; the product-level version is not a per-template compatibility guarantee."
+    summary: "GlobalProtect events capture VPN client authentication attempts, connection establishment, and tunnel status changes for remote users accessing corporate networks. This template targets the documented PAN-OS 11.2-compatible 50-field layout, including the Cluster Name slot introduced in 11.1. GlobalProtect client version is independent of the firewall PAN-OS release."
     when_generated:
       - "User attempts to connect to GlobalProtect VPN"
       - "Authentication events (success/failure)"

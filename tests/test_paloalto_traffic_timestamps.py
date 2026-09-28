@@ -18,9 +18,9 @@ TEMPLATE = (
 )
 
 
-def render_traffic(instant):
+def render_traffic(instant, seed=17):
     """Use the public datetime/filter contract with deterministic non-time data."""
-    rng = random.Random(17)
+    rng = random.Random(seed)
     clock_calls = 0
 
     def clock():
@@ -57,8 +57,10 @@ class TrafficTimestampTests(unittest.TestCase):
         rows, clock_calls = render_traffic(instant)
         self.assertEqual(len(rows), 1)
         fields = rows[0]
-        self.assertEqual(len(fields), 130)
+        self.assertEqual(len(fields), 117)
         self.assertEqual(fields[3], "TRAFFIC")
+        self.assertIn(fields[115], {"NonProxyTraffic", "Explicit Proxy", "Transparent Proxy"})
+        self.assertEqual(fields[116:], [""])  # Final Cluster Name slot.
         # Receive Time, Generated Time and High Resolution Timestamp keep their
         # existing CSV positions (zero-based 1, 6 and 102).
         self.assertEqual(fields[1], instant.strftime("%Y/%m/%d %H:%M:%S"))
@@ -72,6 +74,17 @@ class TrafficTimestampTests(unittest.TestCase):
             instant.replace(microsecond=instant.microsecond // 1000 * 1000)
             .astimezone(timezone.utc),
         )
+
+    def test_baseline_tail_across_flow_types(self):
+        flow_types = set()
+        for seed in range(50):
+            with self.subTest(seed=seed):
+                rows, _ = render_traffic(datetime(2026, 9, 28, tzinfo=timezone.utc), seed)
+                self.assertEqual(len(rows), 1)
+                self.assertEqual(len(rows[0]), 117)
+                self.assertEqual(rows[0][116], "")
+                flow_types.add(rows[0][115])
+        self.assertEqual(flow_types, {"NonProxyTraffic", "Explicit Proxy", "Transparent Proxy"})
 
     def test_utc_and_millisecond_precision(self):
         for micros, fraction in [(0, "000"), (128543, "128"), (999999, "999")]:

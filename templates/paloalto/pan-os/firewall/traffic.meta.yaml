@@ -1,7 +1,7 @@
 vendor: paloalto
 product: pan-os
 data_source: firewall
-description: "Network traffic flow logs from PAN-OS 11.x Next-Generation Firewall (130 CSV fields) showing connection details, policy decisions, and session information"
+description: "Network traffic flow logs from PAN-OS 11.2 baseline (117 CSV fields through Cluster Name) showing connection details, policy decisions, and session information"
 format: "CSV"
 frequency: "critical"
 is_generator: true
@@ -509,14 +509,16 @@ documentation:
           description: "Critical risk application"
       template_source: "group.app_risk (1-5 per PAN-OS application metadata)"
 
-    - name: "proxy_traffic"
+    - name: "flow_type"
       type: "String"
       required: false
       description: "Proxy traffic indicator"
       example_value: "NonProxyTraffic"
       possible_values:
-        - value: "ProxyTraffic"
-          description: "Traffic through proxy"
+        - value: "Explicit Proxy"
+          description: "Traffic through an explicit proxy"
+        - value: "Transparent Proxy"
+          description: "Traffic through a transparent proxy"
         - value: "NonProxyTraffic"
           description: "Direct traffic"
       template_source: "flow_type | random (PAN-OS 11.1+ flow_type field)"

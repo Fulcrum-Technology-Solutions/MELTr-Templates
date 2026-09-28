@@ -1,4 +1,4 @@
-{# PAN-OS 11.x traffic log CSV (131 fields per Palo Alto syslog field descriptions) #}
+{# PAN-OS 11.2 baseline: 117-field CSV; see docs/panos-11.2-contract.md #}
 {%- set app_groups = {
     'web': {
         'apps': ['web-browsing', 'ssl', 'http-proxy'],
@@ -172,7 +172,7 @@
 {%- set dst_dynamic_addr_groups = ['Web-Server', 'DNS-Server', 'Mail-Server', 'Application-Server'] -%}
 {%- set src_dynamic_addr_group = src_dynamic_addr_groups | random -%}
 {%- set dst_dynamic_addr_group = dst_dynamic_addr_groups | random -%}
-{%- set flow_type = ['NonProxyTraffic', 'ProxyTraffic'] | random -%}
+{%- set flow_type = ['NonProxyTraffic', 'Explicit Proxy', 'Transparent Proxy'] | random -%}
 {%- set ingress_interface = 'ethernet1/' ~ random_int(1, 4) -%}
 {%- set egress_interface = 'ethernet1/' ~ random_int(1, 4) -%}
 
@@ -296,19 +296,6 @@
     0,
     0,
     flow_type,
-    '',
-    0,
-    0,
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    '',
     ''
 ] -%}
 {{ fields | join(',') }}
