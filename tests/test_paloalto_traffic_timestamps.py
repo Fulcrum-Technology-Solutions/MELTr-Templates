@@ -57,8 +57,11 @@ class TrafficTimestampTests(unittest.TestCase):
         rows, clock_calls = render_traffic(instant)
         self.assertEqual(len(rows), 1)
         fields = rows[0]
-        self.assertEqual(len(fields), 130)
+        self.assertEqual(len(fields), 128)
         self.assertEqual(fields[3], "TRAFFIC")
+        self.assertIn(fields[115], {"NonProxyTraffic", "Explicit Proxy", "Transparent Proxy"})
+        self.assertEqual(fields[116:120], ["", "0", "0", ""])
+        self.assertEqual(fields[120:], ["0"] * 8)  # Preserved internal TCP slots; no 12.1.2 Device-ID tail.
         # Receive Time, Generated Time and High Resolution Timestamp keep their
         # existing CSV positions (zero-based 1, 6 and 102).
         self.assertEqual(fields[1], instant.strftime("%Y/%m/%d %H:%M:%S"))
