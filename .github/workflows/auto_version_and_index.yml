@@ -88,12 +88,12 @@ jobs:
         run: |
           set -euo pipefail
           pr="${{ steps.cpr.outputs.pull-request-number }}"
-          # Prefer queued auto-merge (waits for required checks if configured).
-          # Fall back to immediate squash merge when auto-merge is disabled on the repo
-          # or when the App's ruleset bypass allows merge without waiting.
-          if gh pr merge --squash --auto "$pr"; then
+          # Repo may not have "Allow auto-merge" enabled. The sync App has
+          # main-protect ruleset bypass (Always); --admin lets gh invoke that
+          # bypass instead of failing client-side on BLOCKED review state.
+          if gh pr merge --squash --auto "$pr" 2>/dev/null; then
             echo "Auto-merge enabled for #$pr"
           else
-            echo "Auto-merge unavailable; squash-merging #$pr now"
-            gh pr merge --squash "$pr"
+            echo "Squash-merging #$pr via App ruleset bypass"
+            gh pr merge --squash --admin "$pr"
           fi
