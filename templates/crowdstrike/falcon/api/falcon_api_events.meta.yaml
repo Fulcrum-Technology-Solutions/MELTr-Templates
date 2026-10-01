@@ -1,7 +1,7 @@
 vendor: crowdstrike
 product: falcon
 data_source: api
-description: "CrowdStrike Falcon API audit events tracking authentication and API request activity"
+description: "CrowdStrike Falcon Event Streams API activity audit events for Falcon API client requests"
 format: "JSON"
 frequency: "high"
 is_generator: true
@@ -10,3 +10,95 @@ time_patterns:
   - business_hours
   - night_hours
   - weekend
+
+documentation:
+  display:
+    title: "Falcon API Activity Audit"
+    subtitle: "Event Streams APIActivityAuditEvent for Falcon API requests"
+    icon: "🔑"
+    color_scheme: "info"
+    tags:
+      - "api-audit"
+      - "event-streams"
+      - "crowdstrike"
+      - "authentication"
+
+  overview:
+    summary: >
+      Emits CrowdStrike Falcon Event Streams records with metadata.eventType
+      APIActivityAuditEvent for Falcon API client calls (ServiceName api_request).
+      Matches the native {metadata, event} envelope including Attributes and
+      AuditKeyValues — not AuthActivityAuditEvent console login events, and
+      without third-party TA connector enrichment.
+    when_generated:
+      - "Falcon API OAuth client issues a request against Falcon APIs"
+      - "Event Streams subscribers receive API activity audit events"
+      - "SIEM connectors ingest APIActivityAuditEvent from the data feed"
+    frequency_notes: >
+      High-volume in environments with active API automation, connectors, and
+      scripting. Rate tracks API client traffic more than interactive console use.
+
+  fields:
+    - name: "metadata.eventType"
+      type: "String"
+      required: true
+      description: "Event Streams type for API request audits"
+      example_value: "APIActivityAuditEvent"
+      template_source: "Static: APIActivityAuditEvent"
+
+    - name: "metadata.customerIDString"
+      type: "String"
+      required: true
+      description: "Falcon customer ID (CID), 32-character lowercase hex"
+      example_value: "7b96de6bd86847bd9dad470057cbbc6a"
+      format: "32-char hex"
+      template_source: "random_string(32, hex)"
+
+    - name: "metadata.eventCreationTime"
+      type: "Integer"
+      required: true
+      description: "Event creation time in Unix epoch milliseconds"
+      example_value: "1750935017037"
+      template_source: "unix_timestamp * 1000"
+
+    - name: "event.OperationName"
+      type: "String"
+      required: true
+      description: "Audit operation name for API request logging"
+      example_value: "logged"
+      template_source: "Static: logged"
+
+    - name: "event.ServiceName"
+      type: "String"
+      required: true
+      description: "Service that produced the audit record"
+      example_value: "api_request"
+      template_source: "Static: api_request"
+
+    - name: "event.Success"
+      type: "Boolean"
+      required: true
+      description: "Whether the API request succeeded (correlated with 2xx status_code)"
+      example_value: "true"
+      template_source: "status_code in ['200', '201']"
+
+    - name: "event.UserId"
+      type: "String"
+      required: true
+      description: "Console user id; empty for API-client requests"
+      example_value: ""
+      template_source: "Static empty string"
+
+    - name: "event.Attributes"
+      type: "Object"
+      required: true
+      description: >
+        Flattened API request attributes (APIClientID, cid, method, path, scopes,
+        status_code, consumes/produces, timings, etc.)
+      template_source: "Built audit_attrs map mirrored into AuditKeyValues"
+
+    - name: "event.AuditKeyValues"
+      type: "Array"
+      required: true
+      description: "Key/ValueString pairs mirroring Attributes for audit consumers"
+      template_source: "Array of {Key, ValueString} from audit_attrs"

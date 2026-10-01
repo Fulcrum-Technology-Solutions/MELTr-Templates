@@ -2,19 +2,21 @@
 {%- set timestamp = current_timestamp() -%}
 {%- set ts_epoch = timestamp | unix_timestamp | int -%}
 {%- set trace_id = random_guid() -%}
-{%- set customer_id = random_guid() -%}
+{#- CrowdStrike CID is 32-char lowercase hex (not a dashed UUID) -#}
+{%- set customer_id = random_string(32, '0123456789abcdef') -%}
 {%- set api_client_id = random_guid() -%}
 {%- set elapsed_microseconds = random_int(10000, 100000) -%}
-{%- set elapsed_time = (elapsed_microseconds // 1000) ~ "." ~ ("%03d" | format(elapsed_microseconds % 1000)) ~ "ms" -%}
+{%- set elapsed_time = (elapsed_microseconds // 1000) ~ "." ~ ("%03d" | format(elapsed_microseconds % 1000)) ~ ("%03d" | format(random_int(0, 999))) ~ "ms" -%}
 {%- set status_code = ["200", "201", "400", "403", "404", "500"] | random -%}
+{%- set success = status_code in ["200", "201"] -%}
 {%- set request_method = ["GET", "POST", "PUT", "DELETE"] | random -%}
 {%- set request_path = [
   "/intel/combined/indicators/v1",
   "/devices/queries/devices/v1",
   "/oauth2/token",
-  "/falcon/intelligence/queries/events/v1",
-  "/detects/queries/detects/v1",
-  "/incidents/queries/incidents/v1"
+  "/alerts/queries/alerts/v1",
+  "/incidents/queries/incidents/v1",
+  "/sensors/entities/datafeed/v2"
 ] | random -%}
 {%- set received_time = timestamp | format_timestamp('%Y-%m-%dT%H:%M:%S.%fZ') -%}
 {%- set request_query = "filter=type%3A%27hash_sha256%27%2Bindicator%3A%27" ~ random_string(64, 'abcdef0123456789') ~ "%27&limit=" ~ random_int(10, 500) ~ "&offset=" ~ random_int(0, 1000) -%}
@@ -22,10 +24,11 @@
   "falconx-indicators:read",
   "devices:read",
   "oauth2:read",
-  "detects:read",
+  "alerts:read",
   "incidents:read",
   "hosts:read",
-  "real-time-response:read"
+  "real-time-response:read",
+  "streaming:read"
 ] | random -%}
 {%- set user_agent = [
   "CrowdStrike-Falcon-API/1.0",
@@ -36,16 +39,21 @@
   "Postman/10.0"
 ] | random -%}
 {%- set request_uri_length = random_int(50, 200) | string -%}
-{%- set success = [true, false] | random -%}
-{%- set user = registry.get_random_user() -%}
+{%- set request_accept = ["*/*", "application/json"] | random -%}
+{%- set content_type = "application/json" -%}
+{%- set consumes = "[" ~ content_type ~ "]" -%}
+{%- set produces = "[" ~ content_type ~ "]" -%}
+{#- API client calls typically have empty UserId -#}
 {%- set audit_attrs = {
   "APIClientID": api_client_id,
   "cid": customer_id,
+  "consumes": consumes,
   "elapsed_microseconds": elapsed_microseconds | string,
   "elapsed_time": elapsed_time,
-  "produces": "[application/json]",
+  "produces": produces,
   "received_time": received_time,
-  "request_accept": "application/json",
+  "request_accept": request_accept,
+  "request_content_type": content_type,
   "request_method": request_method,
   "request_path": request_path,
   "request_query": request_query,
@@ -60,48 +68,40 @@
   "metadata": {
     "customerIDString": customer_id,
     "offset": random_int(1000000, 9999999),
-    "eventType": "AuthActivityAuditEvent",
+    "eventType": "APIActivityAuditEvent",
     "eventCreationTime": ts_epoch * 1000,
     "version": "1.0"
   },
   "event": {
-    "UserId": user.username if user else "",
+    "UserId": "",
     "UserIp": user_ip,
     "OperationName": "logged",
     "ServiceName": "api_request",
     "Success": success,
     "UTCTimestamp": ts_epoch,
-    "AuditKeyValues": [
-      {"Key": "request_method", "ValueString": request_method},
-      {"Key": "request_path", "ValueString": request_path},
-      {"Key": "user_ip", "ValueString": user_ip},
-      {"Key": "received_time", "ValueString": received_time},
-      {"Key": "cid", "ValueString": customer_id},
-      {"Key": "APIClientID", "ValueString": api_client_id},
-      {"Key": "request_query", "ValueString": request_query},
-      {"Key": "scopes", "ValueString": scopes},
-      {"Key": "trace_id", "ValueString": trace_id},
-      {"Key": "request_accept", "ValueString": "application/json"},
-      {"Key": "request_uri_length", "ValueString": request_uri_length},
-      {"Key": "status_code", "ValueString": status_code},
-      {"Key": "user_agent", "ValueString": user_agent},
-      {"Key": "elapsed_time", "ValueString": elapsed_time},
-      {"Key": "elapsed_microseconds", "ValueString": elapsed_microseconds | string},
-      {"Key": "produces", "ValueString": "[application/json]"}
-    ],
     "Attributes": audit_attrs,
     "Message": "",
     "Source": "api_request",
-    "SourceIp": user_ip
-  },
-  "ta_data": {
-    "Feed_id": random_int(0, 10) | string,
-    "Multiple_feeds": ["True", "False"] | random,
-    "Cloud_environment": ["us_commercial1", "us_commercial2", "us_gov1", "eu_central1", "gov_commercial1"] | random,
-    "TA_version": (random_int(1, 5) | string) ~ "." ~ (random_int(0, 9) | string) ~ "." ~ (random_int(0, 9) | string),
-    "Input": "org_crowdstrike",
-    "App_id": ["US_Comm_ALL", "US_Gov_ALL", "EU_Comm_ALL", "GOV_Comm_ALL"] | random,
-    "Event_types": "['All']",
-    "Initial_start": ["historic", "realtime"] | random
+    "SourceIp": user_ip,
+    "AuditKeyValues": [
+      {"Key": "trace_id", "ValueString": trace_id},
+      {"Key": "APIClientID", "ValueString": api_client_id},
+      {"Key": "consumes", "ValueString": consumes},
+      {"Key": "elapsed_microseconds", "ValueString": elapsed_microseconds | string},
+      {"Key": "cid", "ValueString": customer_id},
+      {"Key": "produces", "ValueString": produces},
+      {"Key": "request_uri_length", "ValueString": request_uri_length},
+      {"Key": "user_agent", "ValueString": user_agent},
+      {"Key": "received_time", "ValueString": received_time},
+      {"Key": "request_method", "ValueString": request_method},
+      {"Key": "status_code", "ValueString": status_code},
+      {"Key": "request_query", "ValueString": request_query},
+      {"Key": "request_accept", "ValueString": request_accept},
+      {"Key": "request_content_type", "ValueString": content_type},
+      {"Key": "request_path", "ValueString": request_path},
+      {"Key": "scopes", "ValueString": scopes},
+      {"Key": "user_ip", "ValueString": user_ip},
+      {"Key": "elapsed_time", "ValueString": elapsed_time}
+    ]
   }
 } | tojson -}}
