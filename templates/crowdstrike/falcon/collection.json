@@ -1,6 +1,6 @@
 {
     "name": "crowdstrike-falcon",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "CrowdStrike Falcon Platform log templates for API audit events and security telemetry",
     "maintainers": [
         {
