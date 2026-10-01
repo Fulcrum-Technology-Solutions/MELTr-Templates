@@ -8,26 +8,28 @@ This repository contains community-contributed templates for [MELTr](https://git
 
 ## MELTr Template Hierarchy: 4-Tier System
 
-MELTr Templates are organized in a strict 4-level hierarchy, which is reflected in both the directory structure and the API/UI:
+MELTr Templates are organized in a strict 4-level hierarchy under `templates/`, which is reflected in both the directory structure and the API/UI:
 
 1. **Vendor**: The organization or company that produces the product (e.g., `paloalto`, `microsoft`, `acme`).
-   - Directory: `vendor/`
+   - Directory: `templates/vendor/`
    - Metadata: `vendor.meta.yaml`
-2. **Product**: The specific product or application from the vendor (e.g., `firewall`, `windows`, `secureapp-pro`).
-   - Directory: `vendor/product/`
+2. **Product**: The specific product or application from the vendor (e.g., `pan-os`, `windows`, `secureapp-pro`).
+   - Directory: `templates/vendor/product/`
    - Metadata: `product.meta.yaml`, `collection.json`
-3. **Data Source**: The subsystem, log type, or event source within the product (e.g., `network`, `security`, `user-authentication`).
-   - Directory: `vendor/product/data_source/`
-4. **Event Type (Template)**: The specific event type or log template (e.g., `traffic`, `vpn`, `user_login`).
+3. **Data Source**: The subsystem, log type, or event source within the product (e.g., `firewall`, `security`, `globalprotect`).
+   - Directory: `templates/vendor/product/data_source/`
+4. **Event Type (Template)**: The specific event type or log template (e.g., `traffic`, `globalprotect`, `user_login`).
    - Files: `template_name.j2` (Jinja2 template), `template_name.meta.yaml` (metadata)
 
 **Example Path:**
 ```
-paloalto/firewall/network/traffic.j2
-paloalto/firewall/network/traffic.meta.yaml
+templates/paloalto/pan-os/firewall/traffic.j2
+templates/paloalto/pan-os/firewall/traffic.meta.yaml
 ```
 
 Each level has its own metadata file (see `schemas/`), and the template-level meta.yaml must conform to `template.schema.json`.
+
+PAN-OS lab field counts (117 traffic / 50 GlobalProtect) are defined in [`docs/panos-11.2-contract.md`](docs/panos-11.2-contract.md).
 
 ---
 
@@ -59,7 +61,7 @@ vendor/
 - **Data Source**: Subdirectory for each data source or log type (e.g., `network/`, `security/`).
 - **Template**: Each template consists of:
   - `template_name.j2`: The Jinja2 template file.
-  - `template_name.meta.yaml`: Metadata describing the template (vendor, product, data_source, description, format, parameters, etc.).
+  - `template_name.meta.yaml`: Metadata describing the template (vendor, product, data_source, description, format, optional documentation, etc.). Must match `schemas/template.schema.json` — do not add undeclared root keys such as `parameters` or `context`.
 
 See the `examples/` directory for a complete, working sample.
 
@@ -135,7 +137,7 @@ All new or updated template-level `meta.yaml` files must pass schema validation 
 ## Template Authoring & Contribution
 
 To contribute a new template:
-- Place your `.j2` template and its `.meta.yaml` metadata file as described in the [Template Structure & Requirements](#template-structure--requirements) section (e.g., `paloalto/firewall/network/`).
+- Place your `.j2` template and its `.meta.yaml` metadata file as described in the [Template Structure & Requirements](#template-structure--requirements) section (e.g., `templates/paloalto/pan-os/firewall/`).
 - All metadata files must conform to their respective schemas (see [Schema Validation](#schema-validation)).
 - Use realistic field names and reference entities using the `registry` object (e.g., `{{ registry.get_random_user().username }}` or `{{ fake.email() }}`).
 - Test your template with sample entity files and run validation:

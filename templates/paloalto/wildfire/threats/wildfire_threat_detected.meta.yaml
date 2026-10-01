@@ -26,7 +26,7 @@ documentation:
       - "wildfire"
       - "security"
   overview:
-    summary: "WildFire threat detection events generated when files are analyzed and classified as malicious by Palo Alto's cloud-based threat intelligence service"
+    summary: "WildFire threat detection events generated when files are analyzed and classified as malicious by Palo Alto's cloud-based threat intelligence service. The .j2 emits a full threat-log CSV row; documentation.fields below documents the primary operator-facing subset for registry UI, not every CSV column."
     when_generated:
       - "When files are submitted to WildFire for analysis"
       - "Upon completion of static and dynamic malware analysis"

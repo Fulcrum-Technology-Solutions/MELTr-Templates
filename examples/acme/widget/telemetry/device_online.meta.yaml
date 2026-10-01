@@ -1,6 +1,6 @@
-vendor: "Acme"
-product: "Widget"
-data_source: "telemetry"
+vendor: acme
+product: widget
+data_source: telemetry
 description: "Indicates that a device has come online."
 format: "JSON"
 frequency: "medium"
@@ -8,15 +8,40 @@ is_generator: true
 base_frequency: 10
 time_patterns:
   - business_hours
-context:
-  device_id: "device-1234"
-  timestamp: "2025-01-01T00:00:00Z"
-parameters:
-  - name: "device_id"
-    description: "Unique identifier for the device."
-    required: true
-    default: "device-1234"
-  - name: "timestamp"
-    description: "Event timestamp in ISO8601 format."
-    required: true
-    default: "2025-01-01T00:00:00Z" 
+documentation:
+  display:
+    title: "Device Online"
+    subtitle: "Sample telemetry event"
+    icon: "📡"
+    color_scheme: "info"
+    tags:
+      - telemetry
+      - device
+  overview:
+    summary: "Minimal example event used to illustrate template layout. Prefer production templates under templates/ for real authoring patterns."
+    when_generated:
+      - "When a sample device reports an online status"
+    security_relevance: "Informational"
+  fields:
+    - name: "event"
+      type: "String"
+      required: true
+      description: "Event type identifier"
+      example_value: "device_online"
+    - name: "device_id"
+      type: "String"
+      required: true
+      description: "Device hostname from the entity registry"
+      example_value: "laptop-01"
+      template_source: "registry.get_random_device().hostname"
+    - name: "timestamp"
+      type: "DateTime"
+      required: true
+      description: "Event timestamp"
+      example_value: "2026-01-01T00:00:00+00:00"
+      template_source: "now().isoformat()"
+    - name: "status"
+      type: "String"
+      required: true
+      description: "Device status"
+      example_value: "online"

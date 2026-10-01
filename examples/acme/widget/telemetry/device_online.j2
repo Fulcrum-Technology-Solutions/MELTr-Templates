@@ -1,6 +1,6 @@
 {
   "event": "device_online",
-  "device_id": "{{ device_id }}",
-  "timestamp": "{{ timestamp }}",
+  "device_id": "{{ registry.get_random_device().hostname }}",
+  "timestamp": "{{ now().isoformat() }}",
   "status": "online"
-} 
+}

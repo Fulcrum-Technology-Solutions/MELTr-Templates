@@ -29,16 +29,18 @@ Community-contributed Jinja2 templates and metadata for [MELTr OSS](https://gith
 
 ## 4-tier hierarchy
 
-Strict directory + metadata structure:
+Strict directory + metadata structure under `templates/`:
 
 | Level | Example | Metadata |
 |-------|---------|----------|
-| 1. Vendor | `paloalto/` | `vendor.meta.yaml` |
-| 2. Product | `paloalto/firewall/` | `product.meta.yaml`, `collection.json` |
-| 3. Data source | `paloalto/firewall/network/` | (directory only) |
+| 1. Vendor | `templates/paloalto/` | `vendor.meta.yaml` |
+| 2. Product | `templates/paloalto/pan-os/` | `product.meta.yaml`, `collection.json` |
+| 3. Data source | `templates/paloalto/pan-os/firewall/` | (directory only) |
 | 4. Event type | `traffic.j2`, `traffic.meta.yaml` | `template_name.meta.yaml` |
 
-Example path: `paloalto/firewall/network/traffic.j2`
+Example path: `templates/paloalto/pan-os/firewall/traffic.j2`
+
+(Also under Palo Alto: `templates/paloalto/pan-os/globalprotect/globalprotect.j2`, `templates/paloalto/wildfire/threats/wildfire_threat_detected.j2`.)
 
 ## Schema conformance
 
