@@ -26,7 +26,7 @@ documentation:
       - "session-monitoring"
       - "threat-prevention"
   overview:
-    summary: "Records all network traffic sessions processed by the PAN-OS firewall, including connection details, policy decisions, data transfer statistics, and session lifecycle events. Essential for network monitoring, security analysis, and compliance reporting."
+    summary: "Records all network traffic sessions processed by the PAN-OS firewall, including connection details, policy decisions, data transfer statistics, and session lifecycle events. Essential for network monitoring, security analysis, and compliance reporting. The .j2 emits the full 117-field CSV lab baseline (see docs/panos-11.2-contract.md); documentation.fields below documents the primary operator-facing subset for registry UI, not every CSV column."
     when_generated:
       - "New network connection establishment (start)"
       - "Network connection termination (end)"
@@ -538,13 +538,16 @@ documentation:
       template_source: "Static 0 for standard traffic sessions"
   resources:
     documentation:
-      - title: "PAN-OS Administrator's Guide - Traffic Logs"
-        url: "https://docs.paloaltonetworks.com/pan-os/11-1/pan-os-admin/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/traffic-log-fields"
+      - title: "PAN-OS Traffic Log Fields (current)"
+        url: "https://docs.paloaltonetworks.com/ngfw/administration/monitoring/use-syslog-for-monitoring/syslog-field-descriptions/traffic-log-fields"
         type: "official"
-      - title: "PAN-OS CLI Reference - Log Commands"
-        url: "https://docs.paloaltonetworks.com/pan-os/11-1/pan-os-cli-quick-start/cli-cheat-sheets/log-files-cli"
+      - title: "PAN-OS Administrator's Guide (PDF field tables)"
+        url: "https://docs.paloaltonetworks.com/content/dam/techdocs/en_US/pdf/pan-os/11-1/pan-os-admin/pan-os-admin.pdf"
         type: "official"
-      - title: "Palo Alto Networks Security Operating Platform"
+      - title: "MELTr PAN-OS 11.2 lab baseline"
+        url: "https://github.com/Fulcrum-Technology-Solutions/MELTr-Templates/blob/main/docs/panos-11.2-contract.md"
+        type: "reference"
+      - title: "Palo Alto Networks Next-Generation Firewall"
         url: "https://www.paloaltonetworks.com/network-security/next-generation-firewall"
         type: "official"
     tools:

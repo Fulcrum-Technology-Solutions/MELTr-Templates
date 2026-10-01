@@ -25,7 +25,7 @@ Templates are organized in a 4-tier structure:
 - Data Source (e.g., `security`)
 - Template files (e.g., `account_locked.j2`, `account_locked.meta.yaml`)
 
-See the `examples/` directory for a complete sample structure and files.
+See the `examples/` directory for a minimal starter layout. Prefer real templates under `templates/paloalto/` as the canonical structure and metadata pattern. Note: `examples/` is **not** validated by CI (`validate_templates.py` skips it).
 
 ## Adding a New Template
 
@@ -242,10 +242,12 @@ Template metadata should include comprehensive field documentation for UI render
    - Required fields: `name`, `type`, `description`
    - Recommended: `example_value`, `format`, `template_source`
    - Optional: `possible_values` for enum-like fields
+   - **Wide CSV / vendor syslog formats:** Prefer documenting every emitted column (GlobalProtect is the gold standard: 50/50 with `field_number`). If the lab baseline emits more columns than the curated UI field list (e.g. PAN-OS traffic 117 columns with a shorter documented set), state that explicitly in `documentation.overview.summary` and point to the format contract (e.g. `docs/panos-11.2-contract.md`). Registry sample preview renders the `.j2`, not `example_value`.
 
 4. **resources** (under `documentation.resources`):
    - `documentation`: Array of documentation links
    - `tools`: Array of related tools
+   - Prefer current vendor doc URLs (avoid stale versioned paths when the product version has moved).
 
 ### Field Documentation Example
 

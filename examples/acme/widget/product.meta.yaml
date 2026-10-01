@@ -1,5 +1,6 @@
-slug: widget
-product: "Widget"
+vendor: acme
+product: widget
+name: "Acme Widget"
 description: "Acme Widget is a sample product for demonstration purposes."
 version: "All"
-documentation_url: "https://acme.example.com/widget/docs" 
+documentation_url: "https://acme.example.com/widget/docs"

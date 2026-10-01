@@ -23,3 +23,15 @@ Offline tests check CSV counts, tail positions, clock consistency, offsets, and 
 ## Rollout
 
 After this PR and the automated collection-version/index PR merge, sync the registry and refresh installed templates. Preview traffic and GlobalProtect separately in Cribl and verify destination parsing. Any custom parser expecting exactly 130 traffic columns must be reviewed. Existing source filters, Splunk index choices, and Elastic routing are unchanged. No live generator, Pack, or destination is changed by this repository update.
+
+## Metadata field docs vs CSV width
+
+Registry sample preview renders the `.j2`, not `documentation.fields[].example_value`. For wide CSV formats:
+
+| Template | Emitted CSV columns | Documented in `.meta.yaml` |
+|----------|---------------------|----------------------------|
+| Traffic | 117 (lab baseline) | Curated operator-facing subset; summary states the gap |
+| GlobalProtect | 50 | 50/50 with `field_number` (preferred pattern) |
+| WildFire threat | Full threat-log CSV row | Curated subset; summary states the gap |
+
+Prefer documenting every emitted column when practical. When documenting a subset, say so in `documentation.overview.summary` and keep this contract as the column-count source of truth.
