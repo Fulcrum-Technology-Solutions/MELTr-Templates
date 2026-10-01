@@ -88,12 +88,8 @@ jobs:
         run: |
           set -euo pipefail
           pr="${{ steps.cpr.outputs.pull-request-number }}"
-          # Repo may not have "Allow auto-merge" enabled. The sync App has
-          # main-protect ruleset bypass (Always); --admin lets gh invoke that
-          # bypass instead of failing client-side on BLOCKED review state.
-          if gh pr merge --squash --auto "$pr" 2>/dev/null; then
-            echo "Auto-merge enabled for #$pr"
-          else
-            echo "Squash-merging #$pr via App ruleset bypass"
-            gh pr merge --squash --admin "$pr"
-          fi
+          # Do not use --auto: main-protect still requires code-owner /
+          # unattributed approvals, so queued auto-merge stays BLOCKED forever.
+          # The sync App has Always bypass; --admin applies that bypass now.
+          echo "Squash-merging #$pr via App ruleset bypass"
+          gh pr merge --squash --admin "$pr"
