@@ -1,6 +1,13 @@
 # Sync collection.json versions and TEMPLATES.yaml after template edits.
-# Opens a PR instead of pushing to main (satisfies rulesets that require pull requests).
-# GitHub Releases run separately when bumped collection.json lands on main — see template_collection_release.yml.
+# Opens a PR (audit trail) then squash-merges it via a GitHub App token so
+# ruleset review / unattributed-commit gates do not block the bot.
+# GitHub Releases run separately when bumped collection.json lands on main —
+# see template_collection_release.yml.
+#
+# Requires repo secrets:
+#   MELTR_TEMPLATES_SYNC_APP_ID
+#   MELTR_TEMPLATES_SYNC_APP_PRIVATE_KEY
+# And main-protect ruleset bypass for that GitHub App.
 name: Auto Version and Update Index
 
 on:
@@ -23,13 +30,19 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
     steps:
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.MELTR_TEMPLATES_SYNC_APP_ID }}
+          private-key: ${{ secrets.MELTR_TEMPLATES_SYNC_APP_PRIVATE_KEY }}
+
       - uses: actions/checkout@v7
         with:
           fetch-depth: 2  # auto_version.py compares HEAD~1..HEAD
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python
         uses: actions/setup-python@v7
@@ -52,9 +65,10 @@ jobs:
       # Post-merge of this bot PR, this workflow may run again with only collection.json
       # changes; auto_version usually no-ops and there is no PR to open — no harm.
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
           commit-message: "chore: sync collection versions and TEMPLATES index"
           title: "chore: sync collection versions and TEMPLATES index"
           body: |
@@ -63,8 +77,23 @@ jobs:
             - `auto_version.py` may bump `templates/**/collection.json`
             - `update_templates_index.py` refreshes `TEMPLATES.yaml`
 
-            Merge when checks pass.
+            This PR is squash-merged by the sync GitHub App when ready.
           branch: bot/auto-sync-templates
           delete-branch: false
-          committer: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+
+      - name: Automerge sync PR
+        if: steps.cpr.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          set -euo pipefail
+          pr="${{ steps.cpr.outputs.pull-request-number }}"
+          # Prefer queued auto-merge (waits for required checks if configured).
+          # Fall back to immediate squash merge when auto-merge is disabled on the repo
+          # or when the App's ruleset bypass allows merge without waiting.
+          if gh pr merge --squash --auto "$pr"; then
+            echo "Auto-merge enabled for #$pr"
+          else
+            echo "Auto-merge unavailable; squash-merging #$pr now"
+            gh pr merge --squash "$pr"
+          fi
