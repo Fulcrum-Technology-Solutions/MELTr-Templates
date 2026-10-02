@@ -1,2 +1,4 @@
 vendor: falco
 name: Falco
+website: https://falco.org
+description: Cloud-native runtime security project for detecting anomalous behavior in containers and hosts.

@@ -6,6 +6,7 @@ Thank you for your interest in contributing to MELTr Templates! This document pr
 - [Repository Structure](#repository-structure)
 - [Adding a New Template](#adding-a-new-template)
 - [Metadata Files](#metadata-files)
+- [Vendor logos](#vendor-logos)
 - [Template Testing & Validation](#template-testing--validation)
 - [Updating collection.json](#updating-collectionjson)
 - [Archive Directory Policy](#archive-directory-policy)
@@ -54,6 +55,29 @@ Each level has its own metadata file:
 
 See the `schemas/` directory for the required fields for each file.
 
+## Vendor logos
+
+Static logos are the source of truth for packaging and the community registry.
+
+1. Place the image next to `vendor.meta.yaml`: `templates/<vendor>/<vendor>-logo.png` (PNG or SVG).
+2. Set `logo: "<vendor>-logo.png"` in `vendor.meta.yaml`.
+3. Set `website: "https://..."` so the registry can fall back to Brandfetch when a file is missing.
+
+`validate_templates.py` fails if `logo` is declared but the file is absent.
+
+### Fetching a logo (optional helper)
+
+Maintainers can pull a candidate asset from the Brandfetch Brand API (review trademark/quality before committing):
+
+```bash
+export BRANDFETCH_API_KEY=...   # from https://developers.brandfetch.com/
+python scripts/fetch_vendor_logo.py --vendor cisco --dry-run
+python scripts/fetch_vendor_logo.py --vendor cisco
+python scripts/fetch_vendor_logo.py --all-missing
+```
+
+The community UI may also hotlink Brandfetch as a **runtime fallback** when no static file is available; do not rely on that for OSS packaging—commit the static file.
+
 ## Template Testing & Validation
 
 ### Local Validation
@@ -72,6 +96,7 @@ This will check:
 - Every `.j2` has a matching `.meta.yaml` (and vice versa)
 - Every `.j2` parses as valid Jinja2
 - Every `collection.json` entry resolves to an on-disk `.j2` + `.meta.yaml` pair, and every on-disk template under that product is listed
+- If `logo` is set in `vendor.meta.yaml`, the logo file exists beside it
 
 ### Testing Template Rendering
 

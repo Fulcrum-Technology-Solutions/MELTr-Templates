@@ -1,2 +1,4 @@
 vendor: zeek
 name: Zeek
+website: https://zeek.org
+description: Network security monitoring platform that produces structured connection and protocol logs.
