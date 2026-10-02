@@ -1,0 +1,61 @@
+{%- set profile = registry.get_random_service() -%}
+{%- set client = registry.get_device('vault-client') -%}
+{%- set clock = now() -%}
+{%- set token = 'hmac-sha256:' + fake.hexify(text='^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^') -%}
+{%- set accessor = 'hmac-sha256:' + fake.hexify(text='^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^') -%}
+{{- {
+  "auth": {
+    "accessor": accessor,
+    "client_token": token,
+    "display_name": "token",
+    "policies": [
+      "root"
+    ],
+    "policy_results": {
+      "allowed": true,
+      "granting_policies": [
+        {
+          "type": ""
+        },
+        {
+          "name": "root",
+          "namespace_id": "root",
+          "type": "acl"
+        }
+      ]
+    },
+    "token_policies": [
+      "root"
+    ],
+    "token_issue_time": (clock - 3600) | iso8601_utc,
+    "token_type": "service"
+  },
+  "request": {
+    "client_id": profile['vault_client_id'],
+    "client_token": token,
+    "client_token_accessor": accessor,
+    "data": {
+      "description": profile['description_digest'],
+      "local": false,
+      "options": {
+        "file_path": profile['path_digest']
+      },
+      "type": profile['type_digest']
+    },
+    "id": fake.uuid4(),
+    "mount_accessor": "system_53409ed3",
+    "mount_class": "secret",
+    "mount_point": "sys/",
+    "mount_running_version": "v1.18.4+builtin.vault",
+    "mount_type": "system",
+    "namespace": {
+      "id": "root"
+    },
+    "operation": "update",
+    "path": "sys/audit/file",
+    "remote_address": client['ip_address'],
+    "remote_port": fake.pyint(min_value=49152, max_value=65535)
+  },
+  "time": clock | iso8601_utc,
+  "type": "response"
+} | tojson -}}

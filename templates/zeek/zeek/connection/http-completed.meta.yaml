@@ -1,0 +1,139 @@
+vendor: zeek
+product: zeek
+data_source: connection
+description: Zeek 8.0.0 conn.log completed HTTP/TCP sample profile, coherent fixed counters/state/history, registry
+  endpoints and fresh time/UID/source port.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Zeek completed HTTP connection
+    tags:
+    - zeek
+    - connection
+    - http
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'One completed HTTP/TCP connection with the documented SF profile. Requires source-specific entities:
+      entities/zeek/zeek/connection.yaml; example configuration: configs/zeek/zeek/connection.yaml. Tested with
+      MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic
+      registry preview entities are not sufficient.'
+    when_generated:
+    - An HTTP/TCP connection completes.
+    frequency_notes: One event/second local test rate; independent connection snapshots, no packet replay or cross-log
+      correlation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Complete record and connection semantics
+      url: https://docs.zeek.org/en/v8.0.0/logs/conn.html
+      type: official
+    - title: Conn::Info field definitions
+      url: https://docs.zeek.org/en/v8.0.0/scripts/base/protocols/conn/main.zeek.html#type-Conn::Info
+      type: official
+    - title: UID character alphabet
+      url: https://github.com/zeek/zeek/blob/v8.0.0/src/UID.h
+      type: official
+    tools: []
+  fields:
+  - name: ts
+    type: Number
+    description: Single `now()` through `unix_timestamp`, minus duration; connection start in Unix seconds.
+    template_source: Single `now()` through `unix_timestamp`, minus duration; connection start in Unix seconds.
+    example_value: '1790894900.371537'
+  - name: uid
+    type: String
+    description: '`C` plus `fake.hexify(text=''^^^^^^^^^^^^^^^^'')`; new 16-hex synthetic suffix.'
+    template_source: '`C` plus `fake.hexify(text=''^^^^^^^^^^^^^^^^'')`; new 16-hex synthetic suffix.'
+    example_value: Cfcef3751758c5156
+  - name: id.orig_h
+    type: String
+    description: Selected device `ip_address`.
+    template_source: Selected device `ip_address`.
+    example_value: 10.20.0.11
+  - name: id.orig_p
+    type: Integer
+    description: '`fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port subset.'
+    template_source: '`fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port subset.'
+    example_value: '55114'
+  - name: id.resp_h
+    type: String
+    description: Mapped service `server_ipv4`.
+    template_source: Mapped service `server_ipv4`.
+    example_value: 198.51.100.31
+  - name: id.resp_p
+    type: Integer
+    description: Service port constrained to 80.
+    template_source: Service port constrained to 80.
+    example_value: '80'
+  - name: proto
+    type: String
+    description: Service protocol TCP through Jinja `lower`, yielding tcp.
+    template_source: Service protocol TCP through Jinja `lower`, yielding tcp.
+    example_value: tcp
+  - name: service
+    type: String
+    description: Fixed http.
+    template_source: Fixed http.
+    example_value: http
+  - name: duration
+    type: Number
+    description: Fixed 0.25411510467529297 seconds; start + duration equals the selected end clock.
+    template_source: Fixed 0.25411510467529297 seconds; start + duration equals the selected end clock.
+    example_value: '0.25411510467529297'
+  - name: orig_bytes
+    type: Integer
+    description: Fixed 77 / 295 payload bytes.
+    template_source: Fixed 77 / 295 payload bytes.
+    example_value: '77'
+  - name: resp_bytes
+    type: Integer
+    description: Fixed 77 / 295 payload bytes.
+    template_source: Fixed 77 / 295 payload bytes.
+    example_value: '295'
+  - name: conn_state
+    type: String
+    description: Fixed SF.
+    template_source: Fixed SF.
+    example_value: SF
+  - name: missed_bytes
+    type: Integer
+    description: Fixed 0.
+    template_source: Fixed 0.
+    example_value: '0'
+  - name: history
+    type: String
+    description: Fixed ShADadFf, preserved with state/counters.
+    template_source: Fixed ShADadFf, preserved with state/counters.
+    example_value: ShADadFf
+  - name: orig_pkts
+    type: Integer
+    description: Fixed 6 / 4.
+    template_source: Fixed 6 / 4.
+    example_value: '6'
+  - name: resp_pkts
+    type: Integer
+    description: Fixed 6 / 4.
+    template_source: Fixed 6 / 4.
+    example_value: '4'
+  - name: orig_ip_bytes
+    type: Integer
+    description: Fixed 397 / 511, each at least the corresponding payload count.
+    template_source: Fixed 397 / 511, each at least the corresponding payload count.
+    example_value: '397'
+  - name: resp_ip_bytes
+    type: Integer
+    description: Fixed 397 / 511, each at least the corresponding payload count.
+    template_source: Fixed 397 / 511, each at least the corresponding payload count.
+    example_value: '511'
+  - name: ip_proto
+    type: Integer
+    description: Fixed 6, coupled to tcp/http/80.
+    template_source: Fixed 6, coupled to tcp/http/80.
+    example_value: '6'

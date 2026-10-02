@@ -1,0 +1,4 @@
+vendor: tailscale
+product: tailnet
+name: Tailnet
+description: Sample-backed Tailnet event profiles with source-specific MELTr entity fixtures.

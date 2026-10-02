@@ -1,0 +1,133 @@
+vendor: tailscale
+product: tailnet
+data_source: configuration-audit
+description: Documented NODE key-expiry update with registry actor/node identities, fresh operation group ID and
+  derived future expiry.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Tailscale node key expiry update
+    tags:
+    - tailscale
+    - configuration
+    - audit
+    - node
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'First logs[] member of the documented v1.1 configuration-log response. Requires source-specific entities:
+      entities/tailscale/tailnet/configuration-audit.yaml; example configuration: configs/tailscale/tailnet/configuration-audit.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A node key expiry time is updated.
+    frequency_notes: One event/second local test rate; five-event burst. Independent operation snapshots retaining
+      zero-time old/deferredAt values.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Configuration audit response example
+      url: https://tailscale.com/docs/features/logging/audit-logging
+      type: official
+    tools: []
+  fields:
+  - name: action
+    type: String
+    description: Fixed `UPDATE`.
+    template_source: Fixed `UPDATE`.
+    example_value: UPDATE
+  - name: actor
+    type: Object
+    description: Exactly the four fields below.
+    template_source: Exactly the four fields below.
+    example_value: '{"displayName":"Ben Rivera","id":"123457CNTRL","loginName":"ben.rivera@example.com","type":"USER"}'
+  - name: actor.displayName
+    type: String
+    description: Selected registry user's `full_name`.
+    template_source: Selected registry user's `full_name`.
+    example_value: Ben Rivera
+  - name: actor.id
+    type: String
+    description: Same user's stable custom `tailscale_id`.
+    template_source: Same user's stable custom `tailscale_id`.
+    example_value: 123457CNTRL
+  - name: actor.loginName
+    type: String
+    description: Same user's `email`.
+    template_source: Same user's `email`.
+    example_value: ben.rivera@example.com
+  - name: actor.type
+    type: String
+    description: Fixed `USER`.
+    template_source: Fixed `USER`.
+    example_value: USER
+  - name: deferredAt
+    type: String
+    description: Fixed `0001-01-01T00:00:00Z` sentinel.
+    template_source: Fixed `0001-01-01T00:00:00Z` sentinel.
+    example_value: '0001-01-01T00:00:00Z'
+  - name: eventGroupID
+    type: String
+    description: Faker `fake.pyint(min_value=1000000000, max_value=2000000000)` converted with Jinja `string`; a
+      fresh synthetic operation ID.
+    template_source: Faker `fake.pyint(min_value=1000000000, max_value=2000000000)` converted with Jinja `string`;
+      a fresh synthetic operation ID.
+    example_value: '1528213800'
+  - name: eventTime
+    type: String
+    description: One `now()` value through `iso8601_utc`, UTC with microsecond precision.
+    template_source: One `now()` value through `iso8601_utc`, UTC with microsecond precision.
+    example_value: '2026-10-01T22:48:20.162495Z'
+  - name: new
+    type: String
+    description: Same clock plus `tailscale_expiry_days * 86400` using MELTr DateTimeWrapper addition, then `iso8601_utc`.
+      Always later in the validated profile.
+    template_source: Same clock plus `tailscale_expiry_days * 86400` using MELTr DateTimeWrapper addition, then
+      `iso8601_utc`. Always later in the validated profile.
+    example_value: '2027-03-30T22:48:20.162495Z'
+  - name: old
+    type: String
+    description: Fixed `0001-01-01T00:00:00Z` sentinel.
+    template_source: Fixed `0001-01-01T00:00:00Z` sentinel.
+    example_value: '0001-01-01T00:00:00Z'
+  - name: origin
+    type: String
+    description: Fixed `NODE`.
+    template_source: Fixed `NODE`.
+    example_value: NODE
+  - name: target
+    type: Object
+    description: Exactly the four fields below.
+    template_source: Exactly the four fields below.
+    example_value: '{"id":"654322CNTRL","name":"workstation-02.example.ts.net","property":"KEY_EXPIRY_TIME","type":"NODE"}'
+  - name: target.id
+    type: String
+    description: Mapped device's stable custom `tailscale_id`.
+    template_source: Mapped device's stable custom `tailscale_id`.
+    example_value: 654322CNTRL
+  - name: target.name
+    type: String
+    description: Same device's `fqdn`.
+    template_source: Same device's `fqdn`.
+    example_value: workstation-02.example.ts.net
+  - name: target.property
+    type: String
+    description: Fixed `KEY_EXPIRY_TIME`.
+    template_source: Fixed `KEY_EXPIRY_TIME`.
+    example_value: KEY_EXPIRY_TIME
+  - name: target.type
+    type: String
+    description: Fixed `NODE`.
+    template_source: Fixed `NODE`.
+    example_value: NODE
+  - name: type
+    type: String
+    description: Fixed `CONFIG`.
+    template_source: Fixed `CONFIG`.
+    example_value: CONFIG

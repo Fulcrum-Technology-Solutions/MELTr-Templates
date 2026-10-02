@@ -1,0 +1,116 @@
+vendor: gitlab
+product: gitlab
+data_source: audit
+description: GitLab project-archive audit event using registry-backed author, device and project identities; fresh
+  UTC timestamp and synthetic numeric event ID.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: GitLab project archived
+    tags:
+    - gitlab
+    - audit
+    - project
+    - archive
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Independent project-archive event snapshots matching the documented single-event API response. Requires
+      source-specific entities: entities/gitlab/gitlab/audit.yaml; example configuration: configs/gitlab/gitlab/audit.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A user archives a project.
+    frequency_notes: One event/second for local testing; example generator stops after five events. No stateful
+      project lifecycle is simulated.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Retrieve an instance audit event
+      url: https://docs.gitlab.com/api/audit_events/#retrieve-an-instance-audit-event
+      type: official
+    tools: []
+  fields:
+  - name: id
+    type: Integer
+    description: Faker `fake.pyint(min_value=1000000000, max_value=2000000000)` once per event; positive synthetic
+      event ID. The bounds are a local test choice, not a GitLab rule. Random IDs are not guaranteed globally unique
+      or sequential.
+    template_source: Faker `fake.pyint(min_value=1000000000, max_value=2000000000)` once per event; positive synthetic
+      event ID. The bounds are a local test choice, not a GitLab rule. Random IDs are not guaranteed globally unique
+      or sequential.
+    example_value: '1528213800'
+  - name: author_id
+    type: Integer
+    description: Selected registry user's `gitlab_id`; stable per author.
+    template_source: Selected registry user's `gitlab_id`; stable per author.
+    example_value: '102'
+  - name: entity_id
+    type: Integer
+    description: Mapped project service's `gitlab_id`; stable per project.
+    template_source: Mapped project service's `gitlab_id`; stable per project.
+    example_value: '502'
+  - name: entity_type
+    type: String
+    description: Fixed `Project`.
+    template_source: Fixed `Project`.
+    example_value: Project
+  - name: details
+    type: Object
+    description: Jinja dictionary containing the following documented fields.
+    template_source: Jinja dictionary containing the following documented fields.
+    example_value: '{"author_email":"ben.rivera@example.com","author_name":"Ben Rivera","custom_message":"Project
+      archived","entity_path":"example-corp/archive-two","ip_address":"192.0.2.61","target_details":"example-corp/archive-two","target_id":"example-corp/archive-two","target_type":"Project"}'
+  - name: details.custom_message
+    type: String
+    description: Fixed `Project archived`.
+    template_source: Fixed `Project archived`.
+    example_value: Project archived
+  - name: details.author_name
+    type: String
+    description: Same user's `full_name`.
+    template_source: Same user's `full_name`.
+    example_value: Ben Rivera
+  - name: details.author_email
+    type: String
+    description: Same user's `email`.
+    template_source: Same user's `email`.
+    example_value: ben.rivera@example.com
+  - name: details.target_id
+    type: String
+    description: Mapped service's `gitlab_project_path`; intentionally a path, not the numeric entity_id.
+    template_source: Mapped service's `gitlab_project_path`; intentionally a path, not the numeric entity_id.
+    example_value: example-corp/archive-two
+  - name: details.target_type
+    type: String
+    description: Fixed `Project`.
+    template_source: Fixed `Project`.
+    example_value: Project
+  - name: details.target_details
+    type: String
+    description: Same project path as target_id.
+    template_source: Same project path as target_id.
+    example_value: example-corp/archive-two
+  - name: details.ip_address
+    type: String
+    description: The selected user's mapped device.ip_address; IPv4 in this profile.
+    template_source: The selected user's mapped device.ip_address; IPv4 in this profile.
+    example_value: 192.0.2.61
+  - name: details.entity_path
+    type: String
+    description: Same project path as target_id and target_details.
+    template_source: Same project path as target_id and target_details.
+    example_value: example-corp/archive-two
+  - name: created_at
+    type: String
+    description: One `now()` value through MELTr `iso8601_utc`, sliced to milliseconds with UTC Z, matching the
+      reference representation.
+    template_source: One `now()` value through MELTr `iso8601_utc`, sliced to milliseconds with UTC Z, matching
+      the reference representation.
+    example_value: '2026-10-01T22:48:08.821Z'

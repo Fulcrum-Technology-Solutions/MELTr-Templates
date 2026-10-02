@@ -1,0 +1,4 @@
+vendor: oisf
+product: suricata
+name: Suricata
+description: Sample-backed Suricata event profiles with source-specific MELTr entity fixtures.

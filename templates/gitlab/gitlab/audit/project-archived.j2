@@ -1,0 +1,23 @@
+{# GitLab documented single-event API profile. Required entity attributes have no fallbacks. #}
+{%- set author = registry.get_random_user() -%}
+{%- set device = registry.get_device(author['username'] + '-gitlab-client') -%}
+{%- set project = registry.get_service(author['username'] + '-gitlab-project') -%}
+{%- set event_time = now() | iso8601_utc -%}
+{%- set event_id = fake.pyint(min_value=1000000000, max_value=2000000000) -%}
+{{- {
+  'id': event_id,
+  'author_id': author['gitlab_id'],
+  'entity_id': project['gitlab_id'],
+  'entity_type': 'Project',
+  'details': {
+    'custom_message': 'Project archived',
+    'author_name': author['full_name'],
+    'author_email': author['email'],
+    'target_id': project['gitlab_project_path'],
+    'target_type': 'Project',
+    'target_details': project['gitlab_project_path'],
+    'ip_address': device['ip_address'],
+    'entity_path': project['gitlab_project_path']
+  },
+  'created_at': event_time[:-4] + 'Z'
+} | tojson -}}

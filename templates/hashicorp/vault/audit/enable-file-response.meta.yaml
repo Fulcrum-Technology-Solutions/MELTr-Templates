@@ -1,0 +1,255 @@
+vendor: hashicorp
+product: vault
+data_source: audit
+description: Vault v1.18.4 published enable-file audit response profile; root policy, paired synthetic token/accessor,
+  registry client/data digests and fresh time/UUID/port.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Vault enable file audit response
+    tags:
+    - vault
+    - audit
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Independent response snapshot for sys/audit/file enable operation. Requires source-specific entities:
+      entities/hashicorp/vault/audit.yaml; example configuration: configs/hashicorp/vault/audit.yaml. Tested with
+      MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic
+      registry preview entities are not sufficient.'
+    when_generated:
+    - A file audit device is enabled.
+    frequency_notes: One event/second local test rate; independent server snapshots, not repeated enables on a persistent
+      server.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Complete emitted response
+      url: https://developer.hashicorp.com/vault/tutorials/policies/write-a-policy-using-audit-logs
+      type: official
+    - title: Field types and conditional presence
+      url: https://developer.hashicorp.com/vault/docs/audit/schema
+      type: official
+    tools: []
+  fields:
+  - name: auth
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"accessor":"hmac-sha256:50ec8881ead7497fc5d51b80ad1819a217ebbc4b23b263e686a7a45012c4931c","client_token":"hmac-sha256:fcef3751758c51565657973f58c67959a50fff0fbf79f7e659c297257cc0ab30","display_name":"token","policies":["root"],"policy_results":{"allowed":true,"granting_policies":[{"type":""},{"name":"root","namespace_id":"root","type":"acl"}]},"token_issue_time":"2026-10-01T21:48:12.991047Z","token_policies":["root"],"token_type":"service"}'
+  - name: auth.accessor
+    type: String
+    description: 'Per-event accessor: hmac-sha256: plus Faker 64 lowercase hex characters; reused in request.'
+    template_source: 'Per-event accessor: hmac-sha256: plus Faker 64 lowercase hex characters; reused in request.'
+    example_value: hmac-sha256:50ec8881ead7497fc5d51b80ad1819a217ebbc4b23b263e686a7a45012c4931c
+  - name: auth.client_token
+    type: String
+    description: 'Per-event token: hmac-sha256: plus Faker 64 lowercase hex characters; reused in request.'
+    template_source: 'Per-event token: hmac-sha256: plus Faker 64 lowercase hex characters; reused in request.'
+    example_value: hmac-sha256:fcef3751758c51565657973f58c67959a50fff0fbf79f7e659c297257cc0ab30
+  - name: auth.display_name
+    type: String
+    description: Fixed "token".
+    template_source: Fixed "token".
+    example_value: token
+  - name: auth.policies
+    type: Array
+    description: Exactly 1 items.
+    template_source: Exactly 1 items.
+    example_value: '["root"]'
+  - name: auth.policies[0]
+    type: String
+    description: Fixed "root".
+    template_source: Fixed "root".
+    example_value: root
+  - name: auth.policy_results
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"allowed":true,"granting_policies":[{"type":""},{"name":"root","namespace_id":"root","type":"acl"}]}'
+  - name: auth.policy_results.allowed
+    type: Boolean
+    description: Fixed true.
+    template_source: Fixed true.
+    example_value: 'true'
+  - name: auth.policy_results.granting_policies
+    type: Array
+    description: Exactly 2 items.
+    template_source: Exactly 2 items.
+    example_value: '[{"type":""},{"name":"root","namespace_id":"root","type":"acl"}]'
+  - name: auth.policy_results.granting_policies[0]
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"type":""}'
+  - name: auth.policy_results.granting_policies[0].type
+    type: String
+    description: Fixed "".
+    template_source: Fixed "".
+    example_value: ''
+  - name: auth.policy_results.granting_policies[1]
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"name":"root","namespace_id":"root","type":"acl"}'
+  - name: auth.policy_results.granting_policies[1].name
+    type: String
+    description: Fixed "root".
+    template_source: Fixed "root".
+    example_value: root
+  - name: auth.policy_results.granting_policies[1].namespace_id
+    type: String
+    description: Fixed "root".
+    template_source: Fixed "root".
+    example_value: root
+  - name: auth.policy_results.granting_policies[1].type
+    type: String
+    description: Fixed "acl".
+    template_source: Fixed "acl".
+    example_value: acl
+  - name: auth.token_policies
+    type: Array
+    description: Exactly 1 items.
+    template_source: Exactly 1 items.
+    example_value: '["root"]'
+  - name: auth.token_policies[0]
+    type: String
+    description: Fixed "root".
+    template_source: Fixed "root".
+    example_value: root
+  - name: auth.token_issue_time
+    type: String
+    description: Same clock minus 3600 seconds through iso8601_utc.
+    template_source: Same clock minus 3600 seconds through iso8601_utc.
+    example_value: '2026-10-01T21:48:12.991047Z'
+  - name: auth.token_type
+    type: String
+    description: Fixed "service".
+    template_source: Fixed "service".
+    example_value: service
+  - name: request
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"client_id":"GRfjNAfCg2bI47l1sX5zdFiTEmdrkCKa20zm5YVS4iM=","client_token":"hmac-sha256:fcef3751758c51565657973f58c67959a50fff0fbf79f7e659c297257cc0ab30","client_token_accessor":"hmac-sha256:50ec8881ead7497fc5d51b80ad1819a217ebbc4b23b263e686a7a45012c4931c","data":{"description":"hmac-sha256:c5b18e26a3352dc8ed0fa104511c39b533864d33130270f9f904eb0372658d08","local":false,"options":{"file_path":"hmac-sha256:1ccac0e264b9267343c6b6b960db39af64dfebdbdc0f75453f4259dd88efa9c3"},"type":"hmac-sha256:65abaf3c64bbae2c283b165b7100e89b071d4beb4779b6700433af00c1635e73"},"id":"59b74f26-8874-4a6d-a75c-c55e67bf965c","mount_accessor":"system_53409ed3","mount_class":"secret","mount_point":"sys/","mount_running_version":"v1.18.4+builtin.vault","mount_type":"system","namespace":{"id":"root"},"operation":"update","path":"sys/audit/file","remote_address":"127.0.0.1","remote_port":62687}'
+  - name: request.client_id
+    type: String
+    description: Selected service vault_client_id; synthetic base64-shaped 32-byte identity.
+    template_source: Selected service vault_client_id; synthetic base64-shaped 32-byte identity.
+    example_value: GRfjNAfCg2bI47l1sX5zdFiTEmdrkCKa20zm5YVS4iM=
+  - name: request.client_token
+    type: String
+    description: Same token value as auth.client_token.
+    template_source: Same token value as auth.client_token.
+    example_value: hmac-sha256:fcef3751758c51565657973f58c67959a50fff0fbf79f7e659c297257cc0ab30
+  - name: request.client_token_accessor
+    type: String
+    description: Same accessor value as auth.accessor.
+    template_source: Same accessor value as auth.accessor.
+    example_value: hmac-sha256:50ec8881ead7497fc5d51b80ad1819a217ebbc4b23b263e686a7a45012c4931c
+  - name: request.data
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"description":"hmac-sha256:c5b18e26a3352dc8ed0fa104511c39b533864d33130270f9f904eb0372658d08","local":false,"options":{"file_path":"hmac-sha256:1ccac0e264b9267343c6b6b960db39af64dfebdbdc0f75453f4259dd88efa9c3"},"type":"hmac-sha256:65abaf3c64bbae2c283b165b7100e89b071d4beb4779b6700433af00c1635e73"}'
+  - name: request.data.description
+    type: String
+    description: Same service description_digest.
+    template_source: Same service description_digest.
+    example_value: hmac-sha256:c5b18e26a3352dc8ed0fa104511c39b533864d33130270f9f904eb0372658d08
+  - name: request.data.local
+    type: Boolean
+    description: Fixed false.
+    template_source: Fixed false.
+    example_value: 'false'
+  - name: request.data.options
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"file_path":"hmac-sha256:1ccac0e264b9267343c6b6b960db39af64dfebdbdc0f75453f4259dd88efa9c3"}'
+  - name: request.data.options.file_path
+    type: String
+    description: Same service path_digest.
+    template_source: Same service path_digest.
+    example_value: hmac-sha256:1ccac0e264b9267343c6b6b960db39af64dfebdbdc0f75453f4259dd88efa9c3
+  - name: request.data.type
+    type: String
+    description: Same service type_digest.
+    template_source: Same service type_digest.
+    example_value: hmac-sha256:65abaf3c64bbae2c283b165b7100e89b071d4beb4779b6700433af00c1635e73
+  - name: request.id
+    type: String
+    description: fake.uuid4(), fresh synthetic request ID.
+    template_source: fake.uuid4(), fresh synthetic request ID.
+    example_value: 59b74f26-8874-4a6d-a75c-c55e67bf965c
+  - name: request.mount_accessor
+    type: String
+    description: Fixed "system_53409ed3".
+    template_source: Fixed "system_53409ed3".
+    example_value: system_53409ed3
+  - name: request.mount_class
+    type: String
+    description: Fixed "secret".
+    template_source: Fixed "secret".
+    example_value: secret
+  - name: request.mount_point
+    type: String
+    description: Fixed "sys/".
+    template_source: Fixed "sys/".
+    example_value: sys/
+  - name: request.mount_running_version
+    type: String
+    description: Fixed "v1.18.4+builtin.vault".
+    template_source: Fixed "v1.18.4+builtin.vault".
+    example_value: v1.18.4+builtin.vault
+  - name: request.mount_type
+    type: String
+    description: Fixed "system".
+    template_source: Fixed "system".
+    example_value: system
+  - name: request.namespace
+    type: Object
+    description: Required container.
+    template_source: Required container.
+    example_value: '{"id":"root"}'
+  - name: request.namespace.id
+    type: String
+    description: Fixed "root".
+    template_source: Fixed "root".
+    example_value: root
+  - name: request.operation
+    type: String
+    description: Fixed "update".
+    template_source: Fixed "update".
+    example_value: update
+  - name: request.path
+    type: String
+    description: Fixed "sys/audit/file".
+    template_source: Fixed "sys/audit/file".
+    example_value: sys/audit/file
+  - name: request.remote_address
+    type: String
+    description: Named device vault-client.ip_address, fixed loopback in this profile.
+    template_source: Named device vault-client.ip_address, fixed loopback in this profile.
+    example_value: 127.0.0.1
+  - name: request.remote_port
+    type: Integer
+    description: fake.pyint(min_value=49152, max_value=65535), integer local client-port subset.
+    template_source: fake.pyint(min_value=49152, max_value=65535), integer local client-port subset.
+    example_value: '62687'
+  - name: time
+    type: String
+    description: One now() through iso8601_utc, UTC with microseconds and Z.
+    template_source: One now() through iso8601_utc, UTC with microseconds and Z.
+    example_value: '2026-10-01T22:48:12.991047Z'
+  - name: type
+    type: String
+    description: Fixed "response".
+    template_source: Fixed "response".
+    example_value: response

@@ -1,0 +1,423 @@
+vendor: fortinet
+product: fortigate
+data_source: forward-traffic
+description: Historical FortiOS HTTPS close sample profile, 48 raw key=value fields, registry endpoint/MAC/NAT/policy
+  and fresh seconds clock/session/source port.
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: FortiGate historical HTTPS close
+    tags:
+    - fortigate
+    - traffic
+    - https
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Historical raw sample from the 7.6.3 reference, not current default exporter schema. Requires source-specific
+      entities: entities/fortinet/fortigate/forward-traffic.yaml; example configuration: configs/fortinet/fortigate/forward-traffic.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - An HTTPS TCP session closes.
+    frequency_notes: One event/second test rate; independent session summaries, fixed sample counters.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: 'Official reference: samples, field definitions and ID 13'
+      url: https://fortinetweb.s3.amazonaws.com/docs.fortinet.com/v2/attachments/39c2a34e-fde8-11ef-b13a-ca4255feedd9/FortiOS_7.6.3_Log_Reference.pdf
+      type: official
+    tools: []
+  fields:
+  - name: date
+    type: String
+    description: Position 1 in the native text record. Single clock through strftime(%Y-%m-%d), UTC.
+    template_source: Single clock through strftime(%Y-%m-%d), UTC.
+    field_number: 1
+    format: unquoted
+    example_value: date=2026-10-01
+    required: true
+  - name: time
+    type: String
+    description: Position 2 in the native text record. Same clock through strftime(%H:%M:%S), UTC.
+    template_source: Same clock through strftime(%H:%M:%S), UTC.
+    field_number: 2
+    format: unquoted
+    example_value: time=22:48:08
+    required: true
+  - name: logid
+    type: String
+    description: Position 3 in the native text record. Fixed "0000000013".
+    template_source: Fixed "0000000013".
+    field_number: 3
+    format: quoted
+    example_value: logid="0000000013"
+    required: true
+  - name: type
+    type: String
+    description: Position 4 in the native text record. Fixed "traffic".
+    template_source: Fixed "traffic".
+    field_number: 4
+    format: quoted
+    example_value: type="traffic"
+    required: true
+  - name: subtype
+    type: String
+    description: Position 5 in the native text record. Fixed "forward".
+    template_source: Fixed "forward".
+    field_number: 5
+    format: quoted
+    example_value: subtype="forward"
+    required: true
+  - name: level
+    type: String
+    description: Position 6 in the native text record. Fixed "notice".
+    template_source: Fixed "notice".
+    field_number: 6
+    format: quoted
+    example_value: level="notice"
+    required: true
+  - name: vd
+    type: String
+    description: Position 7 in the native text record. Fixed "vdom1".
+    template_source: Fixed "vdom1".
+    field_number: 7
+    format: quoted
+    example_value: vd="vdom1"
+    required: true
+  - name: eventtime
+    type: String
+    description: Position 8 in the native text record. Same clock through unix_timestamp then int; historical seconds
+      profile.
+    template_source: Same clock through unix_timestamp then int; historical seconds profile.
+    field_number: 8
+    format: unquoted
+    example_value: eventtime=1790894888
+    required: true
+  - name: srcip
+    type: String
+    description: Position 9 in the native text record. Selected client.ip_address.
+    template_source: Selected client.ip_address.
+    field_number: 9
+    format: unquoted
+    example_value: srcip=10.20.0.11
+    required: true
+  - name: srcname
+    type: String
+    description: Position 10 in the native text record. Same client.hostname; restricted ASCII hostname.
+    template_source: Same client.hostname; restricted ASCII hostname.
+    field_number: 10
+    format: quoted
+    example_value: srcname="workstation-02"
+    required: true
+  - name: srcport
+    type: String
+    description: Position 11 in the native text record. Faker pyint(min_value=49152, max_value=65535), selected
+      once.
+    template_source: Faker pyint(min_value=49152, max_value=65535), selected once.
+    field_number: 11
+    format: unquoted
+    example_value: srcport=65271
+    required: true
+  - name: srcintf
+    type: String
+    description: Position 12 in the native text record. Fixed "port12".
+    template_source: Fixed "port12".
+    field_number: 12
+    format: quoted
+    example_value: srcintf="port12"
+    required: true
+  - name: srcintfrole
+    type: String
+    description: Position 13 in the native text record. Fixed "undefined".
+    template_source: Fixed "undefined".
+    field_number: 13
+    format: quoted
+    example_value: srcintfrole="undefined"
+    required: true
+  - name: dstip
+    type: String
+    description: Position 14 in the native text record. Mapped server.destination_ipv4.
+    template_source: Mapped server.destination_ipv4.
+    field_number: 14
+    format: unquoted
+    example_value: dstip=198.51.100.71
+    required: true
+  - name: dstname
+    type: String
+    description: Position 15 in the native text record. Same server.destination_name.
+    template_source: Same server.destination_name.
+    field_number: 15
+    format: quoted
+    example_value: dstname="service.example.com"
+    required: true
+  - name: dstport
+    type: String
+    description: Position 16 in the native text record. Fixed 443.
+    template_source: Fixed 443.
+    field_number: 16
+    format: unquoted
+    example_value: dstport=443
+    required: true
+  - name: dstintf
+    type: String
+    description: Position 17 in the native text record. Fixed "port11".
+    template_source: Fixed "port11".
+    field_number: 17
+    format: quoted
+    example_value: dstintf="port11"
+    required: true
+  - name: dstintfrole
+    type: String
+    description: Position 18 in the native text record. Fixed "undefined".
+    template_source: Fixed "undefined".
+    field_number: 18
+    format: quoted
+    example_value: dstintfrole="undefined"
+    required: true
+  - name: poluuid
+    type: String
+    description: Position 19 in the native text record. Same server.policy_uuid, stable policy identity.
+    template_source: Same server.policy_uuid, stable policy identity.
+    field_number: 19
+    format: quoted
+    example_value: poluuid="c3c0ff0e-0e32-5d85-8a13-571898f50409"
+    required: true
+  - name: sessionid
+    type: String
+    description: Position 20 in the native text record. Faker pyint(min_value=1, max_value=4294967295).
+    template_source: Faker pyint(min_value=1, max_value=4294967295).
+    field_number: 20
+    format: unquoted
+    example_value: sessionid=1616793783
+    required: true
+  - name: proto
+    type: String
+    description: Position 21 in the native text record. Fixed 6.
+    template_source: Fixed 6.
+    field_number: 21
+    format: unquoted
+    example_value: proto=6
+    required: true
+  - name: action
+    type: String
+    description: Position 22 in the native text record. Fixed "close".
+    template_source: Fixed "close".
+    field_number: 22
+    format: quoted
+    example_value: action="close"
+    required: true
+  - name: policyid
+    type: String
+    description: Position 23 in the native text record. Fixed 1.
+    template_source: Fixed 1.
+    field_number: 23
+    format: unquoted
+    example_value: policyid=1
+    required: true
+  - name: policytype
+    type: String
+    description: Position 24 in the native text record. Fixed "policy".
+    template_source: Fixed "policy".
+    field_number: 24
+    format: quoted
+    example_value: policytype="policy"
+    required: true
+  - name: policymode
+    type: String
+    description: Position 25 in the native text record. Fixed "learn".
+    template_source: Fixed "learn".
+    field_number: 25
+    format: quoted
+    example_value: policymode="learn"
+    required: true
+  - name: service
+    type: String
+    description: Position 26 in the native text record. Fixed "HTTPS".
+    template_source: Fixed "HTTPS".
+    field_number: 26
+    format: quoted
+    example_value: service="HTTPS"
+    required: true
+  - name: dstcountry
+    type: String
+    description: Position 27 in the native text record. Fixed "United States".
+    template_source: Fixed "United States".
+    field_number: 27
+    format: quoted
+    example_value: dstcountry="United States"
+    required: true
+  - name: srccountry
+    type: String
+    description: Position 28 in the native text record. Fixed "Reserved".
+    template_source: Fixed "Reserved".
+    field_number: 28
+    format: quoted
+    example_value: srccountry="Reserved"
+    required: true
+  - name: trandisp
+    type: String
+    description: Position 29 in the native text record. Fixed "snat".
+    template_source: Fixed "snat".
+    field_number: 29
+    format: quoted
+    example_value: trandisp="snat"
+    required: true
+  - name: transip
+    type: String
+    description: Position 30 in the native text record. Same server.nat_ipv4; differs from client IP.
+    template_source: Same server.nat_ipv4; differs from client IP.
+    field_number: 30
+    format: unquoted
+    example_value: transip=10.30.0.2
+    required: true
+  - name: transport
+    type: String
+    description: Position 31 in the native text record. Same source port, preserving port during SNAT.
+    template_source: Same source port, preserving port during SNAT.
+    field_number: 31
+    format: unquoted
+    example_value: transport=65271
+    required: true
+  - name: appid
+    type: String
+    description: Position 32 in the native text record. Fixed 40568.
+    template_source: Fixed 40568.
+    field_number: 32
+    format: unquoted
+    example_value: appid=40568
+    required: true
+  - name: app
+    type: String
+    description: Position 33 in the native text record. Fixed "HTTPS.BROWSER".
+    template_source: Fixed "HTTPS.BROWSER".
+    field_number: 33
+    format: quoted
+    example_value: app="HTTPS.BROWSER"
+    required: true
+  - name: appcat
+    type: String
+    description: Position 34 in the native text record. Fixed "Web.Client".
+    template_source: Fixed "Web.Client".
+    field_number: 34
+    format: quoted
+    example_value: appcat="Web.Client"
+    required: true
+  - name: apprisk
+    type: String
+    description: Position 35 in the native text record. Fixed "medium".
+    template_source: Fixed "medium".
+    field_number: 35
+    format: quoted
+    example_value: apprisk="medium"
+    required: true
+  - name: duration
+    type: String
+    description: Position 36 in the native text record. Fixed 2.
+    template_source: Fixed 2.
+    field_number: 36
+    format: unquoted
+    example_value: duration=2
+    required: true
+  - name: sentbyte
+    type: String
+    description: Position 37 in the native text record. Fixed 1850.
+    template_source: Fixed 1850.
+    field_number: 37
+    format: unquoted
+    example_value: sentbyte=1850
+    required: true
+  - name: rcvdbyte
+    type: String
+    description: Position 38 in the native text record. Fixed 39898.
+    template_source: Fixed 39898.
+    field_number: 38
+    format: unquoted
+    example_value: rcvdbyte=39898
+    required: true
+  - name: sentpkt
+    type: String
+    description: Position 39 in the native text record. Fixed 25.
+    template_source: Fixed 25.
+    field_number: 39
+    format: unquoted
+    example_value: sentpkt=25
+    required: true
+  - name: rcvdpkt
+    type: String
+    description: Position 40 in the native text record. Fixed 37.
+    template_source: Fixed 37.
+    field_number: 40
+    format: unquoted
+    example_value: rcvdpkt=37
+    required: true
+  - name: utmaction
+    type: String
+    description: Position 41 in the native text record. Fixed "allow".
+    template_source: Fixed "allow".
+    field_number: 41
+    format: quoted
+    example_value: utmaction="allow"
+    required: true
+  - name: countapp
+    type: String
+    description: Position 42 in the native text record. Fixed 1.
+    template_source: Fixed 1.
+    field_number: 42
+    format: unquoted
+    example_value: countapp=1
+    required: true
+  - name: devtype
+    type: String
+    description: Position 43 in the native text record. Fixed "Linux PC".
+    template_source: Fixed "Linux PC".
+    field_number: 43
+    format: quoted
+    example_value: devtype="Linux PC"
+    required: true
+  - name: osname
+    type: String
+    description: Position 44 in the native text record. Fixed "Linux".
+    template_source: Fixed "Linux".
+    field_number: 44
+    format: quoted
+    example_value: osname="Linux"
+    required: true
+  - name: mastersrcmac
+    type: String
+    description: Position 45 in the native text record. Same client.mac_address.
+    template_source: Same client.mac_address.
+    field_number: 45
+    format: quoted
+    example_value: mastersrcmac="02:00:00:00:00:0b"
+    required: true
+  - name: srcmac
+    type: String
+    description: Position 46 in the native text record. Same client.mac_address.
+    template_source: Same client.mac_address.
+    field_number: 46
+    format: quoted
+    example_value: srcmac="02:00:00:00:00:0b"
+    required: true
+  - name: srcserver
+    type: String
+    description: Position 47 in the native text record. Fixed 0.
+    template_source: Fixed 0.
+    field_number: 47
+    format: unquoted
+    example_value: srcserver=0
+    required: true
+  - name: utmref
+    type: String
+    description: Position 48 in the native text record. Fixed 0-220586.
+    template_source: Fixed 0-220586.
+    field_number: 48
+    format: unquoted
+    example_value: utmref=0-220586
+    required: true

@@ -1,0 +1,4 @@
+vendor: github
+product: enterprise-cloud
+name: GitHub Enterprise Cloud
+description: Sample-backed GitHub Enterprise Cloud event profiles with source-specific MELTr entity fixtures.

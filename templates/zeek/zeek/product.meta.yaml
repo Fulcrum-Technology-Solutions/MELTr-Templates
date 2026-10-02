@@ -1,0 +1,4 @@
+vendor: zeek
+product: zeek
+name: Zeek
+description: Sample-backed Zeek event profiles with source-specific MELTr entity fixtures.

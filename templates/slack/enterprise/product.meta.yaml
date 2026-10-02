@@ -1,0 +1,4 @@
+vendor: slack
+product: enterprise
+name: Slack Enterprise
+description: Sample-backed Slack Enterprise event profiles with source-specific MELTr entity fixtures.

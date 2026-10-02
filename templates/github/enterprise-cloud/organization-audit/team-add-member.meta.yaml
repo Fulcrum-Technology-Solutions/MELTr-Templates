@@ -1,0 +1,82 @@
+vendor: github
+product: enterprise-cloud
+data_source: organization-audit
+description: GitHub team.add_member audit event with registry-backed actor, target, organization and team; fresh
+  epoch-millisecond timestamps and synthetic document ID.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: GitHub team member added
+    tags:
+    - github
+    - audit
+    - team
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Independent team.add_member snapshots matching the documented organization audit REST response. Requires
+      source-specific entities: entities/github/enterprise-cloud/organization-audit.yaml; example configuration:
+      configs/github/enterprise-cloud/organization-audit.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A user is added to a team.
+    frequency_notes: One event/second for local testing; five-event example burst. No stateful membership lifecycle.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Get the audit log for an organization
+      url: https://docs.github.com/en/enterprise-cloud@latest/rest/orgs/orgs#get-the-audit-log-for-an-organization
+      type: official
+    tools: []
+  fields:
+  - name: '@timestamp'
+    type: Integer
+    description: One `now()` clock, Unix seconds through `unix_timestamp`, integer seconds × 1000 plus `clock.microsecond
+      // 1000`. Epoch milliseconds, independent of local timezone.
+    template_source: One `now()` clock, Unix seconds through `unix_timestamp`, integer seconds × 1000 plus `clock.microsecond
+      // 1000`. Epoch milliseconds, independent of local timezone.
+    example_value: '1790894888166'
+  - name: created_at
+    type: Integer
+    description: Reuses the exact same millisecond value.
+    template_source: Reuses the exact same millisecond value.
+    example_value: '1790894888166'
+  - name: action
+    type: String
+    description: Fixed documented value `team.add_member`.
+    template_source: Fixed documented value `team.add_member`.
+    example_value: team.add_member
+  - name: actor
+    type: String
+    description: '`github_login` of the user selected once by `registry.get_random_user()`.'
+    template_source: '`github_login` of the user selected once by `registry.get_random_user()`.'
+    example_value: ben-rivera
+  - name: user
+    type: String
+    description: '`github_login` of `registry.get_user(actor[''github_target_username''])`; distinct from actor.'
+    template_source: '`github_login` of `registry.get_user(actor[''github_target_username''])`; distinct from actor.'
+    example_value: casey-patel
+  - name: org
+    type: String
+    description: '`registry.get_organization()[''github_org'']`.'
+    template_source: '`registry.get_organization()[''github_org'']`.'
+    example_value: example-corp
+  - name: team
+    type: String
+    description: Same organization login + `/` + `registry.get_service('github-audit-team')['github_team_slug']`.
+    template_source: Same organization login + `/` + `registry.get_service('github-audit-team')['github_team_slug']`.
+    example_value: example-corp/platform
+  - name: _document_id
+    type: String
+    description: Faker `fake.lexify` with 22 placeholders and an explicit URL-safe alphabet, sampled once per event.
+      Opaque synthetic identifier, not an implementation of GitHub's ID algorithm; global uniqueness is not guaranteed.
+    template_source: Faker `fake.lexify` with 22 placeholders and an explicit URL-safe alphabet, sampled once per
+      event. Opaque synthetic identifier, not an implementation of GitHub's ID algorithm; global uniqueness is not
+      guaranteed.
+    example_value: -W79nFuhFuJWwhvAxBwEMC

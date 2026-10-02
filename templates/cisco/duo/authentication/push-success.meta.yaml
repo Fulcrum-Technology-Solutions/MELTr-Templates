@@ -1,0 +1,380 @@
+vendor: cisco
+product: duo
+data_source: authentication
+description: Duo successful push authentication; registry-backed user, access endpoint, phone and application with
+  fresh timestamps and UUIDs.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Cisco Duo push success
+    tags:
+    - cisco
+    - duo
+    - authentication
+    - mfa
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'One successful duo_push authentication with the documented v2 default-format assessment context. Requires
+      source-specific entities: entities/cisco/duo/authentication.yaml; example configuration: configs/cisco/duo/authentication.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A user approves Duo Push authentication.
+    frequency_notes: Local test rate one event/second; five-event example burst. Each event is an independent transaction/session.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Authentication Logs v2 response and example
+      url: https://duo.com/docs/adminapi#authentication-logs
+      type: official
+    tools: []
+  fields:
+  - name: access_device
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"browser":"Chrome","browser_version":"67.0.3396.99","epkey":"EP000000000000000002","flash_version":"uninstalled","hostname":null,"ip":"192.0.2.11","is_encryption_enabled":true,"is_firewall_enabled":true,"is_password_set":true,"java_version":"uninstalled","location":{"city":"Ann
+      Arbor","country":"United States","state":"Michigan"},"os":"Mac OS X","os_version":"10.14.1","security_agents":[]}'
+  - name: access_device.browser
+    type: String
+    description: 'Fixed scenario value: `"Chrome"`.'
+    template_source: 'Fixed scenario value: `"Chrome"`.'
+    example_value: Chrome
+  - name: access_device.browser_version
+    type: String
+    description: 'Fixed scenario value: `"67.0.3396.99"`.'
+    template_source: 'Fixed scenario value: `"67.0.3396.99"`.'
+    example_value: 67.0.3396.99
+  - name: access_device.epkey
+    type: String
+    description: '`access[''duo_key'']`'
+    template_source: '`access[''duo_key'']`'
+    example_value: EP000000000000000002
+  - name: access_device.flash_version
+    type: String
+    description: 'Fixed scenario value: `"uninstalled"`.'
+    template_source: 'Fixed scenario value: `"uninstalled"`.'
+    example_value: uninstalled
+  - name: access_device.hostname
+    type: 'Null'
+    description: 'Fixed scenario value: `null`.'
+    template_source: 'Fixed scenario value: `null`.'
+    example_value: 'null'
+  - name: access_device.ip
+    type: String
+    description: '`access[''ip_address'']`'
+    template_source: '`access[''ip_address'']`'
+    example_value: 192.0.2.11
+  - name: access_device.is_encryption_enabled
+    type: Boolean
+    description: 'Fixed scenario value: `true`.'
+    template_source: 'Fixed scenario value: `true`.'
+    example_value: 'true'
+  - name: access_device.is_firewall_enabled
+    type: Boolean
+    description: 'Fixed scenario value: `true`.'
+    template_source: 'Fixed scenario value: `true`.'
+    example_value: 'true'
+  - name: access_device.is_password_set
+    type: Boolean
+    description: 'Fixed scenario value: `true`.'
+    template_source: 'Fixed scenario value: `true`.'
+    example_value: 'true'
+  - name: access_device.java_version
+    type: String
+    description: 'Fixed scenario value: `"uninstalled"`.'
+    template_source: 'Fixed scenario value: `"uninstalled"`.'
+    example_value: uninstalled
+  - name: access_device.location
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"city":"Ann Arbor","country":"United States","state":"Michigan"}'
+  - name: access_device.location.city
+    type: String
+    description: 'Fixed scenario value: `"Ann Arbor"`.'
+    template_source: 'Fixed scenario value: `"Ann Arbor"`.'
+    example_value: Ann Arbor
+  - name: access_device.location.country
+    type: String
+    description: 'Fixed scenario value: `"United States"`.'
+    template_source: 'Fixed scenario value: `"United States"`.'
+    example_value: United States
+  - name: access_device.location.state
+    type: String
+    description: 'Fixed scenario value: `"Michigan"`.'
+    template_source: 'Fixed scenario value: `"Michigan"`.'
+    example_value: Michigan
+  - name: access_device.os
+    type: String
+    description: 'Fixed scenario value: `"Mac OS X"`.'
+    template_source: 'Fixed scenario value: `"Mac OS X"`.'
+    example_value: Mac OS X
+  - name: access_device.os_version
+    type: String
+    description: 'Fixed scenario value: `"10.14.1"`.'
+    template_source: 'Fixed scenario value: `"10.14.1"`.'
+    example_value: 10.14.1
+  - name: access_device.security_agents
+    type: Array
+    description: 'Fixed scenario value: `[]`.'
+    template_source: 'Fixed scenario value: `[]`.'
+    example_value: '[]'
+  - name: adaptive_trust_assessments
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"more_secure_auth":{"detected_attack_detectors":["USER_MARKED_FRAUD"],"features_version":"3.0","model_version":"2022.07.19.001","policy_enabled":true,"reason":"Low
+      level of trust; detection of one or more known attack patterns","trust_level":"LOW"},"remember_me":{"features_version":"3.0","model_version":"2022.07.19.001","policy_enabled":false,"reason":"Known
+      Access IP","trust_level":"NORMAL"}}'
+  - name: adaptive_trust_assessments.more_secure_auth
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"detected_attack_detectors":["USER_MARKED_FRAUD"],"features_version":"3.0","model_version":"2022.07.19.001","policy_enabled":true,"reason":"Low
+      level of trust; detection of one or more known attack patterns","trust_level":"LOW"}'
+  - name: adaptive_trust_assessments.more_secure_auth.detected_attack_detectors
+    type: Array
+    description: 'Fixed scenario value: `["USER_MARKED_FRAUD"]`.'
+    template_source: 'Fixed scenario value: `["USER_MARKED_FRAUD"]`.'
+    example_value: '["USER_MARKED_FRAUD"]'
+  - name: adaptive_trust_assessments.more_secure_auth.features_version
+    type: String
+    description: 'Fixed scenario value: `"3.0"`.'
+    template_source: 'Fixed scenario value: `"3.0"`.'
+    example_value: '3.0'
+  - name: adaptive_trust_assessments.more_secure_auth.model_version
+    type: String
+    description: 'Fixed scenario value: `"2022.07.19.001"`.'
+    template_source: 'Fixed scenario value: `"2022.07.19.001"`.'
+    example_value: 2022.07.19.001
+  - name: adaptive_trust_assessments.more_secure_auth.policy_enabled
+    type: Boolean
+    description: 'Fixed scenario value: `true`.'
+    template_source: 'Fixed scenario value: `true`.'
+    example_value: 'true'
+  - name: adaptive_trust_assessments.more_secure_auth.reason
+    type: String
+    description: 'Fixed scenario value: `"Low level of trust; detection of one or more known attack patterns"`.'
+    template_source: 'Fixed scenario value: `"Low level of trust; detection of one or more known attack patterns"`.'
+    example_value: Low level of trust; detection of one or more known attack patterns
+  - name: adaptive_trust_assessments.more_secure_auth.trust_level
+    type: String
+    description: 'Fixed scenario value: `"LOW"`.'
+    template_source: 'Fixed scenario value: `"LOW"`.'
+    example_value: LOW
+  - name: adaptive_trust_assessments.remember_me
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"features_version":"3.0","model_version":"2022.07.19.001","policy_enabled":false,"reason":"Known
+      Access IP","trust_level":"NORMAL"}'
+  - name: adaptive_trust_assessments.remember_me.features_version
+    type: String
+    description: 'Fixed scenario value: `"3.0"`.'
+    template_source: 'Fixed scenario value: `"3.0"`.'
+    example_value: '3.0'
+  - name: adaptive_trust_assessments.remember_me.model_version
+    type: String
+    description: 'Fixed scenario value: `"2022.07.19.001"`.'
+    template_source: 'Fixed scenario value: `"2022.07.19.001"`.'
+    example_value: 2022.07.19.001
+  - name: adaptive_trust_assessments.remember_me.policy_enabled
+    type: Boolean
+    description: 'Fixed scenario value: `false`.'
+    template_source: 'Fixed scenario value: `false`.'
+    example_value: 'false'
+  - name: adaptive_trust_assessments.remember_me.reason
+    type: String
+    description: 'Fixed scenario value: `"Known Access IP"`.'
+    template_source: 'Fixed scenario value: `"Known Access IP"`.'
+    example_value: Known Access IP
+  - name: adaptive_trust_assessments.remember_me.trust_level
+    type: String
+    description: 'Fixed scenario value: `"NORMAL"`.'
+    template_source: 'Fixed scenario value: `"NORMAL"`.'
+    example_value: NORMAL
+  - name: alias
+    type: String
+    description: 'Fixed scenario value: `""`.'
+    template_source: 'Fixed scenario value: `""`.'
+    example_value: ''
+  - name: application
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"destination_name":"Microsoft 365","key":"DIE7E7FA079778E781C9","name":"Example Corp IdP"}'
+  - name: application.destination_name
+    type: String
+    description: '`app[''duo_destination'']`'
+    template_source: '`app[''duo_destination'']`'
+    example_value: Microsoft 365
+  - name: application.key
+    type: String
+    description: '`app[''duo_key'']`'
+    template_source: '`app[''duo_key'']`'
+    example_value: DIE7E7FA079778E781C9
+  - name: application.name
+    type: String
+    description: '`app[''duo_name'']`'
+    template_source: '`app[''duo_name'']`'
+    example_value: Example Corp IdP
+  - name: auth_device
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"ip":"10.20.0.11","key":"DP000000000000000002","location":{"city":"Ann Arbor","country":"United
+      States","state":"Michigan"},"name":"Ben Rivera enrolled phone"}'
+  - name: auth_device.ip
+    type: String
+    description: '`phone[''ip_address'']`'
+    template_source: '`phone[''ip_address'']`'
+    example_value: 10.20.0.11
+  - name: auth_device.key
+    type: String
+    description: '`phone[''duo_key'']`'
+    template_source: '`phone[''duo_key'']`'
+    example_value: DP000000000000000002
+  - name: auth_device.location
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"city":"Ann Arbor","country":"United States","state":"Michigan"}'
+  - name: auth_device.location.city
+    type: String
+    description: 'Fixed scenario value: `"Ann Arbor"`.'
+    template_source: 'Fixed scenario value: `"Ann Arbor"`.'
+    example_value: Ann Arbor
+  - name: auth_device.location.country
+    type: String
+    description: 'Fixed scenario value: `"United States"`.'
+    template_source: 'Fixed scenario value: `"United States"`.'
+    example_value: United States
+  - name: auth_device.location.state
+    type: String
+    description: 'Fixed scenario value: `"Michigan"`.'
+    template_source: 'Fixed scenario value: `"Michigan"`.'
+    example_value: Michigan
+  - name: auth_device.name
+    type: String
+    description: '`phone[''duo_name'']`'
+    template_source: '`phone[''duo_name'']`'
+    example_value: Ben Rivera enrolled phone
+  - name: email
+    type: String
+    description: '`user[''email'']`'
+    template_source: '`user[''email'']`'
+    example_value: ben.rivera@example.com
+  - name: event_type
+    type: String
+    description: 'Fixed scenario value: `"authentication"`.'
+    template_source: 'Fixed scenario value: `"authentication"`.'
+    example_value: authentication
+  - name: factor
+    type: String
+    description: 'Fixed scenario value: `"duo_push"`.'
+    template_source: 'Fixed scenario value: `"duo_push"`.'
+    example_value: duo_push
+  - name: isotimestamp
+    type: String
+    description: '`clock | iso8601_utc`'
+    template_source: '`clock | iso8601_utc`'
+    example_value: '2026-10-01T22:47:50.708880Z'
+  - name: ood_software
+    type: 'Null'
+    description: 'Fixed scenario value: `null`.'
+    template_source: 'Fixed scenario value: `null`.'
+    example_value: 'null'
+  - name: passport_assessment
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"is_supported":false,"reason":"absent_health_report"}'
+  - name: passport_assessment.is_supported
+    type: Boolean
+    description: 'Fixed scenario value: `false`.'
+    template_source: 'Fixed scenario value: `false`.'
+    example_value: 'false'
+  - name: passport_assessment.reason
+    type: String
+    description: 'Fixed scenario value: `"absent_health_report"`.'
+    template_source: 'Fixed scenario value: `"absent_health_report"`.'
+    example_value: absent_health_report
+  - name: reason
+    type: String
+    description: 'Fixed scenario value: `"user_approved"`.'
+    template_source: 'Fixed scenario value: `"user_approved"`.'
+    example_value: user_approved
+  - name: result
+    type: String
+    description: 'Fixed scenario value: `"success"`.'
+    template_source: 'Fixed scenario value: `"success"`.'
+    example_value: success
+  - name: timestamp
+    type: Integer
+    description: '`(clock | unix_timestamp) | int`'
+    template_source: '`(clock | unix_timestamp) | int`'
+    example_value: '1790894870'
+  - name: trusted_endpoint_status
+    type: String
+    description: 'Fixed scenario value: `"not trusted"`.'
+    template_source: 'Fixed scenario value: `"not trusted"`.'
+    example_value: not trusted
+  - name: trusted_session_info
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"trusted_session_uuid":"7a11005a-772a-46b9-a05e-50b67def9ca3"}'
+  - name: trusted_session_info.trusted_session_uuid
+    type: String
+    description: '`fake.uuid4()`'
+    template_source: '`fake.uuid4()`'
+    example_value: 7a11005a-772a-46b9-a05e-50b67def9ca3
+  - name: txid
+    type: String
+    description: '`fake.uuid4()`'
+    template_source: '`fake.uuid4()`'
+    example_value: 290ae120-3f23-4cdf-9b06-c18197b38bd4
+  - name: user
+    type: Object
+    description: Object containing the fields below.
+    template_source: Object containing the fields below.
+    example_value: '{"groups":["Example Employees","Example Headquarters"],"key":"DU4E8C7F6514E98DFA4D","name":"ben.rivera@example.com"}'
+  - name: user.groups
+    type: Array
+    description: '`user[''duo_groups'']`'
+    template_source: '`user[''duo_groups'']`'
+    example_value: '["Example Employees","Example Headquarters"]'
+  - name: user.key
+    type: String
+    description: '`user[''duo_key'']`'
+    template_source: '`user[''duo_key'']`'
+    example_value: DU4E8C7F6514E98DFA4D
+  - name: user.name
+    type: String
+    description: '`user[''email'']`'
+    template_source: '`user[''email'']`'
+    example_value: ben.rivera@example.com
+  - name: adaptive_trust_assessments.more_secure_auth.detected_attack_detectors[0]
+    type: String
+    description: 'Fixed scenario value: `["USER_MARKED_FRAUD"]`. This field is the adaptive_trust_assessments.more_secure_auth.detected_attack_detectors[0]
+      member.'
+    template_source: 'Fixed scenario value: `["USER_MARKED_FRAUD"]`.'
+    example_value: USER_MARKED_FRAUD
+  - name: user.groups[0]
+    type: String
+    description: '`user[''duo_groups'']` This field is the user.groups[0] member.'
+    template_source: '`user[''duo_groups'']`'
+    example_value: Example Employees
+  - name: user.groups[1]
+    type: String
+    description: '`user[''duo_groups'']` This field is the user.groups[1] member.'
+    template_source: '`user[''duo_groups'']`'
+    example_value: Example Headquarters

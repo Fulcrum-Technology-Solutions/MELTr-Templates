@@ -1,0 +1,156 @@
+vendor: oisf
+product: suricata
+data_source: eve-alert
+description: Pinned suspicious HTTP POST alert with registry client/destination pairs, fresh timestamps and synthetic
+  flow IDs/source ports.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Suricata suspicious HTTP POST
+    tags:
+    - suricata
+    - eve
+    - alert
+    - http
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Compact PCAP-oriented documentation example; signature 2018358 revision 10. Requires source-specific
+      entities: entities/oisf/suricata/eve-alert.yaml; example configuration: configs/oisf/suricata/eve-alert.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - The pinned suspicious HTTP POST signature alerts.
+    frequency_notes: One event/second local test rate; five-event burst. Independent PCAP/flow snapshots, not a
+      continuous packet counter.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Suricata 8.0.6 EVE introductory example
+      url: https://docs.suricata.io/en/suricata-8.0.6/output/eve/eve-json-format.html
+      type: official
+    tools: []
+  fields:
+  - name: timestamp
+    type: String
+    description: One `now()` value through MELTr `iso8601_utc`; UTC Z with microseconds. Original whole-second Z
+      samples remain valid.
+    template_source: One `now()` value through MELTr `iso8601_utc`; UTC Z with microseconds. Original whole-second
+      Z samples remain valid.
+    example_value: '2026-10-01T22:48:14.717331Z'
+  - name: flow_id
+    type: Integer
+    description: Faker `fake.pyint(min_value=100000000000000, max_value=999999999999999)` once per event. Local
+      15-digit synthetic range, not Suricata's ID algorithm.
+    template_source: Faker `fake.pyint(min_value=100000000000000, max_value=999999999999999)` once per event. Local
+      15-digit synthetic range, not Suricata's ID algorithm.
+    example_value: '523833780591779'
+  - name: pcap_cnt
+    type: Integer
+    description: Fixed `53381`, the independent example's packet position.
+    template_source: Fixed `53381`, the independent example's packet position.
+    example_value: '53381'
+  - name: event_type
+    type: String
+    description: Fixed `alert`.
+    template_source: Fixed `alert`.
+    example_value: alert
+  - name: src_ip
+    type: String
+    description: Selected registry client device's `ip_address`.
+    template_source: Selected registry client device's `ip_address`.
+    example_value: 10.20.0.11
+  - name: src_port
+    type: Integer
+    description: Faker `fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port test range, not a universal
+      client-port restriction.
+    template_source: Faker `fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port test range, not
+      a universal client-port restriction.
+    example_value: '64405'
+  - name: dest_ip
+    type: String
+    description: Mapped HTTP service's `suricata_dest_ip`.
+    template_source: Mapped HTTP service's `suricata_dest_ip`.
+    example_value: 198.51.100.21
+  - name: dest_port
+    type: Integer
+    description: Same service's `port`, required to be 80 in this scenario.
+    template_source: Same service's `port`, required to be 80 in this scenario.
+    example_value: '80'
+  - name: proto
+    type: String
+    description: Fixed `TCP`.
+    template_source: Fixed `TCP`.
+    example_value: TCP
+  - name: metadata
+    type: Object
+    description: Contains only `flowbits`.
+    template_source: Contains only `flowbits`.
+    example_value: '{"flowbits":["http.dottedquadhost"]}'
+  - name: metadata.flowbits
+    type: Array
+    description: Fixed single value `http.dottedquadhost`.
+    template_source: Fixed single value `http.dottedquadhost`.
+    example_value: '["http.dottedquadhost"]'
+  - name: tx_id
+    type: Integer
+    description: Fixed `4`, the independent flow example's transaction position.
+    template_source: Fixed `4`, the independent flow example's transaction position.
+    example_value: '4'
+  - name: alert
+    type: Object
+    description: Contains exactly the signature fields below.
+    template_source: Contains exactly the signature fields below.
+    example_value: '{"action":"allowed","category":"Potentially Bad Traffic","gid":1,"rev":10,"severity":2,"signature":"ET
+      HUNTING GENERIC SUSPICIOUS POST to Dotted Quad with Fake Browser 1","signature_id":2018358}'
+  - name: alert.action
+    type: String
+    description: Fixed `allowed`.
+    template_source: Fixed `allowed`.
+    example_value: allowed
+  - name: alert.gid
+    type: Integer
+    description: Fixed `1`.
+    template_source: Fixed `1`.
+    example_value: '1'
+  - name: alert.signature_id
+    type: Integer
+    description: Fixed `2018358`.
+    template_source: Fixed `2018358`.
+    example_value: '2018358'
+  - name: alert.rev
+    type: Integer
+    description: Fixed `10`.
+    template_source: Fixed `10`.
+    example_value: '10'
+  - name: alert.signature
+    type: String
+    description: Fixed `ET HUNTING GENERIC SUSPICIOUS POST to Dotted Quad with Fake Browser 1`.
+    template_source: Fixed `ET HUNTING GENERIC SUSPICIOUS POST to Dotted Quad with Fake Browser 1`.
+    example_value: ET HUNTING GENERIC SUSPICIOUS POST to Dotted Quad with Fake Browser 1
+  - name: alert.category
+    type: String
+    description: Fixed `Potentially Bad Traffic`.
+    template_source: Fixed `Potentially Bad Traffic`.
+    example_value: Potentially Bad Traffic
+  - name: alert.severity
+    type: Integer
+    description: Fixed `2`.
+    template_source: Fixed `2`.
+    example_value: '2'
+  - name: app_proto
+    type: String
+    description: Fixed `http`.
+    template_source: Fixed `http`.
+    example_value: http
+  - name: metadata.flowbits[0]
+    type: String
+    description: Fixed single value `http.dottedquadhost`. This field is the metadata.flowbits[0] member.
+    template_source: Fixed single value `http.dottedquadhost`.
+    example_value: http.dottedquadhost

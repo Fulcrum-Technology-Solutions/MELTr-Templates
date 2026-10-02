@@ -1,0 +1,4 @@
+vendor: falco
+product: falco
+name: Falco
+description: Sample-backed Falco event profiles with source-specific MELTr entity fixtures.

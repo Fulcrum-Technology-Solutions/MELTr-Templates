@@ -1,0 +1,4 @@
+vendor: netgate
+product: pfsense
+name: pfSense
+description: Sample-backed pfSense event profiles with source-specific MELTr entity fixtures.

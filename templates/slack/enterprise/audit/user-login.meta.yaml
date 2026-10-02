@@ -1,0 +1,161 @@
+vendor: slack
+product: enterprise
+data_source: audit
+description: 'Slack Audit API v1 user_login: identical registry actor/entity, enterprise context, mapped client,
+  fresh UUID/session ID and Unix seconds.'
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Slack Enterprise user login
+    tags:
+    - slack
+    - audit
+    - authentication
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'One unwrapped user_login audit entry with enterprise context. Requires source-specific entities: entities/slack/enterprise/audit.yaml;
+      example configuration: configs/slack/enterprise/audit.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A user logs in.
+    frequency_notes: One event/second local test rate; independent sessions, no session lifecycle.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Complete event and actor/entity/context definitions
+      url: https://docs.slack.dev/admins/audit-logs-api/
+      type: official
+    tools: []
+  fields:
+  - name: id
+    type: String
+    description: '`fake.uuid4()`, new synthetic event UUID.'
+    template_source: '`fake.uuid4()`, new synthetic event UUID.'
+    example_value: 7a11005a-772a-46b9-a05e-50b67def9ca3
+  - name: date_create
+    type: Integer
+    description: One `now()` through `unix_timestamp` then `int`, Unix seconds.
+    template_source: One `now()` through `unix_timestamp` then `int`, Unix seconds.
+    example_value: '1790894900'
+  - name: action
+    type: String
+    description: Fixed `user_login`.
+    template_source: Fixed `user_login`.
+    example_value: user_login
+  - name: actor
+    type: Object
+    description: Each contains type and user.
+    template_source: Each contains type and user.
+    example_value: '{"type":"user","user":{"email":"ben.rivera@example.com","id":"W123456781","name":"Ben Rivera"}}'
+  - name: entity
+    type: Object
+    description: Each contains type and user.
+    template_source: Each contains type and user.
+    example_value: '{"type":"user","user":{"email":"ben.rivera@example.com","id":"W123456781","name":"Ben Rivera"}}'
+  - name: actor.type
+    type: String
+    description: Fixed `user`.
+    template_source: Fixed `user`.
+    example_value: user
+  - name: entity.type
+    type: String
+    description: Fixed `user`.
+    template_source: Fixed `user`.
+    example_value: user
+  - name: actor.user
+    type: Object
+    description: Same identity object, constructed once from selected registry user.
+    template_source: Same identity object, constructed once from selected registry user.
+    example_value: '{"email":"ben.rivera@example.com","id":"W123456781","name":"Ben Rivera"}'
+  - name: entity.user
+    type: Object
+    description: Same identity object, constructed once from selected registry user.
+    template_source: Same identity object, constructed once from selected registry user.
+    example_value: '{"email":"ben.rivera@example.com","id":"W123456781","name":"Ben Rivera"}'
+  - name: actor.user.id
+    type: String
+    description: User `slack_id`; local W plus 8–10 uppercase alphanumeric characters.
+    template_source: User `slack_id`; local W plus 8–10 uppercase alphanumeric characters.
+    example_value: W123456781
+  - name: entity.user.id
+    type: String
+    description: User `slack_id`; local W plus 8–10 uppercase alphanumeric characters.
+    template_source: User `slack_id`; local W plus 8–10 uppercase alphanumeric characters.
+    example_value: W123456781
+  - name: actor.user.name
+    type: String
+    description: User `full_name`; nonempty, JSON-escaped.
+    template_source: User `full_name`; nonempty, JSON-escaped.
+    example_value: Ben Rivera
+  - name: entity.user.name
+    type: String
+    description: User `full_name`; nonempty, JSON-escaped.
+    template_source: User `full_name`; nonempty, JSON-escaped.
+    example_value: Ben Rivera
+  - name: actor.user.email
+    type: String
+    description: User `email`; nonempty email format.
+    template_source: User `email`; nonempty email format.
+    example_value: ben.rivera@example.com
+  - name: entity.user.email
+    type: String
+    description: User `email`; nonempty email format.
+    template_source: User `email`; nonempty email format.
+    example_value: ben.rivera@example.com
+  - name: context
+    type: Object
+    description: Location, ua, session_id and ip_address.
+    template_source: Location, ua, session_id and ip_address.
+    example_value: '{"ip_address":"192.0.2.51","location":{"domain":"example-corp","id":"E0123456789","name":"Example
+      Corp","type":"enterprise"},"session_id":"913203824962","ua":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6)
+      AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36"}'
+  - name: context.location
+    type: Object
+    description: Four fields below from one organization.
+    template_source: Four fields below from one organization.
+    example_value: '{"domain":"example-corp","id":"E0123456789","name":"Example Corp","type":"enterprise"}'
+  - name: context.location.type
+    type: String
+    description: Fixed `enterprise`.
+    template_source: Fixed `enterprise`.
+    example_value: enterprise
+  - name: context.location.id
+    type: String
+    description: Organization `slack_enterprise_id`; local E plus 8–10 uppercase alphanumeric characters.
+    template_source: Organization `slack_enterprise_id`; local E plus 8–10 uppercase alphanumeric characters.
+    example_value: E0123456789
+  - name: context.location.name
+    type: String
+    description: Organization `name`; nonempty.
+    template_source: Organization `name`; nonempty.
+    example_value: Example Corp
+  - name: context.location.domain
+    type: String
+    description: Organization `slack_domain`; local lowercase hyphenated slug, distinct from email domain.
+    template_source: Organization `slack_domain`; local lowercase hyphenated slug, distinct from email domain.
+    example_value: example-corp
+  - name: context.ua
+    type: String
+    description: Named service `slack-browser` attribute `user_agent`, constrained to published browser string.
+    template_source: Named service `slack-browser` attribute `user_agent`, constrained to published browser string.
+    example_value: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186
+      Safari/537.36
+  - name: context.session_id
+    type: String
+    description: '`fake.numerify(text=''############'')`, a new 12-digit local string subset matching sample shape;
+      leading zeros retained.'
+    template_source: '`fake.numerify(text=''############'')`, a new 12-digit local string subset matching sample
+      shape; leading zeros retained.'
+    example_value: '913203824962'
+  - name: context.ip_address
+    type: String
+    description: Mapped client device `ip_address`.
+    template_source: Mapped client device `ip_address`.
+    example_value: 192.0.2.51
