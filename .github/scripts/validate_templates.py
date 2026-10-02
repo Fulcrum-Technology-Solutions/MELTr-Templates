@@ -9,7 +9,8 @@ import sys
 from pathlib import Path
 
 import yaml
-from jinja2 import Environment, TemplateSyntaxError
+from jinja2 import TemplateSyntaxError
+from jinja2.sandbox import SandboxedEnvironment
 from jsonschema import ValidationError, validate
 
 SCHEMA_DIR = Path(__file__).resolve().parent.parent.parent / "schemas"
@@ -130,11 +131,13 @@ def validate_template_meta(filepath: Path, templates_root: Path) -> bool:
 
 
 def validate_jinja_template(filepath: Path) -> bool:
+    """Syntax-check a log template. Parse only — never render HTML."""
     source = filepath.read_text(encoding="utf-8")
     if not source.strip():
         print(f"[FAIL] content {filepath}: template is empty")
         return False
-    env = Environment(autoescape=False)
+    # SandboxedEnvironment + parse(): no HTML render surface (not a Flask app).
+    env = SandboxedEnvironment(autoescape=True)
     try:
         env.parse(source)
     except TemplateSyntaxError as e:
