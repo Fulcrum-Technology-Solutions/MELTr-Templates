@@ -1,18 +1,18 @@
 {
-  "name": "zeek-zeek",
-  "version": "1.0.0",
-  "description": "Sample-backed Zeek events with source-specific entities.",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "zeek"
-  ],
-  "templates": [
-    "connection/http-completed",
-    "dns/a-query-success"
-  ]
+    "name": "zeek-zeek",
+    "version": "1.1.0",
+    "description": "Sample-backed Zeek events with source-specific entities.",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "zeek"
+    ],
+    "templates": [
+        "connection/http-completed",
+        "dns/a-query-success"
+    ]
 }
