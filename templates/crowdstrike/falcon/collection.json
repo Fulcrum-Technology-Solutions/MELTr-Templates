@@ -1,30 +1,30 @@
 {
-  "name": "crowdstrike-falcon",
-  "version": "1.3.0",
-  "description": "CrowdStrike Falcon Platform log templates for API audit events and security telemetry",
-  "maintainers": [
-    {
-      "name": "John Owen",
-      "email": "jowen@ftsc.com"
-    }
-  ],
-  "tags": [
-    "cybersecurity",
-    "endpoint-protection",
-    "api-audit",
-    "threat-intelligence",
-    "cloud-security"
-  ],
-  "templates": [
-    "api-activity-audit/logged-reference-request",
-    "api/falcon_api_events",
-    "authentication-audit/login-success",
-    "authentication-audit/password-change",
-    "authentication-audit/password-reset-request",
-    "authentication-audit/two-factor-success",
-    "remote-response-session/session-end",
-    "remote-response-session/session-start",
-    "user-activity-audit/group-member-added",
-    "user-activity-audit/legacy-detection-assigned"
-  ]
+    "name": "crowdstrike-falcon",
+    "version": "1.3.1",
+    "description": "CrowdStrike Falcon Platform log templates for API audit events and security telemetry",
+    "maintainers": [
+        {
+            "name": "John Owen",
+            "email": "jowen@ftsc.com"
+        }
+    ],
+    "tags": [
+        "cybersecurity",
+        "endpoint-protection",
+        "api-audit",
+        "threat-intelligence",
+        "cloud-security"
+    ],
+    "templates": [
+        "api-activity-audit/logged-reference-request",
+        "api/falcon_api_events",
+        "authentication-audit/login-success",
+        "authentication-audit/password-change",
+        "authentication-audit/password-reset-request",
+        "authentication-audit/two-factor-success",
+        "remote-response-session/session-end",
+        "remote-response-session/session-start",
+        "user-activity-audit/group-member-added",
+        "user-activity-audit/legacy-detection-assigned"
+    ]
 }
