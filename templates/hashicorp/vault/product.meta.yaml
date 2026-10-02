@@ -1,0 +1,4 @@
+vendor: hashicorp
+product: vault
+name: Vault
+description: Sample-backed Vault event profiles with source-specific MELTr entity fixtures.

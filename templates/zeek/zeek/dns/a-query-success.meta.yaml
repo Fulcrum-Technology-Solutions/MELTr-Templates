@@ -1,0 +1,183 @@
+vendor: zeek
+product: zeek
+data_source: dns
+description: Zeek 8.0.0 dns.log successful UDP IN/A response, one IPv4 answer, registry endpoints and question/answer,
+  fresh Unix time and Faker IDs/port.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Zeek successful DNS A query
+    tags:
+    - zeek
+    - dns
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'One independent successful UDP IN/A exchange with one answer. Requires source-specific entities: entities/zeek/zeek/dns.yaml;
+      example configuration: configs/zeek/zeek/dns.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A recursive DNS query returns one A record.
+    frequency_notes: One event/second test rate; no connection reuse, conn.log correlation or packet simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Complete record and DNS field reference
+      url: https://docs.zeek.org/en/v8.0.0/logs/dns.html
+      type: official
+    - title: DNS::Info field definitions
+      url: https://docs.zeek.org/en/v8.0.0/scripts/base/protocols/dns/main.zeek.html#type-DNS::Info
+      type: official
+    - title: UID character alphabet
+      url: https://github.com/zeek/zeek/blob/v8.0.0/src/UID.h
+      type: official
+    tools: []
+  fields:
+  - name: ts
+    type: Number
+    description: 'One `now()` via `unix_timestamp`, minus rtt: earliest request time in Unix seconds. Microsecond-scale
+      floating representation.'
+    template_source: 'One `now()` via `unix_timestamp`, minus rtt: earliest request time in Unix seconds. Microsecond-scale
+      floating representation.'
+    example_value: '1790894904.750061'
+  - name: uid
+    type: String
+    description: '`C` + `fake.hexify(text=''^^^^^^^^^^^^^^^^'')`; 16 random lowercase hex characters, a local subset
+      of base62. New per independent connection snapshot.'
+    template_source: '`C` + `fake.hexify(text=''^^^^^^^^^^^^^^^^'')`; 16 random lowercase hex characters, a local
+      subset of base62. New per independent connection snapshot.'
+    example_value: Cfcef3751758c5156
+  - name: id.orig_h
+    type: String
+    description: Selected device `ip_address`.
+    template_source: Selected device `ip_address`.
+    example_value: 10.20.0.11
+  - name: id.orig_p
+    type: Integer
+    description: '`fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port subset.'
+    template_source: '`fake.pyint(min_value=49152, max_value=65535)`; local ephemeral-port subset.'
+    example_value: '55114'
+  - name: id.resp_h
+    type: String
+    description: Mapped service `resolver_ipv4`; distinct from client.
+    template_source: Mapped service `resolver_ipv4`; distinct from client.
+    example_value: 10.20.0.53
+  - name: id.resp_p
+    type: Integer
+    description: Service port, preflight constrained to 53.
+    template_source: Service port, preflight constrained to 53.
+    example_value: '53'
+  - name: proto
+    type: String
+    description: Service protocol `UDP` through Jinja `lower`, producing `udp`.
+    template_source: Service protocol `UDP` through Jinja `lower`, producing `udp`.
+    example_value: udp
+  - name: trans_id
+    type: Integer
+    description: '`fake.pyint(min_value=0, max_value=65535)`; per-query 16-bit value. Repeats are allowed across
+      independent exchanges.'
+    template_source: '`fake.pyint(min_value=0, max_value=65535)`; per-query 16-bit value. Repeats are allowed across
+      independent exchanges.'
+    example_value: '27798'
+  - name: rtt
+    type: Number
+    description: Fixed sample interval `0.06685185432434082` seconds. Query time + rtt equals the selected observation
+      clock within float tolerance.
+    template_source: Fixed sample interval `0.06685185432434082` seconds. Query time + rtt equals the selected observation
+      clock within float tolerance.
+    example_value: '0.06685185432434082'
+  - name: query
+    type: String
+    description: Service `dns_name`; local lowercase label under example.com, without trailing dot.
+    template_source: Service `dns_name`; local lowercase label under example.com, without trailing dot.
+    example_value: files.example.com
+  - name: qclass
+    type: Integer
+    description: Fixed 1 / `C_INTERNET`.
+    template_source: Fixed 1 / `C_INTERNET`.
+    example_value: '1'
+  - name: qclass_name
+    type: String
+    description: Fixed 1 / `C_INTERNET`.
+    template_source: Fixed 1 / `C_INTERNET`.
+    example_value: C_INTERNET
+  - name: qtype
+    type: Integer
+    description: Fixed 1 / `A`.
+    template_source: Fixed 1 / `A`.
+    example_value: '1'
+  - name: qtype_name
+    type: String
+    description: Fixed 1 / `A`.
+    template_source: Fixed 1 / `A`.
+    example_value: A
+  - name: rcode
+    type: Integer
+    description: Fixed 0 / `NOERROR`.
+    template_source: Fixed 0 / `NOERROR`.
+    example_value: '0'
+  - name: rcode_name
+    type: String
+    description: Fixed 0 / `NOERROR`.
+    template_source: Fixed 0 / `NOERROR`.
+    example_value: NOERROR
+  - name: AA
+    type: Boolean
+    description: Both false.
+    template_source: Both false.
+    example_value: 'false'
+  - name: TC
+    type: Boolean
+    description: Both false.
+    template_source: Both false.
+    example_value: 'false'
+  - name: RD
+    type: Boolean
+    description: Both true.
+    template_source: Both true.
+    example_value: 'true'
+  - name: RA
+    type: Boolean
+    description: Both true.
+    template_source: Both true.
+    example_value: 'true'
+  - name: Z
+    type: Integer
+    description: Fixed 0.
+    template_source: Fixed 0.
+    example_value: '0'
+  - name: answers
+    type: Array
+    description: Exactly one service `dns_answer_ipv4`.
+    template_source: Exactly one service `dns_answer_ipv4`.
+    example_value: '["198.51.100.11"]'
+  - name: TTLs
+    type: Array
+    description: Exactly one value, 3600 seconds; paired with the answer. Integral JSON representation matches the
+      sample.
+    template_source: Exactly one value, 3600 seconds; paired with the answer. Integral JSON representation matches
+      the sample.
+    example_value: '[3600]'
+  - name: rejected
+    type: Boolean
+    description: Fixed false.
+    template_source: Fixed false.
+    example_value: 'false'
+  - name: TTLs[0]
+    type: Integer
+    description: Exactly one value, 3600 seconds; paired with the answer. Integral JSON representation matches the
+      sample. This field is the TTLs[0] member.
+    template_source: Exactly one value, 3600 seconds; paired with the answer. Integral JSON representation matches
+      the sample.
+    example_value: '3600'
+  - name: answers[0]
+    type: String
+    description: Exactly one service `dns_answer_ipv4`. This field is the answers[0] member.
+    template_source: Exactly one service `dns_answer_ipv4`.
+    example_value: 198.51.100.11

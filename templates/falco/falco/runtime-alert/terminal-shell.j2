@@ -1,0 +1,20 @@
+{%- set sensor = registry.get_random_device() -%}
+{%- set workload = registry.get_service(sensor['hostname'] + '-workload') -%}
+{%- set clock = now() -%}
+{# Integer civil-day arithmetic preserves nanoseconds without a floating-point epoch. #}
+{%- set offset = clock.utcoffset() -%}
+{%- set epoch_seconds = (clock.toordinal() - 719163) * 86400 + clock.hour * 3600 + clock.minute * 60 + clock.second - (offset.days * 86400 + offset.seconds) -%}
+{%- set fraction = clock.microsecond * 1000 + fake.pyint(min_value=0, max_value=999) -%}
+{%- set iso = (clock | iso8601_utc)[:19] + '.' + ('%09d' | format(fraction)) + 'Z' -%}
+{%- set fields = {
+    'container.id': workload['falco_container_id'],
+    'container.image.repository': 'docker.io/library/alpine',
+    'evt.time': epoch_seconds * 1000000000 + fraction,
+    'k8s.ns.name': 'default',
+    'k8s.pod.name': workload['falco_pod_name'],
+    'proc.cmdline': 'sh -c clear; (bash || ash || sh)',
+    'proc.name': 'sh', 'proc.pname': 'runc', 'proc.tty': 34816,
+    'user.loginuid': -1, 'user.name': 'root'
+} -%}
+{%- set output = iso[11:29] + ': Critical A shell was spawned in a container with an attached terminal (user=' + fields['user.name'] + ' user_loginuid=' + (fields['user.loginuid'] | string) + ' k8s.ns=' + fields['k8s.ns.name'] + ' k8s.pod=' + fields['k8s.pod.name'] + ' container=' + fields['container.id'] + ' shell=' + fields['proc.name'] + ' parent=' + fields['proc.pname'] + ' cmdline=' + fields['proc.cmdline'] + ' terminal=' + (fields['proc.tty'] | string) + ' container_id=' + fields['container.id'] + ' image=' + fields['container.image.repository'] + ')' -%}
+{{- {'hostname': sensor['hostname'], 'output': output, 'priority': 'Critical', 'rule': 'Terminal shell in container', 'source': 'syscall', 'tags': ['container', 'mitre_execution', 'shell'], 'time': iso, 'output_fields': fields} | tojson -}}

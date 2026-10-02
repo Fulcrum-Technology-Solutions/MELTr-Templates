@@ -1,0 +1,4 @@
+vendor: cisco
+product: duo
+name: Duo
+description: Sample-backed Duo event profiles with source-specific MELTr entity fixtures.

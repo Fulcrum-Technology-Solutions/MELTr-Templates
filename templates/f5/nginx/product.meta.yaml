@@ -1,0 +1,4 @@
+vendor: f5
+product: nginx
+name: NGINX
+description: Sample-backed NGINX event profiles with source-specific MELTr entity fixtures.

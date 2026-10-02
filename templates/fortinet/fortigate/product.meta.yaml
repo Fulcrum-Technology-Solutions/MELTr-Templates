@@ -1,0 +1,4 @@
+vendor: fortinet
+product: fortigate
+name: FortiGate
+description: Sample-backed FortiGate event profiles with source-specific MELTr entity fixtures.

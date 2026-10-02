@@ -1,0 +1,272 @@
+vendor: netgate
+product: pfsense
+data_source: filter
+description: Raw 29-field IPv4/TCP SYN filterlog CSV; registry clients and distinct stable pass/block rule profiles,
+  Faker packet ID/port/sequence.
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: pfSense TCP SYN pass and block
+    tags:
+    - pfsense
+    - firewall
+    - tcp
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Raw IPv4/TCP filterlog body with preserved empty fields. Requires source-specific entities: entities/netgate/pfsense/filter.yaml;
+      example configuration: configs/netgate/pfsense/filter.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A TCP SYN packet matches a pass rule.
+    - A TCP SYN packet matches a block rule.
+    frequency_notes: One event/second test rate; no timestamp/syslog envelope or connection lifecycle.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Field order and BNF grammar
+      url: https://docs.netgate.com/pfsense/en/latest/monitoring/logs/raw-filter-format.html
+      type: official
+    - title: Native sample confirming empty CSV slots (maintainer-confirmed issue)
+      url: https://redmine.pfsense.org/issues/8077
+      type: official
+    tools: []
+  fields:
+  - name: rule_number
+    type: String
+    description: Position 1 in the native text record. Selected rule.rule_number, decimal string.
+    template_source: Selected rule.rule_number, decimal string.
+    field_number: 1
+    format: string
+    example_value: '101'
+    required: true
+  - name: sub_rule_number
+    type: String
+    description: Position 2 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 2
+    format: string
+    example_value: ''
+    required: true
+  - name: anchor
+    type: String
+    description: Position 3 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 3
+    format: string
+    example_value: ''
+    required: true
+  - name: tracker
+    type: String
+    description: Position 4 in the native text record. Same rule.tracker, stable decimal string; distinct per action.
+    template_source: Same rule.tracker, stable decimal string; distinct per action.
+    field_number: 4
+    format: string
+    example_value: '1000000101'
+    required: true
+  - name: interface
+    type: String
+    description: Position 5 in the native text record. Same rule.interface, constrained em0.
+    template_source: Same rule.interface, constrained em0.
+    field_number: 5
+    format: string
+    example_value: em0
+    required: true
+  - name: reason
+    type: String
+    description: Position 6 in the native text record. Fixed 'match'.
+    template_source: Fixed 'match'.
+    field_number: 6
+    format: string
+    example_value: match
+    required: true
+  - name: action
+    type: String
+    description: Position 7 in the native text record. Same rule.filter_action, pass or block.
+    template_source: Same rule.filter_action, pass or block.
+    field_number: 7
+    format: string
+    example_value: block
+    required: true
+  - name: direction
+    type: String
+    description: Position 8 in the native text record. Fixed 'in'.
+    template_source: Fixed 'in'.
+    field_number: 8
+    format: string
+    example_value: in
+    required: true
+  - name: ip_version
+    type: String
+    description: Position 9 in the native text record. Fixed '4'.
+    template_source: Fixed '4'.
+    field_number: 9
+    format: string
+    example_value: '4'
+    required: true
+  - name: tos
+    type: String
+    description: Position 10 in the native text record. Fixed '0x0'.
+    template_source: Fixed '0x0'.
+    field_number: 10
+    format: string
+    example_value: '0x0'
+    required: true
+  - name: ecn
+    type: String
+    description: Position 11 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 11
+    format: string
+    example_value: ''
+    required: true
+  - name: ttl
+    type: String
+    description: Position 12 in the native text record. Fixed '64'.
+    template_source: Fixed '64'.
+    field_number: 12
+    format: string
+    example_value: '64'
+    required: true
+  - name: id
+    type: String
+    description: Position 13 in the native text record. Faker pyint(min_value=0, max_value=65535).
+    template_source: Faker pyint(min_value=0, max_value=65535).
+    field_number: 13
+    format: integer
+    example_value: '49340'
+    required: true
+  - name: offset
+    type: String
+    description: Position 14 in the native text record. Fixed '0'.
+    template_source: Fixed '0'.
+    field_number: 14
+    format: string
+    example_value: '0'
+    required: true
+  - name: flags
+    type: String
+    description: Position 15 in the native text record. Fixed 'DF'.
+    template_source: Fixed 'DF'.
+    field_number: 15
+    format: string
+    example_value: DF
+    required: true
+  - name: protocol_id
+    type: String
+    description: Position 16 in the native text record. Fixed '6'.
+    template_source: Fixed '6'.
+    field_number: 16
+    format: string
+    example_value: '6'
+    required: true
+  - name: protocol_text
+    type: String
+    description: Position 17 in the native text record. Fixed 'tcp'.
+    template_source: Fixed 'tcp'.
+    field_number: 17
+    format: string
+    example_value: tcp
+    required: true
+  - name: length
+    type: String
+    description: Position 18 in the native text record. Fixed '40'.
+    template_source: Fixed '40'.
+    field_number: 18
+    format: string
+    example_value: '40'
+    required: true
+  - name: source_address
+    type: String
+    description: Position 19 in the native text record. Selected device.ip_address, IPv4.
+    template_source: Selected device.ip_address, IPv4.
+    field_number: 19
+    format: string
+    example_value: 192.0.2.111
+    required: true
+  - name: destination_address
+    type: String
+    description: Position 20 in the native text record. Same rule.destination_ipv4, IPv4 distinct from client.
+    template_source: Same rule.destination_ipv4, IPv4 distinct from client.
+    field_number: 20
+    format: string
+    example_value: 10.20.1.20
+    required: true
+  - name: source_port
+    type: String
+    description: Position 21 in the native text record. Faker pyint(min_value=49152, max_value=65535).
+    template_source: Faker pyint(min_value=49152, max_value=65535).
+    field_number: 21
+    format: integer
+    example_value: '64405'
+    required: true
+  - name: destination_port
+    type: String
+    description: Position 22 in the native text record. Same rule.port, fixed 443.
+    template_source: Same rule.port, fixed 443.
+    field_number: 22
+    format: string
+    example_value: '443'
+    required: true
+  - name: data_length
+    type: String
+    description: Position 23 in the native text record. Fixed '0'.
+    template_source: Fixed '0'.
+    field_number: 23
+    format: string
+    example_value: '0'
+    required: true
+  - name: tcp_flags
+    type: String
+    description: Position 24 in the native text record. Fixed 'S'.
+    template_source: Fixed 'S'.
+    field_number: 24
+    format: string
+    example_value: S
+    required: true
+  - name: sequence_number
+    type: String
+    description: Position 25 in the native text record. Faker pyint(min_value=0, max_value=4294967295).
+    template_source: Faker pyint(min_value=0, max_value=4294967295).
+    field_number: 25
+    format: integer
+    example_value: '453427585'
+    required: true
+  - name: ack_number
+    type: String
+    description: Position 26 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 26
+    format: string
+    example_value: ''
+    required: true
+  - name: tcp_window
+    type: String
+    description: Position 27 in the native text record. Fixed '65535'.
+    template_source: Fixed '65535'.
+    field_number: 27
+    format: string
+    example_value: '65535'
+    required: true
+  - name: urg
+    type: String
+    description: Position 28 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 28
+    format: string
+    example_value: ''
+    required: true
+  - name: tcp_options
+    type: String
+    description: Position 29 in the native text record. Fixed ''.
+    template_source: Fixed ''.
+    field_number: 29
+    format: string
+    example_value: ''
+    required: true

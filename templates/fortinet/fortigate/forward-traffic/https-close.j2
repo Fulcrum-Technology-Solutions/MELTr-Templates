@@ -1,0 +1,7 @@
+{%- autoescape false -%}
+{%- set client = registry.get_random_device() -%}
+{%- set server = registry.get_service(client['hostname'] + '-https') -%}
+{%- set clock = now() -%}
+{%- set port = fake.pyint(min_value=49152, max_value=65535) -%}
+date={{ clock | strftime('%Y-%m-%d') }} time={{ clock | strftime('%H:%M:%S') }} logid="0000000013" type="traffic" subtype="forward" level="notice" vd="vdom1" eventtime={{ (clock | unix_timestamp) | int }} srcip={{ client['ip_address'] }} srcname="{{ client['hostname'] }}" srcport={{ port }} srcintf="port12" srcintfrole="undefined" dstip={{ server['destination_ipv4'] }} dstname="{{ server['destination_name'] }}" dstport=443 dstintf="port11" dstintfrole="undefined" poluuid="{{ server['policy_uuid'] }}" sessionid={{ fake.pyint(min_value=1, max_value=4294967295) }} proto=6 action="close" policyid=1 policytype="policy" policymode="learn" service="HTTPS" dstcountry="United States" srccountry="Reserved" trandisp="snat" transip={{ server['nat_ipv4'] }} transport={{ port }} appid=40568 app="HTTPS.BROWSER" appcat="Web.Client" apprisk="medium" duration=2 sentbyte=1850 rcvdbyte=39898 sentpkt=25 rcvdpkt=37 utmaction="allow" countapp=1 devtype="Linux PC" osname="Linux" mastersrcmac="{{ client['mac_address'] }}" srcmac="{{ client['mac_address'] }}" srcserver=0 utmref=0-220586
+{%- endautoescape -%}

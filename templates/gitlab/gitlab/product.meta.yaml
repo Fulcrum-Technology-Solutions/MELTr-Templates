@@ -1,0 +1,4 @@
+vendor: gitlab
+product: gitlab
+name: GitLab
+description: Sample-backed GitLab event profiles with source-specific MELTr entity fixtures.

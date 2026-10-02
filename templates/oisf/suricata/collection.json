@@ -1,0 +1,18 @@
+{
+  "name": "oisf-suricata",
+  "version": "1.0.0",
+  "description": "Sample-backed Suricata events with source-specific entities.",
+  "maintainers": [
+    {
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
+    }
+  ],
+  "tags": [
+    "oisf",
+    "suricata"
+  ],
+  "templates": [
+    "eve-alert/suspicious-http-post"
+  ]
+}

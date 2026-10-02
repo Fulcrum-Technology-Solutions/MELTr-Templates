@@ -1,0 +1,17 @@
+{%- set actor = registry.get_random_user() -%}
+{%- set node = registry.get_device(actor['tailscale_node_hostname']) -%}
+{%- set profile = registry.get_service('tailscale-audit-profile') -%}
+{%- set clock = now() -%}
+{%- set expires = clock + profile['tailscale_expiry_days'] * 86400 -%}
+{{- {
+    'action': 'UPDATE',
+    'actor': {'displayName': actor['full_name'], 'id': actor['tailscale_id'], 'loginName': actor['email'], 'type': 'USER'},
+    'deferredAt': '0001-01-01T00:00:00Z',
+    'eventGroupID': fake.pyint(min_value=1000000000, max_value=2000000000) | string,
+    'eventTime': clock | iso8601_utc,
+    'new': expires | iso8601_utc,
+    'old': '0001-01-01T00:00:00Z',
+    'origin': 'NODE',
+    'target': {'id': node['tailscale_id'], 'name': node['fqdn'], 'property': 'KEY_EXPIRY_TIME', 'type': 'NODE'},
+    'type': 'CONFIG'
+} | tojson -}}

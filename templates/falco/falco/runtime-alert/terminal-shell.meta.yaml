@@ -1,0 +1,158 @@
+vendor: falco
+product: falco
+data_source: runtime-alert
+description: Published Critical terminal-shell profile with registry sensor/workload identities and exact integer
+  nanosecond timestamps.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Falco terminal shell in container
+    tags:
+    - falco
+    - container
+    - runtime
+    - shell
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Published JSON output-channel example profile; fixed rule, command, priority and tags. Requires source-specific
+      entities: entities/falco/falco/runtime-alert.yaml; example configuration: configs/falco/falco/runtime-alert.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A shell is spawned in a container with an attached terminal.
+    frequency_notes: One event/second local test rate; five-event burst. Independent alerts, no container lifecycle
+      simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Falco JSON output example
+      url: https://falco.org/docs/concepts/outputs/channels/#json-output
+      type: official
+    tools: []
+  fields:
+  - name: hostname
+    type: String
+    description: Hostname of `registry.get_random_device()`, selected once.
+    template_source: Hostname of `registry.get_random_device()`, selected once.
+    example_value: falco-sensor-02
+  - name: output
+    type: String
+    description: Exact published message structure, rebuilt from the same structured field dictionary, UTC clock
+      and priority. Pod, command, identity, tty and both container-ID appearances agree.
+    template_source: Exact published message structure, rebuilt from the same structured field dictionary, UTC clock
+      and priority. Pod, command, identity, tty and both container-ID appearances agree.
+    example_value: '22:48:02.761855503: Critical A shell was spawned in a container with an attached terminal (user=root
+      user_loginuid=-1 k8s.ns=default k8s.pod=example-shell-02 container=454e61a0dab0 shell=sh parent=runc cmdline=sh
+      -c clear; (bash || ash || sh) terminal=34816 container_id=454e61a0dab0 image=docker.io/library/alpine)'
+  - name: priority
+    type: String
+    description: Fixed `Critical`.
+    template_source: Fixed `Critical`.
+    example_value: Critical
+  - name: rule
+    type: String
+    description: Fixed `Terminal shell in container`.
+    template_source: Fixed `Terminal shell in container`.
+    example_value: Terminal shell in container
+  - name: source
+    type: String
+    description: Fixed `syscall`.
+    template_source: Fixed `syscall`.
+    example_value: syscall
+  - name: tags
+    type: Array
+    description: 'Fixed ordered list: `container`, `mitre_execution`, `shell`.'
+    template_source: 'Fixed ordered list: `container`, `mitre_execution`, `shell`.'
+    example_value: '["container","mitre_execution","shell"]'
+  - name: time
+    type: String
+    description: UTC ISO timestamp with nine fractional digits from the single event clock and synthetic submicrosecond
+      fraction.
+    template_source: UTC ISO timestamp with nine fractional digits from the single event clock and synthetic submicrosecond
+      fraction.
+    example_value: '2026-10-01T22:48:02.761855503Z'
+  - name: output_fields
+    type: Object
+    description: Contains exactly the fields below; no additional properties.
+    template_source: Contains exactly the fields below; no additional properties.
+    example_value: '{"container.id":"454e61a0dab0","container.image.repository":"docker.io/library/alpine","evt.time":1790894882761855503,"k8s.ns.name":"default","k8s.pod.name":"example-shell-02","proc.cmdline":"sh
+      -c clear; (bash || ash || sh)","proc.name":"sh","proc.pname":"runc","proc.tty":34816,"user.loginuid":-1,"user.name":"root"}'
+  - name: output_fields.container.id
+    type: String
+    description: Stable mapped service `falco_container_id`; twelve lowercase hex characters in this local profile.
+    template_source: Stable mapped service `falco_container_id`; twelve lowercase hex characters in this local profile.
+    example_value: 454e61a0dab0
+  - name: output_fields.container.image.repository
+    type: String
+    description: Fixed `docker.io/library/alpine`.
+    template_source: Fixed `docker.io/library/alpine`.
+    example_value: docker.io/library/alpine
+  - name: output_fields.evt.time
+    type: Integer
+    description: Exact Unix nanoseconds derived using integer day/second arithmetic plus the same fraction as `time`
+      and `output`.
+    template_source: Exact Unix nanoseconds derived using integer day/second arithmetic plus the same fraction as
+      `time` and `output`.
+    example_value: '1790894882761855503'
+  - name: output_fields.k8s.ns.name
+    type: String
+    description: Fixed `default`.
+    template_source: Fixed `default`.
+    example_value: default
+  - name: output_fields.k8s.pod.name
+    type: String
+    description: Same mapped service's `falco_pod_name`.
+    template_source: Same mapped service's `falco_pod_name`.
+    example_value: example-shell-02
+  - name: output_fields.proc.cmdline
+    type: String
+    description: Fixed `sh -c clear; (bash || ash || sh)`.
+    template_source: Fixed `sh -c clear; (bash || ash || sh)`.
+    example_value: sh -c clear; (bash || ash || sh)
+  - name: output_fields.proc.name
+    type: String
+    description: Fixed `sh`.
+    template_source: Fixed `sh`.
+    example_value: sh
+  - name: output_fields.proc.pname
+    type: String
+    description: Fixed `runc`.
+    template_source: Fixed `runc`.
+    example_value: runc
+  - name: output_fields.proc.tty
+    type: Integer
+    description: Fixed `34816`.
+    template_source: Fixed `34816`.
+    example_value: '34816'
+  - name: output_fields.user.loginuid
+    type: Integer
+    description: Fixed `-1` sentinel; never replaced with an unrelated registry user ID.
+    template_source: Fixed `-1` sentinel; never replaced with an unrelated registry user ID.
+    example_value: '-1'
+  - name: output_fields.user.name
+    type: String
+    description: Fixed `root`.
+    template_source: Fixed `root`.
+    example_value: root
+  - name: tags[0]
+    type: String
+    description: 'Fixed ordered list: `container`, `mitre_execution`, `shell`. This field is the tags[0] member.'
+    template_source: 'Fixed ordered list: `container`, `mitre_execution`, `shell`.'
+    example_value: container
+  - name: tags[1]
+    type: String
+    description: 'Fixed ordered list: `container`, `mitre_execution`, `shell`. This field is the tags[1] member.'
+    template_source: 'Fixed ordered list: `container`, `mitre_execution`, `shell`.'
+    example_value: mitre_execution
+  - name: tags[2]
+    type: String
+    description: 'Fixed ordered list: `container`, `mitre_execution`, `shell`. This field is the tags[2] member.'
+    template_source: 'Fixed ordered list: `container`, `mitre_execution`, `shell`.'
+    example_value: shell

@@ -1,0 +1,119 @@
+vendor: f5
+product: nginx
+data_source: access
+description: NGINX combined access log for unauthenticated HTTP/1.1 GET success; registry client and response fixtures,
+  fresh CLF time, native default escaping.
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: NGINX combined GET success
+    tags:
+    - f5
+    - nginx
+    - http
+    - access
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Built-in combined format with 200 responses and absent user/Referer. Requires source-specific entities:
+      entities/f5/nginx/access.yaml; example configuration: configs/f5/nginx/access.yaml. Tested with MELTr rc3
+      commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic registry
+      preview entities are not sufficient.'
+    when_generated:
+    - An unauthenticated GET request completes successfully.
+    frequency_notes: One event/second local test rate; five-event burst; complete uncompressed body sizes from fixture.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: NGINX logging format and default escaping
+      url: https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+      type: official
+    tools: []
+  fields:
+  - name: remote_addr
+    type: String
+    description: Position 1 in the native text record. `registry.get_random_device()` selected once; its `ip_address`.
+    template_source: '`registry.get_random_device()` selected once; its `ip_address`.'
+    field_number: 1
+    format: String
+    example_value: 192.0.2.101
+    required: true
+  - name: ident
+    type: String
+    description: Position 2 in the native text record. Literal field from the format.
+    template_source: Literal field from the format.
+    field_number: 2
+    format: '-'
+    example_value: '-'
+    required: true
+  - name: remote_user
+    type: String
+    description: Position 3 in the native text record. Missing authenticated user for this scenario. No fictional
+      username.
+    template_source: Missing authenticated user for this scenario. No fictional username.
+    field_number: 3
+    format: '-'
+    example_value: '-'
+    required: true
+  - name: time_local
+    type: String
+    description: Position 4 in the native text record. One `now()` clock; `strftime` for numeric components and
+      an explicit English month table. Whole seconds and numeric offset; generator uses UTC.
+    template_source: One `now()` clock; `strftime` for numeric components and an explicit English month table. Whole
+      seconds and numeric offset; generator uses UTC.
+    field_number: 4
+    format: '[Dd/Mon/Yyyy:Hh:Mm:Ss ±Hhmm]'
+    example_value: '[01/Oct/2026:22:47:56 +0000]'
+    required: true
+  - name: request
+    type: String
+    description: Position 5 in the native text record. `GET ` + selected response path + ` HTTP/1.1`. Paths limited
+      to `/health`, `/index.html`, `/robots.txt`.
+    template_source: '`GET ` + selected response path + ` HTTP/1.1`. Paths limited to `/health`, `/index.html`,
+      `/robots.txt`.'
+    field_number: 5
+    format: Quoted Request Line
+    example_value: '"GET /index.html HTTP/1.1"'
+    required: true
+  - name: status
+    type: String
+    description: Position 6 in the native text record. Fixed successful response scenario.
+    template_source: Fixed successful response scenario.
+    field_number: 6
+    format: '200'
+    example_value: '200'
+    required: true
+  - name: body_bytes_sent
+    type: String
+    description: Position 7 in the native text record. `response['body'].encode('utf-8')` length, excluding headers.
+      Assumes complete, uncompressed response with no transfer framing added.
+    template_source: '`response[''body''].encode(''utf-8'')` length, excluding headers. Assumes complete, uncompressed
+      response with no transfer framing added.'
+    field_number: 7
+    format: Decimal Integer
+    example_value: '39'
+    required: true
+  - name: http_referer
+    type: String
+    description: Position 8 in the native text record. Missing Referer sentinel.
+    template_source: Missing Referer sentinel.
+    field_number: 8
+    format: Quoted `-
+    example_value: '"-"'
+    required: true
+  - name: http_user_agent
+    type: String
+    description: Position 9 in the native text record. Same selected device's `nginx_user_agent`; nonempty string.
+      Initial fixture uses `curl/8.10.1`, not a claim about current curl versions.
+    template_source: Same selected device's `nginx_user_agent`; nonempty string. Initial fixture uses `curl/8.10.1`,
+      not a claim about current curl versions.
+    field_number: 9
+    format: String
+    example_value: '"curl/8.10.1"'
+    required: true

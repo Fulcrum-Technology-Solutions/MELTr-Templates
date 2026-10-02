@@ -1,0 +1,18 @@
+{%- autoescape false -%}
+{%- macro nginx_escape(value) -%}
+{%- for byte in value.encode('utf-8') -%}
+{%- if byte < 32 or byte > 126 or byte == 34 or byte == 92 -%}
+{{- '\\x%02X' | format(byte) -}}
+{%- else -%}
+{{- '%c' | format(byte) -}}
+{%- endif -%}
+{%- endfor -%}
+{%- endmacro -%}
+{%- set device = registry.get_random_device() -%}
+{%- set site = registry.get_service('nginx-site') -%}
+{%- set response = fake.random_element(elements=site['nginx_responses']) -%}
+{%- set clock = now() -%}
+{%- set months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] -%}
+{%- set local_time = clock.strftime('%d/') + months[clock.month - 1] + clock.strftime('/%Y:%H:%M:%S %z') -%}
+{{- nginx_escape(device['ip_address']) }} - - [{{ local_time }}] "{{ nginx_escape('GET ' + response['path'] + ' HTTP/1.1') }}" 200 {{ response['body'].encode('utf-8') | length }} "-" "{{ nginx_escape(device['nginx_user_agent']) }}"
+{%- endautoescape -%}

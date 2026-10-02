@@ -1,0 +1,18 @@
+{
+  "name": "tailscale-tailnet",
+  "version": "1.0.0",
+  "description": "Sample-backed Tailnet events with source-specific entities.",
+  "maintainers": [
+    {
+      "name": "John Owen",
+      "email": "jowen@ftsc.com"
+    }
+  ],
+  "tags": [
+    "tailscale",
+    "tailnet"
+  ],
+  "templates": [
+    "configuration-audit/node-key-expiry-update"
+  ]
+}
