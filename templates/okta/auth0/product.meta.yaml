@@ -1,0 +1,4 @@
+vendor: okta
+product: auth0
+name: Auth0
+description: Sample-backed Auth0 event profiles with source-specific MELTr entity fixtures.

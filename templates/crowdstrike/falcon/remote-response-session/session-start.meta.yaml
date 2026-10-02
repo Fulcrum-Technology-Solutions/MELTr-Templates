@@ -1,0 +1,81 @@
+vendor: crowdstrike
+product: falcon
+data_source: remote-response-session
+description: session-start; sample-backed independent native Event Streams JSON replica. Registry identities and
+  fresh UTC clock; not a sequenced stream.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: CrowdStrike session-start
+    tags:
+    - crowdstrike
+    - audit
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Narrow documented reference profile. Requires source-specific entities: entities/crowdstrike/falcon/remote-response-session.yaml;
+      example configuration: configs/crowdstrike/falcon/remote-response-session.yaml. Tested with MELTr rc3 commit
+      1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic registry preview
+      entities are not sufficient.'
+    when_generated:
+    - RemoteResponseSessionStartEvent
+    frequency_notes: Local test rate only. Independent records; no lifecycle simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Full reference event
+      url: https://github.com/elastic/integrations/blob/cbfff90638a7565377768f50726775c0febc7bf4/packages/crowdstrike/data_stream/falcon/_dev/test/pipeline/test-falcon-audit-events.log
+      type: reference
+    tools: []
+  fields:
+  - name: metadata.customerIDString
+    type: String
+    description: '`org[''crowdstrike_cid'']`'
+    template_source: '`org[''crowdstrike_cid'']`'
+    example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - name: metadata.offset
+    type: Integer
+    description: '`fake.pyint(min_value=1,max_value=2147483647)`'
+    template_source: '`fake.pyint(min_value=1,max_value=2147483647)`'
+    example_value: '457598004'
+  - name: metadata.eventType
+    type: String
+    description: '`Fixed: "RemoteResponseSessionStartEvent"`'
+    template_source: '`Fixed: "RemoteResponseSessionStartEvent"`'
+    example_value: RemoteResponseSessionStartEvent
+  - name: metadata.eventCreationTime
+    type: Integer
+    description: '`sec * 1000`'
+    template_source: '`sec * 1000`'
+    example_value: '1790894876000'
+  - name: metadata.version
+    type: String
+    description: '`Fixed: "1.0"`'
+    template_source: '`Fixed: "1.0"`'
+    example_value: '1.0'
+  - name: event.SessionId
+    type: String
+    description: '`fake.uuid4()`'
+    template_source: '`fake.uuid4()`'
+    example_value: 2f95f787-a751-466c-b999-538dc93832d2
+  - name: event.HostnameField
+    type: String
+    description: '`device[''hostname'']`'
+    template_source: '`device[''hostname'']`'
+    example_value: casey.patel-client
+  - name: event.UserName
+    type: String
+    description: '`user[''email'']`'
+    template_source: '`user[''email'']`'
+    example_value: casey.patel@example.com
+  - name: event.StartTimestamp
+    type: Integer
+    description: '`sec`'
+    template_source: '`sec`'
+    example_value: '1790894876'

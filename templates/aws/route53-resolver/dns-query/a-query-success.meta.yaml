@@ -1,0 +1,132 @@
+vendor: aws
+product: route53-resolver
+data_source: dns-query
+description: Successful UDP IN/A Resolver query with one IPv4 answer; registry-backed EC2/VPC identity and DNS answer,
+  Faker source port, fresh UTC time.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Route 53 Resolver successful A query
+    tags:
+    - aws
+    - dns
+    - route53
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Documented JSON wire profile 1.100000, direct VPC query, no firewall match. Requires source-specific
+      entities: entities/aws/route53-resolver/dns-query.yaml; example configuration: configs/aws/route53-resolver/dns-query.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - An EC2 client makes a successful UDP A query.
+    frequency_notes: Independent sample queries; one event/second test rate, not Resolver cache or delivery simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Wire field names and value representations
+      url: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs-example-json.html
+      type: official
+    - title: Query, answer and conditional firewall-field definitions
+      url: https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resolver-query-logs-format.html
+      type: official
+    tools: []
+  fields:
+  - name: version
+    type: String
+    description: Fixed `1.100000`, exact wire example.
+    template_source: Fixed `1.100000`, exact wire example.
+    example_value: '1.100000'
+  - name: account_id
+    type: String
+    description: Selected device `aws_account_id`, twelve digits; stable account of its VPC, leading zeros retained.
+    template_source: Selected device `aws_account_id`, twelve digits; stable account of its VPC, leading zeros retained.
+    example_value: '111122223333'
+  - name: region
+    type: String
+    description: Fixed `us-east-1`; fixture resources belong to this region.
+    template_source: Fixed `us-east-1`; fixture resources belong to this region.
+    example_value: us-east-1
+  - name: vpc_id
+    type: String
+    description: Same device `aws_vpc_id`; local modern `vpc-` plus 17 lowercase hex subset.
+    template_source: Same device `aws_vpc_id`; local modern `vpc-` plus 17 lowercase hex subset.
+    example_value: vpc-0123456789abcdef0
+  - name: query_timestamp
+    type: String
+    description: One `now()` through `iso8601_utc`; UTC ISO8601 with microseconds and Z.
+    template_source: One `now()` through `iso8601_utc`; UTC ISO8601 with microseconds and Z.
+    example_value: '2026-10-01T22:47:44.694138Z'
+  - name: query_name
+    type: String
+    description: Mapped service `dns_name`; local lowercase alphabetic label under example.com, trailing dot.
+    template_source: Mapped service `dns_name`; local lowercase alphabetic label under example.com, trailing dot.
+    example_value: files.example.com.
+  - name: query_type
+    type: String
+    description: Fixed `A` / `IN` / `NOERROR`.
+    template_source: Fixed `A` / `IN` / `NOERROR`.
+    example_value: A
+  - name: query_class
+    type: String
+    description: Fixed `A` / `IN` / `NOERROR`.
+    template_source: Fixed `A` / `IN` / `NOERROR`.
+    example_value: IN
+  - name: rcode
+    type: String
+    description: Fixed `A` / `IN` / `NOERROR`.
+    template_source: Fixed `A` / `IN` / `NOERROR`.
+    example_value: NOERROR
+  - name: answers
+    type: Array
+    description: Exactly one answer object; case-sensitive keys below.
+    template_source: Exactly one answer object; case-sensitive keys below.
+    example_value: '[{"Class":"IN","Rdata":"198.51.100.11","Type":"A"}]'
+  - name: answers[0].Rdata
+    type: String
+    description: Same service `dns_answer_ipv4`; stable for this query name.
+    template_source: Same service `dns_answer_ipv4`; stable for this query name.
+    example_value: 198.51.100.11
+  - name: answers[0].Type
+    type: String
+    description: DNS answer type. Fixed A, matching the IPv4 answer and query.
+    template_source: Fixed A.
+    example_value: A
+  - name: srcaddr
+    type: String
+    description: Selected device `ip_address`.
+    template_source: Selected device `ip_address`.
+    example_value: 10.20.0.11
+  - name: srcport
+    type: String
+    description: '`fake.pyint(min_value=49152, max_value=65535)` then Jinja `string`; local client-port subset of
+      1–65535.'
+    template_source: '`fake.pyint(min_value=49152, max_value=65535)` then Jinja `string`; local client-port subset
+      of 1–65535.'
+    example_value: '65271'
+  - name: transport
+    type: String
+    description: Fixed `UDP`.
+    template_source: Fixed `UDP`.
+    example_value: UDP
+  - name: srcids
+    type: Object
+    description: Exactly the instance key below for this source path.
+    template_source: Exactly the instance key below for this source path.
+    example_value: '{"instance":"i-8e59995608f14e0e7"}'
+  - name: srcids.instance
+    type: String
+    description: Same device `aws_instance_id`; local `i-` plus 17 lowercase hex subset.
+    template_source: Same device `aws_instance_id`; local `i-` plus 17 lowercase hex subset.
+    example_value: i-8e59995608f14e0e7
+  - name: answers[0].Class
+    type: String
+    description: DNS answer class. Fixed IN, matching the query class.
+    template_source: Fixed IN.
+    example_value: IN

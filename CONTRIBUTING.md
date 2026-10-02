@@ -66,10 +66,12 @@ python .github/scripts/validate_templates.py
 ```
 
 This will check:
-- All metadata files conform to their schemas
-- Required fields are present
-- Enum values are valid (e.g., `frequency` must be: critical, high, medium, low)
-- Directory names match metadata fields (vendor/product/data_source)
+- All metadata files (`vendor.meta.yaml`, `product.meta.yaml`, `collection.json`, `*.meta.yaml`) conform to their schemas
+- Required fields are present and enum values are valid
+- Directory names match metadata fields (`vendor` / `product` / `data_source`)
+- Every `.j2` has a matching `.meta.yaml` (and vice versa)
+- Every `.j2` parses as valid Jinja2
+- Every `collection.json` entry resolves to an on-disk `.j2` + `.meta.yaml` pair, and every on-disk template under that product is listed
 
 ### Testing Template Rendering
 

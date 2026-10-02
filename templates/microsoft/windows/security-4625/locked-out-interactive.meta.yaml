@@ -1,0 +1,228 @@
+vendor: microsoft
+product: windows
+data_source: security-4625
+description: Event 4625 Version 0 locked-out interactive logon; registry user, computer and domain; UTC clock and
+  synthetic independent record ID.
+format: XML
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Windows 4625 locked-out interactive logon
+    tags:
+    - windows
+    - security
+    - authentication
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Documented locked-out-account XML scenario. Requires source-specific entities: entities/microsoft/windows/security-4625.yaml;
+      example configuration: configs/microsoft/windows/security-4625.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - An interactive logon to a locked account fails.
+    frequency_notes: 3600/hour test rate; independent event snapshots, not an ordered channel replay.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Microsoft Event 4625 XML and definitions
+      url: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625
+      type: official
+    tools: []
+  fields:
+  - name: Event/@xmlns
+    type: String
+    description: Fixed http://schemas.microsoft.com/win/2004/08/events/event
+    template_source: Fixed http://schemas.microsoft.com/win/2004/08/events/event
+    required: true
+  - name: System/Provider/@Name
+    type: String
+    description: Fixed `Microsoft-Windows-Security-Auditing`.
+    template_source: Fixed `Microsoft-Windows-Security-Auditing`.
+    required: true
+  - name: System/Provider/@Guid
+    type: String
+    description: Fixed `{54849625-5478-4994-A5BA-3E3B0328C30D}`.
+    template_source: Fixed `{54849625-5478-4994-A5BA-3E3B0328C30D}`.
+    required: true
+  - name: System/EventID
+    type: String
+    description: Fixed `4625`.
+    template_source: Fixed `4625`.
+    required: true
+  - name: System/Version
+    type: String
+    description: Fixed `0`.
+    template_source: Fixed `0`.
+    required: true
+  - name: System/Level
+    type: String
+    description: Fixed `0`.
+    template_source: Fixed `0`.
+    required: true
+  - name: System/Task
+    type: String
+    description: Fixed `12546`.
+    template_source: Fixed `12546`.
+    required: true
+  - name: System/Opcode
+    type: String
+    description: Fixed `0`.
+    template_source: Fixed `0`.
+    required: true
+  - name: System/Keywords
+    type: String
+    description: Fixed `0x8010000000000000`.
+    template_source: Fixed `0x8010000000000000`.
+    required: true
+  - name: System/TimeCreated/@SystemTime
+    type: String
+    description: One now() UTC clock via strftime; microsecond precision and Z suffix.
+    template_source: One now() UTC clock via strftime; microsecond precision and Z suffix.
+    required: true
+  - name: System/EventRecordID
+    type: String
+    description: Faker pyint 1–4294967295; synthetic positive record number, independently sampled.
+    template_source: Faker pyint 1–4294967295; synthetic positive record number, independently sampled.
+    required: true
+  - name: System/Correlation
+    type: String
+    description: Retained empty, as in the reference.
+    template_source: Retained empty, as in the reference.
+    example_value: ''
+    required: true
+  - name: System/Execution/@ProcessID
+    type: String
+    description: Fixed `516`.
+    template_source: Fixed `516`.
+    required: true
+  - name: System/Execution/@ThreadID
+    type: String
+    description: Fixed `3240`.
+    template_source: Fixed `3240`.
+    required: true
+  - name: System/Channel
+    type: String
+    description: Fixed `Security`.
+    template_source: Fixed `Security`.
+    required: true
+  - name: System/Computer
+    type: String
+    description: Selected device hostname + organization DNS domain.
+    template_source: Selected device hostname + organization DNS domain.
+    required: true
+  - name: System/Security
+    type: String
+    description: Retained empty, as in the reference.
+    template_source: Retained empty, as in the reference.
+    example_value: ''
+    required: true
+  - name: EventData/SubjectUserSid
+    type: String
+    description: Fixed `S-1-5-18`.
+    template_source: Fixed `S-1-5-18`.
+    required: true
+  - name: EventData/SubjectUserName
+    type: String
+    description: Same device hostname + $.
+    template_source: Same device hostname + $.
+    required: true
+  - name: EventData/SubjectDomainName
+    type: String
+    description: Organization windows_domain.
+    template_source: Organization windows_domain.
+    required: true
+  - name: EventData/SubjectLogonId
+    type: String
+    description: Fixed `0x3e7`.
+    template_source: Fixed `0x3e7`.
+    required: true
+  - name: EventData/TargetUserSid
+    type: String
+    description: Fixed `S-1-0-0`.
+    template_source: Fixed `S-1-0-0`.
+    required: true
+  - name: EventData/TargetUserName
+    type: String
+    description: Selected user username; local account-name grammar, Unicode supported.
+    template_source: Selected user username; local account-name grammar, Unicode supported.
+    required: true
+  - name: EventData/TargetDomainName
+    type: String
+    description: Reuse organization windows_domain.
+    template_source: Reuse organization windows_domain.
+    required: true
+  - name: EventData/Status
+    type: String
+    description: Fixed `0xc0000234`.
+    template_source: Fixed `0xc0000234`.
+    required: true
+  - name: EventData/FailureReason
+    type: String
+    description: Fixed `%%2307`.
+    template_source: Fixed `%%2307`.
+    required: true
+  - name: EventData/SubStatus
+    type: String
+    description: Fixed `0x0`.
+    template_source: Fixed `0x0`.
+    required: true
+  - name: EventData/LogonType
+    type: String
+    description: Fixed `2`.
+    template_source: Fixed `2`.
+    required: true
+  - name: EventData/LogonProcessName
+    type: String
+    description: Fixed `User32`.
+    template_source: Fixed `User32`.
+    required: true
+  - name: EventData/AuthenticationPackageName
+    type: String
+    description: Fixed `Negotiate`.
+    template_source: Fixed `Negotiate`.
+    required: true
+  - name: EventData/WorkstationName
+    type: String
+    description: Same device hostname.
+    template_source: Same device hostname.
+    required: true
+  - name: EventData/TransmittedServices
+    type: String
+    description: Fixed `-`.
+    template_source: Fixed `-`.
+    required: true
+  - name: EventData/LmPackageName
+    type: String
+    description: Fixed `-`.
+    template_source: Fixed `-`.
+    required: true
+  - name: EventData/KeyLength
+    type: String
+    description: Fixed `0`.
+    template_source: Fixed `0`.
+    required: true
+  - name: EventData/ProcessId
+    type: String
+    description: Fixed `0x1bc`.
+    template_source: Fixed `0x1bc`.
+    required: true
+  - name: EventData/ProcessName
+    type: String
+    description: Fixed `C:\Windows\System32\winlogon.exe`.
+    template_source: Fixed `C:\Windows\System32\winlogon.exe`.
+    required: true
+  - name: EventData/IpAddress
+    type: String
+    description: Fixed `127.0.0.1`.
+    template_source: Fixed `127.0.0.1`.
+    required: true
+  - name: EventData/IpPort
+    type: String
+    description: Fixed `0`.
+    template_source: Fixed `0`.
+    required: true

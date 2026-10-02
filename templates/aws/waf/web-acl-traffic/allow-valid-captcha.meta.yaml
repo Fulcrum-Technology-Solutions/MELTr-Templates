@@ -1,0 +1,521 @@
+vendor: aws
+product: waf
+data_source: web-acl-traffic
+description: WAF v1 ALLOW default action with valid non-terminating CAPTCHA, redacted cookie, registry client/API
+  and coherent time/trace fields.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: AWS WAF allow with valid CAPTCHA
+    tags:
+    - aws
+    - waf
+    - captcha
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'One documented APIGW request profile with valid CAPTCHA and redacted cookie. Requires source-specific
+      entities: entities/aws/waf/web-acl-traffic.yaml; example configuration: configs/aws/waf/web-acl-traffic.yaml.
+      Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per
+      source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - A valid CAPTCHA permits continued evaluation and default ALLOW.
+    frequency_notes: One event/second local test rate; independent requests, no token/session lifecycle.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Complete scenario example
+      url: https://docs.aws.amazon.com/waf/latest/developerguide/logging-examples.html
+      type: official
+    - title: Field definitions
+      url: https://docs.aws.amazon.com/waf/latest/developerguide/logging-fields.html
+      type: official
+    - title: Supported logging redaction
+      url: https://docs.aws.amazon.com/waf/latest/developerguide/logging-management.html
+      type: official
+    - title: Trace ID time and hex components
+      url: https://docs.aws.amazon.com/xray/latest/devguide/xray-api-sendingdata.html#xray-api-traceids
+      type: official
+    tools: []
+  fields:
+  - name: timestamp
+    type: Integer
+    description: 'Single now() → unix_timestamp × 1000 → int: epoch milliseconds.'
+    template_source: 'Single now() → unix_timestamp × 1000 → int: epoch milliseconds.'
+    example_value: '1790894870700'
+  - name: formatVersion
+    type: Integer
+    description: Fixed 1.
+    template_source: Fixed 1.
+    example_value: '1'
+  - name: webaclId
+    type: String
+    description: Named service waf-api.webacl_id; pinned to the sample ACL.
+    template_source: Named service waf-api.webacl_id; pinned to the sample ACL.
+    example_value: arn:aws:wafv2:us-east-1:111122223333:regional/webacl/example-captcha/fbafb30f-345b-5618-8cd9-4bb0d8f19448
+  - name: terminatingRuleId
+    type: String
+    description: Fixed "Default_Action".
+    template_source: Fixed "Default_Action".
+    example_value: Default_Action
+  - name: terminatingRuleType
+    type: String
+    description: Fixed "REGULAR".
+    template_source: Fixed "REGULAR".
+    example_value: REGULAR
+  - name: action
+    type: String
+    description: Fixed "ALLOW".
+    template_source: Fixed "ALLOW".
+    example_value: ALLOW
+  - name: terminatingRuleMatchDetails
+    type: Array
+    description: Exactly 0 item(s) in this profile.
+    template_source: Exactly 0 item(s) in this profile.
+    example_value: '[]'
+  - name: httpSourceName
+    type: String
+    description: Fixed "APIGW".
+    template_source: Fixed "APIGW".
+    example_value: APIGW
+  - name: httpSourceId
+    type: String
+    description: Same service http_source_id; pinned to sample account/API/stage.
+    template_source: Same service http_source_id; pinned to sample account/API/stage.
+    example_value: 111122223333:abc123def4:lab
+  - name: ruleGroupList
+    type: Array
+    description: Exactly 0 item(s) in this profile.
+    template_source: Exactly 0 item(s) in this profile.
+    example_value: '[]'
+  - name: rateBasedRuleList
+    type: Array
+    description: Exactly 0 item(s) in this profile.
+    template_source: Exactly 0 item(s) in this profile.
+    example_value: '[]'
+  - name: nonTerminatingMatchingRules
+    type: Array
+    description: Exactly 1 item(s) in this profile.
+    template_source: Exactly 1 item(s) in this profile.
+    example_value: '[{"action":"CAPTCHA","captchaResponse":{"responseCode":0,"solveTimestamp":1790894865},"ruleId":"captcha-rule","ruleMatchDetails":[]}]'
+  - name: nonTerminatingMatchingRules[0]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"action":"CAPTCHA","captchaResponse":{"responseCode":0,"solveTimestamp":1790894865},"ruleId":"captcha-rule","ruleMatchDetails":[]}'
+  - name: nonTerminatingMatchingRules[0].ruleId
+    type: String
+    description: Fixed "captcha-rule".
+    template_source: Fixed "captcha-rule".
+    example_value: captcha-rule
+  - name: nonTerminatingMatchingRules[0].action
+    type: String
+    description: Fixed "CAPTCHA".
+    template_source: Fixed "CAPTCHA".
+    example_value: CAPTCHA
+  - name: nonTerminatingMatchingRules[0].ruleMatchDetails
+    type: Array
+    description: Exactly 0 item(s) in this profile.
+    template_source: Exactly 0 item(s) in this profile.
+    example_value: '[]'
+  - name: nonTerminatingMatchingRules[0].captchaResponse
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"responseCode":0,"solveTimestamp":1790894865}'
+  - name: nonTerminatingMatchingRules[0].captchaResponse.responseCode
+    type: Integer
+    description: Fixed 0.
+    template_source: Fixed 0.
+    example_value: '0'
+  - name: nonTerminatingMatchingRules[0].captchaResponse.solveTimestamp
+    type: Integer
+    description: Same clock truncated to seconds minus five.
+    template_source: Same clock truncated to seconds minus five.
+    example_value: '1790894865'
+  - name: requestHeadersInserted
+    type: Array
+    description: Exactly 1 item(s) in this profile.
+    template_source: Exactly 1 item(s) in this profile.
+    example_value: '[{"name":"x-amzn-waf-test-header-name","value":"test-header-value"}]'
+  - name: requestHeadersInserted[0]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"x-amzn-waf-test-header-name","value":"test-header-value"}'
+  - name: requestHeadersInserted[0].name
+    type: String
+    description: Fixed "x-amzn-waf-test-header-name".
+    template_source: Fixed "x-amzn-waf-test-header-name".
+    example_value: x-amzn-waf-test-header-name
+  - name: requestHeadersInserted[0].value
+    type: String
+    description: Fixed "test-header-value".
+    template_source: Fixed "test-header-value".
+    example_value: test-header-value
+  - name: responseCodeSent
+    type: 'Null'
+    description: Fixed null.
+    template_source: Fixed null.
+    example_value: 'null'
+  - name: httpRequest
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"args":"","clientIp":"192.0.2.41","country":"US","headers":[{"name":"X-Forwarded-For","value":"192.0.2.41"},{"name":"X-Forwarded-Proto","value":"https"},{"name":"X-Forwarded-Port","value":"443"},{"name":"Host","value":"abc123def4.execute-api.us-east-1.amazonaws.com"},{"name":"X-Amzn-Trace-Id","value":"Root=1-6abee316-fcef3751758c51565657973f"},{"name":"cache-control","value":"max-age=0"},{"name":"sec-ch-ua","value":"\"Chromium\";v=\"94\",
+      \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\""},{"name":"sec-ch-ua-mobile","value":"?0"},{"name":"sec-ch-ua-platform","value":"\"Windows\""},{"name":"upgrade-insecure-requests","value":"1"},{"name":"user-agent","value":"Mozilla/5.0
+      (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36"},{"name":"accept","value":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"},{"name":"sec-fetch-site","value":"same-origin"},{"name":"sec-fetch-mode","value":"navigate"},{"name":"sec-fetch-user","value":"?1"},{"name":"sec-fetch-dest","value":"document"},{"name":"referer","value":"https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets"},{"name":"accept-encoding","value":"gzip,
+      deflate, br"},{"name":"accept-language","value":"en-US,en;q=0.9"},{"name":"cookie","value":"REDACTED"}],"httpMethod":"GET","httpVersion":"HTTP/1.1","requestId":"58c67959a50fff0f","uri":"/lab/pets"}'
+  - name: httpRequest.clientIp
+    type: String
+    description: Selected device ip_address.
+    template_source: Selected device ip_address.
+    example_value: 192.0.2.41
+  - name: httpRequest.country
+    type: String
+    description: Fixed "US".
+    template_source: Fixed "US".
+    example_value: US
+  - name: httpRequest.headers
+    type: Array
+    description: Exactly 20 item(s) in this profile.
+    template_source: Exactly 20 item(s) in this profile.
+    example_value: '[{"name":"X-Forwarded-For","value":"192.0.2.41"},{"name":"X-Forwarded-Proto","value":"https"},{"name":"X-Forwarded-Port","value":"443"},{"name":"Host","value":"abc123def4.execute-api.us-east-1.amazonaws.com"},{"name":"X-Amzn-Trace-Id","value":"Root=1-6abee316-fcef3751758c51565657973f"},{"name":"cache-control","value":"max-age=0"},{"name":"sec-ch-ua","value":"\"Chromium\";v=\"94\",
+      \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\""},{"name":"sec-ch-ua-mobile","value":"?0"},{"name":"sec-ch-ua-platform","value":"\"Windows\""},{"name":"upgrade-insecure-requests","value":"1"},{"name":"user-agent","value":"Mozilla/5.0
+      (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36"},{"name":"accept","value":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"},{"name":"sec-fetch-site","value":"same-origin"},{"name":"sec-fetch-mode","value":"navigate"},{"name":"sec-fetch-user","value":"?1"},{"name":"sec-fetch-dest","value":"document"},{"name":"referer","value":"https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets"},{"name":"accept-encoding","value":"gzip,
+      deflate, br"},{"name":"accept-language","value":"en-US,en;q=0.9"},{"name":"cookie","value":"REDACTED"}]'
+  - name: httpRequest.headers[0]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"X-Forwarded-For","value":"192.0.2.41"}'
+  - name: httpRequest.headers[0].name
+    type: String
+    description: Fixed "X-Forwarded-For".
+    template_source: Fixed "X-Forwarded-For".
+    example_value: X-Forwarded-For
+  - name: httpRequest.headers[0].value
+    type: String
+    description: Same selected device ip_address; equals clientIp.
+    template_source: Same selected device ip_address; equals clientIp.
+    example_value: 192.0.2.41
+  - name: httpRequest.headers[1]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"X-Forwarded-Proto","value":"https"}'
+  - name: httpRequest.headers[1].name
+    type: String
+    description: Fixed "X-Forwarded-Proto".
+    template_source: Fixed "X-Forwarded-Proto".
+    example_value: X-Forwarded-Proto
+  - name: httpRequest.headers[1].value
+    type: String
+    description: Fixed "https".
+    template_source: Fixed "https".
+    example_value: https
+  - name: httpRequest.headers[2]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"X-Forwarded-Port","value":"443"}'
+  - name: httpRequest.headers[2].name
+    type: String
+    description: Fixed "X-Forwarded-Port".
+    template_source: Fixed "X-Forwarded-Port".
+    example_value: X-Forwarded-Port
+  - name: httpRequest.headers[2].value
+    type: String
+    description: Fixed "443".
+    template_source: Fixed "443".
+    example_value: '443'
+  - name: httpRequest.headers[3]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"Host","value":"abc123def4.execute-api.us-east-1.amazonaws.com"}'
+  - name: httpRequest.headers[3].name
+    type: String
+    description: Fixed "Host".
+    template_source: Fixed "Host".
+    example_value: Host
+  - name: httpRequest.headers[3].value
+    type: String
+    description: Fixed "abc123def4.execute-api.us-east-1.amazonaws.com".
+    template_source: Fixed "abc123def4.execute-api.us-east-1.amazonaws.com".
+    example_value: abc123def4.execute-api.us-east-1.amazonaws.com
+  - name: httpRequest.headers[4]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"X-Amzn-Trace-Id","value":"Root=1-6abee316-fcef3751758c51565657973f"}'
+  - name: httpRequest.headers[4].name
+    type: String
+    description: Fixed "X-Amzn-Trace-Id".
+    template_source: Fixed "X-Amzn-Trace-Id".
+    example_value: X-Amzn-Trace-Id
+  - name: httpRequest.headers[4].value
+    type: String
+    description: Root=1- + eight-digit lowercase hex epoch seconds + 24 Faker hex digits.
+    template_source: Root=1- + eight-digit lowercase hex epoch seconds + 24 Faker hex digits.
+    example_value: Root=1-6abee316-fcef3751758c51565657973f
+  - name: httpRequest.headers[5]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"cache-control","value":"max-age=0"}'
+  - name: httpRequest.headers[5].name
+    type: String
+    description: Fixed "cache-control".
+    template_source: Fixed "cache-control".
+    example_value: cache-control
+  - name: httpRequest.headers[5].value
+    type: String
+    description: Fixed "max-age=0".
+    template_source: Fixed "max-age=0".
+    example_value: max-age=0
+  - name: httpRequest.headers[6]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-ch-ua","value":"\"Chromium\";v=\"94\", \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\""}'
+  - name: httpRequest.headers[6].name
+    type: String
+    description: Fixed "sec-ch-ua".
+    template_source: Fixed "sec-ch-ua".
+    example_value: sec-ch-ua
+  - name: httpRequest.headers[6].value
+    type: String
+    description: Fixed "\"Chromium\";v=\"94\", \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\"".
+    template_source: Fixed "\"Chromium\";v=\"94\", \"Google Chrome\";v=\"94\", \";Not A Brand\";v=\"99\"".
+    example_value: '"Chromium";v="94", "Google Chrome";v="94", ";Not A Brand";v="99"'
+  - name: httpRequest.headers[7]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-ch-ua-mobile","value":"?0"}'
+  - name: httpRequest.headers[7].name
+    type: String
+    description: Fixed "sec-ch-ua-mobile".
+    template_source: Fixed "sec-ch-ua-mobile".
+    example_value: sec-ch-ua-mobile
+  - name: httpRequest.headers[7].value
+    type: String
+    description: Fixed "?0".
+    template_source: Fixed "?0".
+    example_value: ?0
+  - name: httpRequest.headers[8]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-ch-ua-platform","value":"\"Windows\""}'
+  - name: httpRequest.headers[8].name
+    type: String
+    description: Fixed "sec-ch-ua-platform".
+    template_source: Fixed "sec-ch-ua-platform".
+    example_value: sec-ch-ua-platform
+  - name: httpRequest.headers[8].value
+    type: String
+    description: Fixed "\"Windows\"".
+    template_source: Fixed "\"Windows\"".
+    example_value: '"Windows"'
+  - name: httpRequest.headers[9]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"upgrade-insecure-requests","value":"1"}'
+  - name: httpRequest.headers[9].name
+    type: String
+    description: Fixed "upgrade-insecure-requests".
+    template_source: Fixed "upgrade-insecure-requests".
+    example_value: upgrade-insecure-requests
+  - name: httpRequest.headers[9].value
+    type: String
+    description: Fixed "1".
+    template_source: Fixed "1".
+    example_value: '1'
+  - name: httpRequest.headers[10]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"user-agent","value":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
+      like Gecko) Chrome/94.0.4606.54 Safari/537.36"}'
+  - name: httpRequest.headers[10].name
+    type: String
+    description: Fixed "user-agent".
+    template_source: Fixed "user-agent".
+    example_value: user-agent
+  - name: httpRequest.headers[10].value
+    type: String
+    description: Fixed "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54
+      Safari/537.36".
+    template_source: Fixed "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54
+      Safari/537.36".
+    example_value: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54
+      Safari/537.36
+  - name: httpRequest.headers[11]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"accept","value":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}'
+  - name: httpRequest.headers[11].name
+    type: String
+    description: Fixed "accept".
+    template_source: Fixed "accept".
+    example_value: accept
+  - name: httpRequest.headers[11].value
+    type: String
+    description: Fixed "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9".
+    template_source: Fixed "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9".
+    example_value: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+  - name: httpRequest.headers[12]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-fetch-site","value":"same-origin"}'
+  - name: httpRequest.headers[12].name
+    type: String
+    description: Fixed "sec-fetch-site".
+    template_source: Fixed "sec-fetch-site".
+    example_value: sec-fetch-site
+  - name: httpRequest.headers[12].value
+    type: String
+    description: Fixed "same-origin".
+    template_source: Fixed "same-origin".
+    example_value: same-origin
+  - name: httpRequest.headers[13]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-fetch-mode","value":"navigate"}'
+  - name: httpRequest.headers[13].name
+    type: String
+    description: Fixed "sec-fetch-mode".
+    template_source: Fixed "sec-fetch-mode".
+    example_value: sec-fetch-mode
+  - name: httpRequest.headers[13].value
+    type: String
+    description: Fixed "navigate".
+    template_source: Fixed "navigate".
+    example_value: navigate
+  - name: httpRequest.headers[14]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-fetch-user","value":"?1"}'
+  - name: httpRequest.headers[14].name
+    type: String
+    description: Fixed "sec-fetch-user".
+    template_source: Fixed "sec-fetch-user".
+    example_value: sec-fetch-user
+  - name: httpRequest.headers[14].value
+    type: String
+    description: Fixed "?1".
+    template_source: Fixed "?1".
+    example_value: ?1
+  - name: httpRequest.headers[15]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"sec-fetch-dest","value":"document"}'
+  - name: httpRequest.headers[15].name
+    type: String
+    description: Fixed "sec-fetch-dest".
+    template_source: Fixed "sec-fetch-dest".
+    example_value: sec-fetch-dest
+  - name: httpRequest.headers[15].value
+    type: String
+    description: Fixed "document".
+    template_source: Fixed "document".
+    example_value: document
+  - name: httpRequest.headers[16]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"referer","value":"https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets"}'
+  - name: httpRequest.headers[16].name
+    type: String
+    description: Fixed "referer".
+    template_source: Fixed "referer".
+    example_value: referer
+  - name: httpRequest.headers[16].value
+    type: String
+    description: Fixed "https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets".
+    template_source: Fixed "https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets".
+    example_value: https://abc123def4.execute-api.us-east-1.amazonaws.com/lab/pets
+  - name: httpRequest.headers[17]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"accept-encoding","value":"gzip, deflate, br"}'
+  - name: httpRequest.headers[17].name
+    type: String
+    description: Fixed "accept-encoding".
+    template_source: Fixed "accept-encoding".
+    example_value: accept-encoding
+  - name: httpRequest.headers[17].value
+    type: String
+    description: Fixed "gzip, deflate, br".
+    template_source: Fixed "gzip, deflate, br".
+    example_value: gzip, deflate, br
+  - name: httpRequest.headers[18]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"accept-language","value":"en-US,en;q=0.9"}'
+  - name: httpRequest.headers[18].name
+    type: String
+    description: Fixed "accept-language".
+    template_source: Fixed "accept-language".
+    example_value: accept-language
+  - name: httpRequest.headers[18].value
+    type: String
+    description: Fixed "en-US,en;q=0.9".
+    template_source: Fixed "en-US,en;q=0.9".
+    example_value: en-US,en;q=0.9
+  - name: httpRequest.headers[19]
+    type: Object
+    description: Required container; keys exactly as shown below.
+    template_source: Required container; keys exactly as shown below.
+    example_value: '{"name":"cookie","value":"REDACTED"}'
+  - name: httpRequest.headers[19].name
+    type: String
+    description: Fixed "cookie".
+    template_source: Fixed "cookie".
+    example_value: cookie
+  - name: httpRequest.headers[19].value
+    type: String
+    description: Fixed "REDACTED".
+    template_source: Fixed "REDACTED".
+    example_value: REDACTED
+  - name: httpRequest.uri
+    type: String
+    description: Fixed "/lab/pets".
+    template_source: Fixed "/lab/pets".
+    example_value: /lab/pets
+  - name: httpRequest.args
+    type: String
+    description: Fixed "".
+    template_source: Fixed "".
+    example_value: ''
+  - name: httpRequest.httpVersion
+    type: String
+    description: Fixed "HTTP/1.1".
+    template_source: Fixed "HTTP/1.1".
+    example_value: HTTP/1.1
+  - name: httpRequest.httpMethod
+    type: String
+    description: Fixed "GET".
+    template_source: Fixed "GET".
+    example_value: GET
+  - name: httpRequest.requestId
+    type: String
+    description: 'Faker hexify: 16 lowercase hex characters, local synthetic nonempty-string subset.'
+    template_source: 'Faker hexify: 16 lowercase hex characters, local synthetic nonempty-string subset.'
+    example_value: 58c67959a50fff0f
