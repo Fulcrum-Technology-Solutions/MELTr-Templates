@@ -1,2 +1,4 @@
 vendor: f5
 name: F5
+website: https://www.f5.com
+description: Application delivery and security products including NGINX web servers and reverse proxies.

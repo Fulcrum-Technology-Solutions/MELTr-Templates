@@ -1,2 +1,4 @@
 vendor: gitlab
 name: GitLab
+website: https://gitlab.com
+description: DevSecOps platform providing source control, CI/CD, and audit logging.

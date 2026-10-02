@@ -1,2 +1,4 @@
 vendor: netgate
 name: Netgate
+website: https://www.netgate.com
+description: Network security appliances and software including pfSense firewalls.

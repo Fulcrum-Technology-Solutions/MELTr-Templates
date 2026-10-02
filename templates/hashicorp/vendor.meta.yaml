@@ -1,2 +1,4 @@
 vendor: hashicorp
 name: HashiCorp
+website: https://www.hashicorp.com
+description: Infrastructure automation tools including Vault for secrets management and audit logging.

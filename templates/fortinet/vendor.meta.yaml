@@ -1,2 +1,4 @@
 vendor: fortinet
 name: Fortinet
+website: https://www.fortinet.com
+description: Network security platforms including FortiGate firewalls and threat protection.

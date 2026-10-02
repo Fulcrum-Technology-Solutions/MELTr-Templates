@@ -1,2 +1,4 @@
 vendor: tailscale
 name: Tailscale
+website: https://tailscale.com
+description: Zero-configuration mesh VPN built on WireGuard with configuration audit events.

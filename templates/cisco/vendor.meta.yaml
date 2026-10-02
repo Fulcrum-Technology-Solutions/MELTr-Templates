@@ -1,2 +1,4 @@
 vendor: cisco
 name: Cisco
+website: https://www.cisco.com
+description: Networking, security, and collaboration platforms including Duo multi-factor authentication.

@@ -1,2 +1,4 @@
 vendor: oisf
 name: Open Information Security Foundation
+website: https://oisf.net
+description: Non-profit behind Suricata, an open-source network threat detection engine.

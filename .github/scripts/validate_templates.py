@@ -61,14 +61,29 @@ def validate_vendor_meta(filepath: Path, templates_root: Path) -> bool:
     vendor_dir = rel.parts[0]
     with open(filepath) as f:
         data = yaml.safe_load(f) or {}
+    ok = True
     vendor = data.get("vendor")
     if vendor != vendor_dir:
         print(
             f"[FAIL] path {filepath}: vendor={vendor!r} does not match directory {vendor_dir!r}"
         )
-        return False
-    print(f"[OK] path {filepath}")
-    return True
+        ok = False
+    logo = data.get("logo")
+    if logo:
+        logo_name = Path(str(logo)).name
+        if logo_name != str(logo) or "/" in str(logo) or "\\" in str(logo):
+            print(f"[FAIL] path {filepath}: logo must be a bare filename, got {logo!r}")
+            ok = False
+        else:
+            logo_path = filepath.parent / logo_name
+            if not logo_path.is_file():
+                print(
+                    f"[FAIL] path {filepath}: logo={logo!r} declared but file missing at {logo_path}"
+                )
+                ok = False
+    if ok:
+        print(f"[OK] path {filepath}")
+    return ok
 
 
 def validate_product_meta(filepath: Path, templates_root: Path) -> bool:

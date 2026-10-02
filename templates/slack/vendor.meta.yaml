@@ -1,2 +1,4 @@
 vendor: slack
 name: Slack
+website: https://slack.com
+description: Enterprise messaging and collaboration platform with organization audit logs.
