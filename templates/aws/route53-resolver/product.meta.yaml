@@ -1,0 +1,4 @@
+vendor: aws
+product: route53-resolver
+name: Route 53 Resolver
+description: Sample-backed Route 53 Resolver event profiles with source-specific MELTr entity fixtures.

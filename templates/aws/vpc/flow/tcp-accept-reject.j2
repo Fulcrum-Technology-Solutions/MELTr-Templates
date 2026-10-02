@@ -1,0 +1,12 @@
+{%- autoescape false -%}
+{%- set user = registry.get_random_user() -%}
+{%- set client = registry.get_device(user['username'] + '-vpc-client') -%}
+{%- set interface = registry.get_device('vpc-interface') -%}
+{%- set service = registry.get_service(fake.random_element(elements=['vpc-https', 'vpc-rdp'])) -%}
+{%- set clock = now() -%}
+{%- set end = (clock | unix_timestamp) | int -%}
+{%- set packets = fake.pyint(min_value=2, max_value=30) -%}
+{%- set bytes = packets * fake.pyint(min_value=40, max_value=1500) -%}
+{%- set source_port = fake.pyint(min_value=49152, max_value=65535) -%}
+{{- '2 ' + interface['aws_account_id'] + ' ' + interface['aws_interface_id'] + ' ' + client['ip_address'] + ' ' + interface['ip_address'] + ' ' + (source_port | string) + ' ' + (service['port'] | string) + ' 6 ' + (packets | string) + ' ' + (bytes | string) + ' ' + ((end - 30) | string) + ' ' + (end | string) + ' ' + service['vpc_action'] + ' OK' -}}
+{%- endautoescape -%}

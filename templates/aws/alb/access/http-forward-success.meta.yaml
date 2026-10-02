@@ -1,0 +1,306 @@
+vendor: aws
+product: alb
+data_source: access
+description: 33-field legacy ALB HTTP forward success profile. Registry client/service, coherent UTC timing, fresh
+  request and connection IDs.
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: ALB HTTP forward success
+    tags:
+    - alb
+    - access
+    - http
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Documented 33-field HTTP example profile, not latest 34-field layout. Requires source-specific entities:
+      entities/aws/alb/access.yaml; example configuration: configs/aws/alb/access.yaml. Tested with MELTr rc3 commit
+      1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic registry preview
+      entities are not sufficient.'
+    when_generated:
+    - HTTP request forwarded to target with status 200.
+    frequency_notes: 3600/hour test rate; independent new connection per request.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Positional definitions and HTTP example
+      url: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html
+      type: official
+    - title: Request trace syntax
+      url: https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-request-tracing.html
+      type: official
+    tools: []
+  fields:
+  - name: type
+    type: String
+    description: Position 1 in the native text record. Fixed `http`.
+    template_source: Fixed `http`.
+    field_number: 1
+    format: unquoted
+    example_value: http
+    required: true
+  - name: time
+    type: String
+    description: Position 2 in the native text record. One now() clock; UTC second plus .001000Z.
+    template_source: One now() clock; UTC second plus .001000Z.
+    field_number: 2
+    format: unquoted
+    example_value: '2026-10-01T22:47:44.001000Z'
+    required: true
+  - name: elb
+    type: String
+    description: Position 3 in the native text record. Service load_balancer_id; stable app/name/16-hex ID.
+    template_source: Service load_balancer_id; stable app/name/16-hex ID.
+    field_number: 3
+    format: unquoted
+    example_value: app/example-alb/0123456789abcdef
+    required: true
+  - name: client:port
+    type: String
+    description: Position 4 in the native text record. Selected device IPv4 + Faker pyint(49152,65535).
+    template_source: Selected device IPv4 + Faker pyint(49152,65535).
+    field_number: 4
+    format: unquoted
+    example_value: 192.0.2.81:65271
+    required: true
+  - name: target:port
+    type: String
+    description: Position 5 in the native text record. Service target_ipv4 + :80.
+    template_source: Service target_ipv4 + :80.
+    field_number: 5
+    format: unquoted
+    example_value: 10.20.1.20:80
+    required: true
+  - name: request_processing_time
+    type: String
+    description: Position 6 in the native text record. Fixed `0.000`.
+    template_source: Fixed `0.000`.
+    field_number: 6
+    format: unquoted
+    example_value: '0.000'
+    required: true
+  - name: target_processing_time
+    type: String
+    description: Position 7 in the native text record. Fixed `0.001`.
+    template_source: Fixed `0.001`.
+    field_number: 7
+    format: unquoted
+    example_value: '0.001'
+    required: true
+  - name: response_processing_time
+    type: String
+    description: Position 8 in the native text record. Fixed `0.000`.
+    template_source: Fixed `0.000`.
+    field_number: 8
+    format: unquoted
+    example_value: '0.000'
+    required: true
+  - name: elb_status_code
+    type: String
+    description: Position 9 in the native text record. Fixed `200`.
+    template_source: Fixed `200`.
+    field_number: 9
+    format: unquoted
+    example_value: '200'
+    required: true
+  - name: target_status_code
+    type: String
+    description: Position 10 in the native text record. Fixed `200`.
+    template_source: Fixed `200`.
+    field_number: 10
+    format: unquoted
+    example_value: '200'
+    required: true
+  - name: received_bytes
+    type: String
+    description: Position 11 in the native text record. Fixed `34`.
+    template_source: Fixed `34`.
+    field_number: 11
+    format: unquoted
+    example_value: '34'
+    required: true
+  - name: sent_bytes
+    type: String
+    description: Position 12 in the native text record. Fixed `366`.
+    template_source: Fixed `366`.
+    field_number: 12
+    format: unquoted
+    example_value: '366'
+    required: true
+  - name: request
+    type: String
+    description: Position 13 in the native text record. GET http:// + service request_host + :80/ HTTP/1.1.
+    template_source: GET http:// + service request_host + :80/ HTTP/1.1.
+    field_number: 13
+    format: quoted
+    example_value: '"GET http://app.example.com:80/ HTTP/1.1"'
+    required: true
+  - name: user_agent
+    type: String
+    description: Position 14 in the native text record. Fixed `curl/7.46.0`.
+    template_source: Fixed `curl/7.46.0`.
+    field_number: 14
+    format: quoted
+    example_value: '"curl/7.46.0"'
+    required: true
+  - name: ssl_cipher
+    type: String
+    description: Position 15 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 15
+    format: unquoted
+    example_value: '-'
+    required: true
+  - name: ssl_protocol
+    type: String
+    description: Position 16 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 16
+    format: unquoted
+    example_value: '-'
+    required: true
+  - name: target_group_arn
+    type: String
+    description: Position 17 in the native text record. Service target_group_arn; us-east-1 local profile and 12-digit
+      synthetic account.
+    template_source: Service target_group_arn; us-east-1 local profile and 12-digit synthetic account.
+    field_number: 17
+    format: unquoted
+    example_value: arn:aws:elasticloadbalancing:us-east-1:111122223333:targetgroup/example-targets/0123456789abcdef
+    required: true
+  - name: trace_id
+    type: String
+    description: Position 18 in the native text record. Root=1- + 8-hex epoch second + 24 Faker hexadecimal characters.
+    template_source: Root=1- + 8-hex epoch second + 24 Faker hexadecimal characters.
+    field_number: 18
+    format: quoted
+    example_value: '"Root=1-6abee310-cef3751758c51565657973f5"'
+    required: true
+  - name: domain_name
+    type: String
+    description: Position 19 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 19
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: chosen_cert_arn
+    type: String
+    description: Position 20 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 20
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: matched_rule_priority
+    type: String
+    description: Position 21 in the native text record. Fixed `0`.
+    template_source: Fixed `0`.
+    field_number: 21
+    format: unquoted
+    example_value: '0'
+    required: true
+  - name: request_creation_time
+    type: String
+    description: Position 22 in the native text record. Same clock truncated to UTC second, .000000Z.
+    template_source: Same clock truncated to UTC second, .000000Z.
+    field_number: 22
+    format: unquoted
+    example_value: '2026-10-01T22:47:44.000000Z'
+    required: true
+  - name: actions_executed
+    type: String
+    description: Position 23 in the native text record. Fixed `forward`.
+    template_source: Fixed `forward`.
+    field_number: 23
+    format: quoted
+    example_value: '"forward"'
+    required: true
+  - name: redirect_url
+    type: String
+    description: Position 24 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 24
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: error_reason
+    type: String
+    description: Position 25 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 25
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: target:port_list
+    type: String
+    description: Position 26 in the native text record. Reuse the exact target:port token.
+    template_source: Reuse the exact target:port token.
+    field_number: 26
+    format: quoted
+    example_value: '"10.20.1.20:80"'
+    required: true
+  - name: target_status_code_list
+    type: String
+    description: Position 27 in the native text record. Fixed `200`.
+    template_source: Fixed `200`.
+    field_number: 27
+    format: quoted
+    example_value: '"200"'
+    required: true
+  - name: classification
+    type: String
+    description: Position 28 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 28
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: classification_reason
+    type: String
+    description: Position 29 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 29
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: conn_trace_id
+    type: String
+    description: Position 30 in the native text record. TID_ + 16 Faker hexadecimal characters; opaque local example-compatible
+      shape.
+    template_source: TID_ + 16 Faker hexadecimal characters; opaque local example-compatible shape.
+    field_number: 30
+    format: unquoted
+    example_value: TID_8c67959a50fff0fb
+    required: true
+  - name: transformed_host
+    type: String
+    description: Position 31 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 31
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: transformed_uri
+    type: String
+    description: Position 32 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 32
+    format: quoted
+    example_value: '"-"'
+    required: true
+  - name: request_transform_status
+    type: String
+    description: Position 33 in the native text record. Fixed `-`.
+    template_source: Fixed `-`.
+    field_number: 33
+    format: quoted
+    example_value: '"-"'
+    required: true

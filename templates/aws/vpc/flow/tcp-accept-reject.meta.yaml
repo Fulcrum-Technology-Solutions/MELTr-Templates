@@ -1,0 +1,161 @@
+vendor: aws
+product: vpc
+data_source: flow
+description: Default v2 inbound IPv4 TCP flow examples; registry endpoints/interface and coupled ACCEPT 443 / REJECT
+  3389 scenarios, coherent counters and fresh times.
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: AWS VPC TCP ACCEPT and REJECT
+    tags:
+    - aws
+    - vpc
+    - flow
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: '14-field default v2 text profile with OK logging status. Requires source-specific entities: entities/aws/vpc/flow.yaml;
+      example configuration: configs/aws/vpc/flow.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - TCP 443 traffic is accepted.
+    - TCP 3389 traffic is rejected.
+    frequency_notes: One event/second test rate, five-event burst. Independent 30-second flow snapshots; no AWS
+      delivery delay simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Fields and enum definitions
+      url: https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html
+      type: official
+    - title: Complete ACCEPT/REJECT samples
+      url: https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-records-examples.html
+      type: official
+    tools: []
+  fields:
+  - name: version
+    type: String
+    description: Position 1 in the native text record. Fixed `2`.
+    template_source: Fixed `2`.
+    field_number: 1
+    format: String
+    example_value: '2'
+    required: true
+  - name: account-id
+    type: String
+    description: Position 2 in the native text record. Monitored interface device's `aws_account_id`; twelve decimal
+      digits, preserving leading zeros.
+    template_source: Monitored interface device's `aws_account_id`; twelve decimal digits, preserving leading zeros.
+    field_number: 2
+    format: String
+    example_value: '111122223333'
+    required: true
+  - name: interface-id
+    type: String
+    description: Position 3 in the native text record. Same device's stable `aws_interface_id`; local eni- plus
+      17 lowercase hex profile.
+    template_source: Same device's stable `aws_interface_id`; local eni- plus 17 lowercase hex profile.
+    field_number: 3
+    format: String
+    example_value: eni-0123456789abcdef0
+    required: true
+  - name: srcaddr
+    type: String
+    description: Position 4 in the native text record. Selected user's mapped client device `ip_address`.
+    template_source: Selected user's mapped client device `ip_address`.
+    field_number: 4
+    format: Ipv4 String
+    example_value: 10.20.0.11
+    required: true
+  - name: dstaddr
+    type: String
+    description: Position 5 in the native text record. Monitored interface `ip_address`, distinct from client.
+    template_source: Monitored interface `ip_address`, distinct from client.
+    field_number: 5
+    format: Ipv4 String
+    example_value: 10.20.1.20
+    required: true
+  - name: srcport
+    type: String
+    description: Position 6 in the native text record. Faker `pyint(49152, 65535)` through named min/max arguments;
+      local client-port subset.
+    template_source: Faker `pyint(49152, 65535)` through named min/max arguments; local client-port subset.
+    field_number: 6
+    format: Integer
+    example_value: '64776'
+    required: true
+  - name: dstport
+    type: String
+    description: Position 7 in the native text record. Selected service `port`, 443 or 3389.
+    template_source: Selected service `port`, 443 or 3389.
+    field_number: 7
+    format: Integer
+    example_value: '3389'
+    required: true
+  - name: protocol
+    type: String
+    description: Position 8 in the native text record. Fixed IANA TCP code `6`.
+    template_source: Fixed IANA TCP code `6`.
+    field_number: 8
+    format: String
+    example_value: '6'
+    required: true
+  - name: packets
+    type: String
+    description: Position 9 in the native text record. Faker `pyint(min_value=2, max_value=30)`, selected once.
+      Two or more packets permit the nonzero first-to-last span.
+    template_source: Faker `pyint(min_value=2, max_value=30)`, selected once. Two or more packets permit the nonzero
+      first-to-last span.
+    field_number: 9
+    format: Integer
+    example_value: '14'
+    required: true
+  - name: bytes
+    type: String
+    description: Position 10 in the native text record. Same packet count × Faker `pyint(min_value=40, max_value=1500)`.
+      A bounded synthetic average IP packet size; no application payload is inferred.
+    template_source: Same packet count × Faker `pyint(min_value=40, max_value=1500)`. A bounded synthetic average
+      IP packet size; no application payload is inferred.
+    field_number: 10
+    format: Integer
+    example_value: '13902'
+    required: true
+  - name: start
+    type: String
+    description: Position 11 in the native text record. End minus 30 seconds.
+    template_source: End minus 30 seconds.
+    field_number: 11
+    format: Integer
+    example_value: '1790894834'
+    required: true
+  - name: end
+    type: String
+    description: 'Position 12 in the native text record. Single `now()` through `unix_timestamp` then integer truncation:
+      Unix seconds.'
+    template_source: 'Single `now()` through `unix_timestamp` then integer truncation: Unix seconds.'
+    field_number: 12
+    format: Integer
+    example_value: '1790894864'
+    required: true
+  - name: action
+    type: String
+    description: Position 13 in the native text record. Same selected service's `vpc_action`, coupled to its port.
+    template_source: Same selected service's `vpc_action`, coupled to its port.
+    field_number: 13
+    format: String
+    example_value: REJECT
+    required: true
+  - name: log-status
+    type: String
+    description: Position 14 in the native text record. Fixed `OK`.
+    template_source: Fixed `OK`.
+    field_number: 14
+    format: String
+    example_value: OK
+    required: true

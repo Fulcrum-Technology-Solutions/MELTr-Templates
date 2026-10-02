@@ -1,6 +1,6 @@
 vendor: google
 product: security-command-center
-data_source: security_findings
+data_source: findings
 description: Security findings from Google Cloud Security Command Center V2, including custom threats, vulnerabilities, and policy violations detected across GCP resources and projects.
 format: JSON
 frequency: medium

@@ -1,0 +1,4 @@
+vendor: aws
+product: vpc
+name: Amazon VPC
+description: Sample-backed Amazon VPC event profiles with source-specific MELTr entity fixtures.

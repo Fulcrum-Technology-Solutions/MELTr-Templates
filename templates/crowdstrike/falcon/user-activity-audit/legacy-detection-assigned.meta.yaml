@@ -1,0 +1,125 @@
+vendor: crowdstrike
+product: falcon
+data_source: user-activity-audit
+description: legacy-detection-assigned; sample-backed independent native Event Streams JSON replica. Registry identities
+  and fresh UTC clock; not a sequenced stream.
+format: JSON
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: CrowdStrike legacy-detection-assigned
+    tags:
+    - crowdstrike
+    - audit
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: 'Narrow documented reference profile. Requires source-specific entities: entities/crowdstrike/falcon/user-activity-audit.yaml;
+      example configuration: configs/crowdstrike/falcon/user-activity-audit.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
+      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    when_generated:
+    - detection_update
+    frequency_notes: Local test rate only. Independent records; no lifecycle simulation.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: Full reference event
+      url: https://github.com/elastic/integrations/blob/cbfff90638a7565377768f50726775c0febc7bf4/packages/crowdstrike/data_stream/falcon/_dev/test/pipeline/test-falcon-audit-events.log
+      type: reference
+    tools: []
+  fields:
+  - name: metadata.customerIDString
+    type: String
+    description: '`org[''crowdstrike_cid'']`'
+    template_source: '`org[''crowdstrike_cid'']`'
+    example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  - name: metadata.offset
+    type: Integer
+    description: '`fake.pyint(min_value=1,max_value=2147483647)`'
+    template_source: '`fake.pyint(min_value=1,max_value=2147483647)`'
+    example_value: '820887982'
+  - name: metadata.eventType
+    type: String
+    description: '`Fixed: "UserActivityAuditEvent"`'
+    template_source: '`Fixed: "UserActivityAuditEvent"`'
+    example_value: UserActivityAuditEvent
+  - name: metadata.eventCreationTime
+    type: Integer
+    description: '`sec * 1000`'
+    template_source: '`sec * 1000`'
+    example_value: '1790894876000'
+  - name: metadata.version
+    type: String
+    description: '`Fixed: "1.0"`'
+    template_source: '`Fixed: "1.0"`'
+    example_value: '1.0'
+  - name: event.UserId
+    type: String
+    description: '`user[''email'']`'
+    template_source: '`user[''email'']`'
+    example_value: casey.patel@example.com
+  - name: event.UserIp
+    type: String
+    description: '`device[''ip_address'']`'
+    template_source: '`device[''ip_address'']`'
+    example_value: 192.0.2.42
+  - name: event.OperationName
+    type: String
+    description: '`Fixed: "detection_update"`'
+    template_source: '`Fixed: "detection_update"`'
+    example_value: detection_update
+  - name: event.ServiceName
+    type: String
+    description: '`Fixed: "detections"`'
+    template_source: '`Fixed: "detections"`'
+    example_value: detections
+  - name: event.AuditKeyValues[0].Key
+    type: String
+    description: '`Fixed: "detection_id"`'
+    template_source: '`Fixed: "detection_id"`'
+    example_value: detection_id
+  - name: event.AuditKeyValues[0].ValueString
+    type: String
+    description: '`profile[''detection_id'']`'
+    template_source: '`profile[''detection_id'']`'
+    example_value: ldt:dddddddddddddddddddddddddddddddd:17180539745
+  - name: event.AuditKeyValues[1].Key
+    type: String
+    description: '`Fixed: "new_state"`'
+    template_source: '`Fixed: "new_state"`'
+    example_value: new_state
+  - name: event.AuditKeyValues[1].ValueString
+    type: String
+    description: '`Fixed: "in_progress"`'
+    template_source: '`Fixed: "in_progress"`'
+    example_value: in_progress
+  - name: event.AuditKeyValues[2].Key
+    type: String
+    description: '`Fixed: "assigned_to"`'
+    template_source: '`Fixed: "assigned_to"`'
+    example_value: assigned_to
+  - name: event.AuditKeyValues[2].ValueString
+    type: String
+    description: '`user[''full_name'']`'
+    template_source: '`user[''full_name'']`'
+    example_value: Casey Patel
+  - name: event.AuditKeyValues[3].Key
+    type: String
+    description: '`Fixed: "assigned_to_uid"`'
+    template_source: '`Fixed: "assigned_to_uid"`'
+    example_value: assigned_to_uid
+  - name: event.AuditKeyValues[3].ValueString
+    type: String
+    description: '`user[''email'']`'
+    template_source: '`user[''email'']`'
+    example_value: casey.patel@example.com
+  - name: event.UTCTimestamp
+    type: Integer
+    description: '`sec`'
+    template_source: '`sec`'
+    example_value: '1790894876'

@@ -1,0 +1,260 @@
+vendor: aws
+product: s3
+data_source: server-access
+description: 'Three documented S3 text scenarios: GET logging status, missing bucket policy, PUT object. Registry
+  bucket/owner/client, UTC clock and fresh request identifiers.'
+format: Plain Text
+is_generator: true
+base_frequency: 3600
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: S3 documented server access operations
+    tags:
+    - s3
+    - access
+    icon: 📋
+    color_scheme: info
+  overview:
+    summary: '27-field published example profile; three complete scenario branches. Requires source-specific entities:
+      entities/aws/s3/server-access.yaml; example configuration: configs/aws/s3/server-access.yaml. Tested with
+      MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic
+      registry preview entities are not sufficient.'
+    when_generated:
+    - Logging-status GET, missing-policy GET or successful object PUT.
+    frequency_notes: 3600/hour test rate; equal synthetic branch selection is not measured traffic.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: S3 ordered fields and examples
+      url: https://docs.aws.amazon.com/AmazonS3/latest/userguide/LogFormat.html
+      type: official
+    tools: []
+  fields:
+  - name: bucket_owner
+    type: String
+    description: Position 1 in the native text record. Registry service canonical_owner; 64 lowercase hex, stable
+      synthetic account.
+    template_source: Registry service canonical_owner; 64 lowercase hex, stable synthetic account.
+    field_number: 1
+    format: unquoted token
+    example_value: e6433b73ea41ab1ccb8ebab49cc9392690bebe14b244719dac41d9ef96ce033d
+    required: true
+  - name: bucket
+    type: String
+    description: Position 2 in the native text record. Registry service bucket_name; local safe example-* name (no
+      dots or exotic characters).
+    template_source: Registry service bucket_name; local safe example-* name (no dots or exotic characters).
+    field_number: 2
+    format: unquoted token
+    example_value: example-lab-bucket
+    required: true
+  - name: time
+    type: String
+    description: Position 3 in the native text record. One now() UTC clock, numeric strftime components and explicit
+      English month table; seconds.
+    template_source: One now() UTC clock, numeric strftime components and explicit English month table; seconds.
+    field_number: 3
+    format: bracketed UTC
+    example_value: '[01/Oct/2026:22:47:44 +0000]'
+    required: true
+  - name: remote_ip
+    type: String
+    description: Position 4 in the native text record. One registry.get_random_device() IP; validated IPv4.
+    template_source: One registry.get_random_device() IP; validated IPv4.
+    field_number: 4
+    format: unquoted token
+    example_value: 192.0.2.91
+    required: true
+  - name: requester
+    type: String
+    description: Position 5 in the native text record. Reuse canonical_owner; owner account requester in this profile.
+    template_source: Reuse canonical_owner; owner account requester in this profile.
+    field_number: 5
+    format: unquoted token
+    example_value: e6433b73ea41ab1ccb8ebab49cc9392690bebe14b244719dac41d9ef96ce033d
+    required: true
+  - name: request_id
+    type: String
+    description: 'Position 6 in the native text record. Faker bothify: 16 uppercase hexadecimal characters, fresh
+      each event.'
+    template_source: 'Faker bothify: 16 uppercase hexadecimal characters, fresh each event.'
+    field_number: 6
+    format: unquoted token
+    example_value: CEF3751758C51565
+    required: true
+  - name: operation
+    type: String
+    description: 'Position 7 in the native text record. Scenario-fixed: `REST.GET.BUCKETPOLICY`, `REST.GET.LOGGING_STATUS`,
+      `REST.PUT.OBJECT`.'
+    template_source: 'Scenario-fixed: `REST.GET.BUCKETPOLICY`, `REST.GET.LOGGING_STATUS`, `REST.PUT.OBJECT`.'
+    field_number: 7
+    format: unquoted token
+    example_value: REST.GET.BUCKETPOLICY
+    required: true
+  - name: key
+    type: String
+    description: 'Position 8 in the native text record. Scenario-fixed: `-`, `s3-dg.pdf`.'
+    template_source: 'Scenario-fixed: `-`, `s3-dg.pdf`.'
+    field_number: 8
+    format: unquoted token
+    example_value: '-'
+    required: true
+  - name: request_uri
+    type: String
+    description: Position 9 in the native text record. Jinja derives bucket path; operation-specific method/query/key
+      fixed.
+    template_source: Jinja derives bucket path; operation-specific method/query/key fixed.
+    field_number: 9
+    format: quoted string
+    example_value: '"GET /example-lab-bucket?policy HTTP/1.1"'
+    required: true
+  - name: http_status
+    type: String
+    description: 'Position 10 in the native text record. Scenario-fixed: `200`, `404`.'
+    template_source: 'Scenario-fixed: `200`, `404`.'
+    field_number: 10
+    format: unquoted token
+    example_value: '404'
+    required: true
+  - name: error_code
+    type: String
+    description: 'Position 11 in the native text record. Scenario-fixed: `-`, `NoSuchBucketPolicy`.'
+    template_source: 'Scenario-fixed: `-`, `NoSuchBucketPolicy`.'
+    field_number: 11
+    format: unquoted token
+    example_value: NoSuchBucketPolicy
+    required: true
+  - name: bytes_sent
+    type: String
+    description: 'Position 12 in the native text record. Scenario-fixed: `-`, `242`, `297`.'
+    template_source: 'Scenario-fixed: `-`, `242`, `297`.'
+    field_number: 12
+    format: unquoted token
+    example_value: '297'
+    required: true
+  - name: object_size
+    type: String
+    description: 'Position 13 in the native text record. Scenario-fixed: `-`, `4406583`.'
+    template_source: 'Scenario-fixed: `-`, `4406583`.'
+    field_number: 13
+    format: unquoted token
+    example_value: '-'
+    required: true
+  - name: total_time
+    type: String
+    description: 'Position 14 in the native text record. Scenario-fixed: `11`, `38`, `41754`.'
+    template_source: 'Scenario-fixed: `11`, `38`, `41754`.'
+    field_number: 14
+    format: unquoted token
+    example_value: '38'
+    required: true
+  - name: turnaround_time
+    type: String
+    description: 'Position 15 in the native text record. Scenario-fixed: `-`, `28`.'
+    template_source: 'Scenario-fixed: `-`, `28`.'
+    field_number: 15
+    format: unquoted token
+    example_value: '-'
+    required: true
+  - name: referrer
+    type: String
+    description: 'Position 16 in the native text record. Scenario-fixed: `-`.'
+    template_source: 'Scenario-fixed: `-`.'
+    field_number: 16
+    format: quoted string
+    example_value: '"-"'
+    required: true
+  - name: user_agent
+    type: String
+    description: 'Position 17 in the native text record. Scenario-fixed: `S3Console/0.4`.'
+    template_source: 'Scenario-fixed: `S3Console/0.4`.'
+    field_number: 17
+    format: quoted string
+    example_value: '"S3Console/0.4"'
+    required: true
+  - name: version_id
+    type: String
+    description: 'Position 18 in the native text record. Scenario-fixed: `-`.'
+    template_source: 'Scenario-fixed: `-`.'
+    field_number: 18
+    format: unquoted token
+    example_value: '-'
+    required: true
+  - name: host_id
+    type: String
+    description: Position 19 in the native text record. MELTr random_string(85, base64 alphabet), Faker selects
+      final A/Q/g/w, then ==; synthetic 64-byte base64 token.
+    template_source: MELTr random_string(85, base64 alphabet), Faker selects final A/Q/g/w, then ==; synthetic 64-byte
+      base64 token.
+    field_number: 19
+    format: unquoted token
+    example_value: w79NfUHfUjwWHVaXbWemcO/WhzZelXlrVA/8/A9u9fl8f6bXlwJmdKVfzzApvMDVC4wgigG6q3eTmf8yW3UFvQ==
+    required: true
+  - name: signature_version
+    type: String
+    description: 'Position 20 in the native text record. Scenario-fixed: `SigV4`.'
+    template_source: 'Scenario-fixed: `SigV4`.'
+    field_number: 20
+    format: unquoted token
+    example_value: SigV4
+    required: true
+  - name: cipher_suite
+    type: String
+    description: 'Position 21 in the native text record. Scenario-fixed: `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES128-SHA`.'
+    template_source: 'Scenario-fixed: `ECDHE-RSA-AES128-GCM-SHA256`, `ECDHE-RSA-AES128-SHA`.'
+    field_number: 21
+    format: unquoted token
+    example_value: ECDHE-RSA-AES128-GCM-SHA256
+    required: true
+  - name: authentication_type
+    type: String
+    description: 'Position 22 in the native text record. Scenario-fixed: `AuthHeader`.'
+    template_source: 'Scenario-fixed: `AuthHeader`.'
+    field_number: 22
+    format: unquoted token
+    example_value: AuthHeader
+    required: true
+  - name: host_header
+    type: String
+    description: Position 23 in the native text record. Same bucket + .s3.us-west-1.amazonaws.com.
+    template_source: Same bucket + .s3.us-west-1.amazonaws.com.
+    field_number: 23
+    format: unquoted token
+    example_value: example-lab-bucket.s3.us-west-1.amazonaws.com
+    required: true
+  - name: tls_version
+    type: String
+    description: 'Position 24 in the native text record. Scenario-fixed: `TLSV1.2`.'
+    template_source: 'Scenario-fixed: `TLSV1.2`.'
+    field_number: 24
+    format: unquoted token
+    example_value: TLSV1.2
+    required: true
+  - name: access_point_arn
+    type: String
+    description: 'Position 25 in the native text record. Scenario-fixed: `-`.'
+    template_source: 'Scenario-fixed: `-`.'
+    field_number: 25
+    format: unquoted token
+    example_value: '-'
+    required: true
+  - name: acl_required
+    type: String
+    description: 'Position 26 in the native text record. Scenario-fixed: `-`, `Yes`.'
+    template_source: 'Scenario-fixed: `-`, `Yes`.'
+    field_number: 26
+    format: unquoted token
+    example_value: 'Yes'
+    required: true
+  - name: source_region
+    type: String
+    description: 'Position 27 in the native text record. Scenario-fixed: `us-east-1`.'
+    template_source: 'Scenario-fixed: `us-east-1`.'
+    field_number: 27
+    format: unquoted token
+    example_value: us-east-1
+    required: true

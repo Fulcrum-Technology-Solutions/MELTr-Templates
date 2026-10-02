@@ -1,0 +1,4 @@
+vendor: aws
+product: waf
+name: AWS WAF
+description: Sample-backed AWS WAF event profiles with source-specific MELTr entity fixtures.

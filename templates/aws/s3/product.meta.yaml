@@ -1,0 +1,4 @@
+vendor: aws
+product: s3
+name: Amazon S3
+description: Sample-backed Amazon S3 event profiles with source-specific MELTr entity fixtures.
