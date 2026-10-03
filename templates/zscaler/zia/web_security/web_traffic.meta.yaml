@@ -1,12 +1,41 @@
 vendor: zscaler
 product: zia
 data_source: web_security
-description: "Web proxy traffic events with security analysis from Zscaler Internet Access"
-format: "JSON"
-frequency: "high"
+description: ZIA web proxy NSS fields using native Nanolog Streaming Service token names
+format: JSON
 is_generator: true
 base_frequency: 2400
-time_patterns:
-  - business_hours
-  - night_hours
-  - weekend
+business_hours_multiplier: 1.0
+night_hours_multiplier: 1.0
+weekend_multiplier: 1.0
+documentation:
+  display:
+    title: Zscaler ZIA web NSS
+    tags:
+    - zscaler
+    - zia
+    - nss
+    - web
+    icon: 🛡️
+    color_scheme: info
+  overview:
+    summary: >-
+      Synthetic ZIA web transaction log using native NSS feed field names
+      (cip, recordid, host, urlcat, action Allowed/Blocked, etc.) from Zscaler
+      Nanolog Streaming Service documentation — not Splunk TA remaps
+      (ClientIP, event_id, hostname, urlcategory).
+    when_generated:
+    - web transaction Allowed
+    - web transaction Blocked
+    frequency_notes: High-volume proxy traffic profile.
+    security_relevance: Informational
+    compliance_frameworks: []
+  resources:
+    documentation:
+    - title: NSS Feed Output Format — Web Logs
+      url: https://help.zscaler.com/zia/nss-feed-output-format-web-logs
+      type: reference
+    - title: General Guidelines for NSS Feeds and Feed Formats
+      url: https://help.zscaler.com/zia/general-guidelines-nss-feeds-and-feed-formats
+      type: reference
+    tools: []
