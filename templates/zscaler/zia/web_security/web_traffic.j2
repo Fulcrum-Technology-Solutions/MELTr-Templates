@@ -1,140 +1,137 @@
+{#-
+  Zscaler ZIA web NSS fields — native Nanolog Streaming Service token names.
+  Source: https://help.zscaler.com/zia/nss-feed-output-format-web-logs
+  (not Splunk TA remaps such as ClientIP / event_id / hostname / urlcategory)
+-#}
 {%- set user = registry.get_random_user() -%}
 {%- set device = registry.get_random_device() -%}
-{%- set client_ip = device.ip_address -%}
-{%- set server_ip = random_private_ip() -%}
-{%- set request_method = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'OPTIONS'] | random -%}
-{%- set status_code = [200, 201, 301, 302, 304, 400, 401, 403, 404, 429, 500, 502, 503] | random -%}
-{%- set current_time = current_timestamp() -%}
-{%- set domain = registry.get_organization_field('domain') | default('example.com') -%}
-{%- set url_paths = [
-  '/', '/login', '/dashboard', '/api/v1/users', '/api/v2/data',
-  '/resources/document.pdf', '/images/logo.png', '/css/style.css',
-  '/js/app.js', '/favicon.ico', '/robots.txt'
-] -%}
-{%- set url_path = url_paths | random -%}
-{%- set url = 'https://' + domain + url_path -%}
-{%- set referer = 'https://' + domain + '/' -%}
-{%- set ua_class = ['Browser', 'Mobile App', 'API Client', 'Bot'] | random -%}
-{%- set protocol = ['HTTP', 'HTTPS'] | random -%}
-{%- set action = ['ALLOW', 'BLOCK', 'ALERT', 'MONITOR'] | random -%}
-{%- set req_size = random_int(100, 5000) -%}
-{%- set resp_size = random_int(500, 50000) -%}
-{%- set total_size = req_size + resp_size -%}
-{%- set client_time = random_int(5, 500) -%}
-{%- set server_time = random_int(10, 1000) -%}
-{%- set tls_version = ['TLSv1.2', 'TLSv1.3'] | random -%}
-{%- set ssl_cipher = ['ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-ECDSA-AES256-GCM-SHA384'] | random -%}
-{%- set content_types = [
-  'text/html', 'application/json', 'text/plain', 'application/pdf',
-  'image/png', 'image/jpeg', 'text/css', 'application/javascript',
-  'application/xml', 'text/xml'
-] -%}
-{%- set content_type = content_types | random -%}
-{%- set record_id = random_int(1000000, 9999999) -%}
-{%- set risk_score = random_int(0, 100) -%}
+{%- set org_domain = registry.get_organization_field('domain') or 'example.com' -%}
+{%- set clock = now() -%}
+{%- set epoch = (clock | unix_timestamp) | int -%}
+{%- set months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] -%}
+{%- set days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] -%}
+{%- set time_str = days[clock.weekday()] + ' ' + months[clock.month - 1] + ' ' + (clock | strftime('%d %H:%M:%S %Y')) -%}
 {%- set has_threat = [true, false, false, false, false, false] | random -%}
-{%- set threat_names = [
-  'HTML.Adware.Gen', 'HTML.Adware.Popads', 'Win32.Adware.PCAppStore',
-  'PS.Adware.DesktopGoose', 'W32/Adware.QXJK-2664', 'Trojan.GenericKD.40251423',
-  'JS:Trojan.Cryxos', 'Trojan:Win32/Occamy.C', 'Backdoor.Win32.Androm',
-  'Win32.Downloader.Banload', 'Phishing.Generic', 'Malware.Suspicious'
-] -%}
-{%- set threat_name = threat_names | random -%}
-{%- set threat_categories = ['Adware', 'Trojan', 'Malware', 'Spyware', 'Backdoor', 'Phishing'] | random -%}
-{%- set threat_class = ['Malicious', 'Suspicious', 'PUA', 'Unwanted'] | random -%}
-{%- set url_categories = [
-  'Business', 'Technology', 'Social Media', 'News', 'Education',
-  'Entertainment', 'Shopping', 'Travel', 'Finance', 'Government'
-] -%}
-{%- set url_classes = ['Business', 'Allowed', 'Monitored', 'Restricted'] -%}
-
-{
-  "action": "{{ 'BLOCK' if has_threat else action }}",
-  "appclass": "Web",
-  "appname": "Web Browsing",
-  "bwclassname": "Default",
-  "bwrulename": "Default",
-  "bwthrottle": "No",
-  "ClientIP": "{{ client_ip }}",
-  "clientpublicIP": "{{ random_public_ip() }}",
-  "clientsslcipher": "{{ ssl_cipher }}",
-  "clientsslsessreuse": "{{ ['Yes', 'No'] | random }}",
-  "clienttlsversion": "{{ tls_version }}",
-  "clienttranstime": "{{ client_time }}",
-  "contenttype": "{{ content_type }}",
-  "contenttype__1": "{{ content_type }}",
-  "department": "{{ user.department | default('Unknown') }}",
-  "dept": "{{ user.department | default('Unknown') }}",
-  "deviceappversion": "1.0",
-  "devicemodel": "{{ device.model | default('Unknown') }}",
-  "devicename": "{{ device.hostname }}",
-  "devicename__1": "{{ device.hostname }}",
-  "deviceostype": "{{ device.os_type | default('Unknown') }}",
-  "deviceostype__1": "{{ device.os_type | default('Unknown') }}",
-  "deviceosversion": "{{ device.os_version | default('Unknown') }}",
-  "deviceplatform": "{{ device.device_type | default('workstation') }}",
-  "dlpdicthitcount": "0",
-  "dlpdictionaries": "None",
-  "dlpengine": "Default",
-  "dlpidentifier": "0",
-  "dlpmd5": "None",
-  "ehost": "{{ domain }}",
-  "epochtime": "{{ current_time }}",
-  "ereferer": "{{ referer }}",
-  "event_id": "{{ record_id }}",
-  "fileclass": "None",
-  "filename": "None",
-  "filesubtype": "None",
-  "filetype": "None",
-  "hostname": "{{ domain }}",
-  "location": "{{ user.location.city if user.location is defined and user.location.city is defined else 'Unknown' }}",
-  "md5": "{{ random_string(32, '0123456789abcdef') if has_threat else 'None' }}",
-  "mobappcat": "None",
-  "mobappname": "None",
-  "mobdevtype": "None",
-  "module": "ZIA",
-  "login": "{{ user.username }}",
-  "pagerisk": "{{ '85' if has_threat else risk_score }}",
-  "product": "ZIA",
-  "productversion": "1.0",
-  "protocol": "{{ protocol }}",
-  "reason": "{{ 'Malware detected' if has_threat else 'Policy Allow' }}",
-  "refererURL": "{{ referer }}",
-  "reqdatasize": "{{ req_size - 200 }}",
-  "reqhdrsize": "200",
-  "requestmethod": "{{ request_method }}",
-  "requestsize": "{{ req_size }}",
-  "respdatasize": "{{ resp_size - 300 }}",
-  "resphdrsize": "300",
-  "responsesize": "{{ resp_size }}",
-  "respsize": "{{ resp_size }}",
-  "respversion": "HTTP/1.1",
-  "rulelabel": "Default",
-  "ruletype": "Default",
-  "serverip": "{{ server_ip }}",
-  "serversslsessreuse": "{{ ['Yes', 'No'] | random }}",
-  "servertranstime": "{{ server_time }}",
-  "srvcertchainvalpass": "Yes",
-  "srvcertvalidationtype": "Default",
-  "srvcertvalidityperiod": "{{ random_int(30, 730) }}",
-  "srvocspresult": "None",
-  "srvsslcipher": "{{ ssl_cipher }}",
-  "srvtlsversion": "{{ tls_version }}",
-  "srvwildcardcert": "{{ ['Yes', 'No'] | random }}",
-  "status": "{{ '403' if has_threat else status_code }}",
-  "threatcategory": "{{ threat_categories if has_threat else 'None' }}",
-  "threatclass": "{{ threat_class if has_threat else 'None' }}",
-  "threatname": "{{ threat_name if has_threat else 'None' }}",
-  "throttlereqsize": "0",
-  "throttlerespsize": "0",
-  "trafficredirectmethod": "None",
-  "transactionsize": "{{ total_size }}",
-  "tz": "UTC",
-  "ua_token": "Mozilla/5.0",
-  "uaclass": "{{ ua_class }}",
-  "url": "{{ url }}",
-  "urlcategory": "{{ url_categories | random }}",
-  "urlclass": "{{ url_classes | random }}",
-  "urlsupercategory": "Web Content",
-  "user": "{{ user.username }}"
-}
+{%- set action = 'Blocked' if has_threat else 'Allowed' -%}
+{%- set reqmethod = ['GET', 'POST', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS'] | random -%}
+{%- set proto = ['HTTP', 'HTTPS'] | random -%}
+{%- set host = fake.random_element(elements=['www', 'api', 'cdn', 'mail', 'docs']) + '.' + org_domain -%}
+{%- set url_path = ['/', '/login', '/index.html', '/api/v1/users', '/resources/doc.pdf', '/favicon.ico'] | random -%}
+{%- set url = host + url_path -%}
+{%- set referer = 'www.google.com/' -%}
+{%- set reqsize = random_int(200, 5000) -%}
+{%- set respsize = random_int(500, 50000) -%}
+{%- set reqhdrsize = 200 -%}
+{%- set resphdrsize = 300 -%}
+{%- set reqdatasize = [0, reqsize - reqhdrsize] | max -%}
+{%- set respdatasize = [0, respsize - resphdrsize] | max -%}
+{%- set urlcat = [
+  'Business and Economy', 'Computers and Internet', 'Social Networking',
+  'News and Media', 'Education', 'Entertainment', 'Shopping and Auctions',
+  'Travel', 'Finance', 'Government'
+] | random -%}
+{%- set urlsupercat = [
+  'Business and Economy', 'Internet Communication', 'Social and Lifestyle',
+  'News and Information', 'Education', 'Entertainment and Recreation'
+] | random -%}
+{%- set urlclass = ['Business Use', 'Bandwidth Loss', 'Productivity Loss', 'General Surfing'] | random -%}
+{%- set appname = ['Web Browsing', 'Google', 'Microsoft Office Online', 'Salesforce', 'Box'] | random -%}
+{%- set appclass = ['General Browsing', 'Sales and Marketing', 'File Sharing', 'Collaboration'] | random -%}
+{%- set malwarecat = ['Adware', 'Trojan', 'Phishing', 'Spyware', 'Backdoor'] | random -%}
+{%- set malwareclass = ['Malware', 'Advanced Threats', 'Sandbox'] | random -%}
+{%- set threatname = [
+  'HTML.Adware.Gen', 'JS:Trojan.Cryxos', 'Phishing.Generic', 'EICAR Test File'
+] | random -%}
+{%- set riskscore = 85 if has_threat else random_int(0, 40) -%}
+{%- set threatseverity = 'Critical' if riskscore >= 90 else ('High' if riskscore >= 75 else ('Medium' if riskscore >= 46 else ('Low' if riskscore >= 1 else 'None'))) -%}
+{%- set respcode = '403' if has_threat else (['200', '201', '301', '302', '304', '400', '401', '404', '500'] | random) -%}
+{%- set reason = 'Virus/Spyware/Malware blocked' if has_threat else 'Allowed' -%}
+{%- set ruletype = 'URL Filtering' if has_threat else 'None' -%}
+{%- set rulelabel = 'URL_Filtering_1' if has_threat else 'None' -%}
+{%- set location = user.location.city if user.location is defined and user.location.city is defined else 'Headquarters' -%}
+{%- set ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' -%}
+{{- {
+  'time': time_str,
+  'tz': 'UTC',
+  'epochtime': epoch,
+  'recordid': random_int(1000000000000000000, 9223372036854775807),
+  'login': user['email'],
+  'dept': user.get('department') or 'Default Department',
+  'cip': device['ip_address'],
+  'cintip': random_public_ip(),
+  'sip': '0.0.0.0' if has_threat else random_public_ip(),
+  'host': host,
+  'url': url,
+  'referer': referer,
+  'refererhost': 'www.google.com',
+  'proto': proto,
+  'reqmethod': reqmethod,
+  'reqversion': '1.1',
+  'respversion': '1.1',
+  'reqsize': reqsize,
+  'reqhdrsize': reqhdrsize,
+  'reqdatasize': reqdatasize,
+  'respsize': respsize,
+  'resphdrsize': resphdrsize,
+  'respdatasize': respdatasize,
+  'totalsize': reqsize + respsize,
+  'respcode': respcode,
+  'ua': ua,
+  'ua_token': 'Google Chrome (122.x)',
+  'uaclass': 'Chrome',
+  'contenttype': ['text/html', 'application/json', 'text/plain', 'image/png', 'application/javascript'] | random,
+  'action': action,
+  'reason': reason,
+  'ruletype': ruletype,
+  'rulelabel': rulelabel,
+  'appname': appname,
+  'appclass': appclass,
+  'urlcat': urlcat,
+  'urlsupercat': urlsupercat,
+  'urlclass': urlclass,
+  'location': location,
+  'riskscore': riskscore,
+  'threatname': threatname if has_threat else 'None',
+  'threatseverity': threatseverity if has_threat else 'None',
+  'malwarecat': malwarecat if has_threat else 'None',
+  'malwareclass': malwareclass if has_threat else 'None',
+  'bamd5': random_string(32, '0123456789abcdef') if has_threat else 'None',
+  'filetype': 'None',
+  'fileclass': 'None',
+  'filename': 'None',
+  'filesubtype': 'None',
+  'bwclassname': 'Default',
+  'bwrulename': 'Default',
+  'bwthrottle': 'No',
+  'throttlereqsize': 0,
+  'throttlerespsize': 0,
+  'dlpeng': 'None',
+  'dlpdict': 'None',
+  'dlpdicthitcount': 'None',
+  'dlpidentifier': 0,
+  'dlpmd5': 'None',
+  'ssldecrypted': 'Yes' if proto == 'HTTPS' else 'No',
+  'clienttlsversion': ['TLS1.2', 'TLS1.3'] | random if proto == 'HTTPS' else 'None',
+  'clientsslcipher': ['ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256'] | random if proto == 'HTTPS' else 'None',
+  'clientsslsessreuse': ['Yes', 'No'] | random if proto == 'HTTPS' else 'None',
+  'srvtlsversion': ['TLS1.2', 'TLS1.3'] | random if proto == 'HTTPS' else 'None',
+  'srvsslcipher': ['ECDHE-RSA-AES256-GCM-SHA384', 'ECDHE-RSA-AES128-GCM-SHA256'] | random if proto == 'HTTPS' else 'None',
+  'serversslsessreuse': ['Yes', 'No'] | random if proto == 'HTTPS' else 'None',
+  'srvcertchainvalpass': 'Yes' if proto == 'HTTPS' else 'None',
+  'srvcertvalidationtype': 'Default' if proto == 'HTTPS' else 'None',
+  'srvcertvalidityperiod': random_int(30, 730) if proto == 'HTTPS' else 0,
+  'srvocspresult': 'None',
+  'srvwildcardcert': ['Yes', 'No'] | random if proto == 'HTTPS' else 'None',
+  'devicehostname': device['hostname'],
+  'devicename': device['hostname'],
+  'devicemodel': device.get('model') or 'None',
+  'deviceostype': device.get('os_type') or 'None',
+  'deviceosversion': device.get('os_version') or 'None',
+  'deviceowner': user['email'],
+  'deviceappversion': 'None',
+  'mobappname': 'None',
+  'mobappcat': 'None',
+  'mobdevtype': 'None',
+  'trafficredirectmethod': 'Zscaler Client Connector (Zscaler App)',
+  'productversion': '6.2'
+} | tojson -}}
