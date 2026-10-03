@@ -1,7 +1,10 @@
 {%- autoescape false -%}
 {%- set client = registry.get_random_device() -%}
-{%- set service = registry.get_service('alb-http') -%}
-{%- set target = service['target_ipv4'] + ':80' -%}
+{%- set target_ipv4 = random_private_ip() -%}
+{%- set target = target_ipv4 + ':80' -%}
+{%- set load_balancer_id = 'app/my-loadbalancer/' + fake.bothify(text='????????????????', letters='0123456789abcdef') -%}
+{%- set request_host = 'www.' + (registry.get_organization_field('domain') or 'example.com') -%}
+{%- set target_group_arn = 'arn:aws:elasticloadbalancing:us-east-1:' + fake.numerify(text='############') + ':targetgroup/my-targets/' + fake.bothify(text='????????????????', letters='0123456789abcdef') -%}
 {%- set clock = now() -%}
-http {{ clock | strftime('%Y-%m-%dT%H:%M:%S') }}.001000Z {{ service['load_balancer_id'] }} {{ client['ip_address'] }}:{{ fake.pyint(min_value=49152,max_value=65535) }} {{ target }} 0.000 0.001 0.000 200 200 34 366 "GET http://{{ service['request_host'] }}:80/ HTTP/1.1" "curl/7.46.0" - - {{ service['target_group_arn'] }} "Root=1-{{ '%08x' | format((clock | unix_timestamp) | int) }}-{{ fake.bothify(text='?' * 24, letters='0123456789abcdef') }}" "-" "-" 0 {{ clock | strftime('%Y-%m-%dT%H:%M:%S') }}.000000Z "forward" "-" "-" "{{ target }}" "200" "-" "-" TID_{{ fake.bothify(text='?' * 16, letters='0123456789abcdef') }} "-" "-" "-"
+http {{ clock | strftime('%Y-%m-%dT%H:%M:%S') }}.001000Z {{ load_balancer_id }} {{ client['ip_address'] }}:{{ fake.pyint(min_value=49152,max_value=65535) }} {{ target }} 0.000 0.001 0.000 200 200 34 366 "GET http://{{ request_host }}:80/ HTTP/1.1" "curl/7.46.0" - - {{ target_group_arn }} "Root=1-{{ '%08x' | format((clock | unix_timestamp) | int) }}-{{ fake.bothify(text='?' * 24, letters='0123456789abcdef') }}" "-" "-" 0 {{ clock | strftime('%Y-%m-%dT%H:%M:%S') }}.000000Z "forward" "-" "-" "{{ target }}" "200" "-" "-" TID_{{ fake.bothify(text='?' * 16, letters='0123456789abcdef') }} "-" "-" "-"
 {%- endautoescape -%}

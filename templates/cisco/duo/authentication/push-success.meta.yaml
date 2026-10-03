@@ -349,13 +349,13 @@ documentation:
     example_value: '{"groups":["Example Employees","Example Headquarters"],"key":"DU4E8C7F6514E98DFA4D","name":"ben.rivera@example.com"}'
   - name: user.groups
     type: Array
-    description: '`user[''duo_groups'']`'
-    template_source: '`user[''duo_groups'']`'
+    description: '`duo_groups` (from user.department)'
+    template_source: '`duo_groups` (from user.department)'
     example_value: '["Example Employees","Example Headquarters"]'
   - name: user.key
     type: String
-    description: '`user[''duo_key'']`'
-    template_source: '`user[''duo_key'']`'
+    description: '`duo_user_key` (generated)'
+    template_source: '`duo_user_key` (generated)'
     example_value: DU4E8C7F6514E98DFA4D
   - name: user.name
     type: String
@@ -370,11 +370,11 @@ documentation:
     example_value: USER_MARKED_FRAUD
   - name: user.groups[0]
     type: String
-    description: '`user[''duo_groups'']` This field is the user.groups[0] member.'
-    template_source: '`user[''duo_groups'']`'
+    description: '`duo_groups` (from user.department) This field is the user.groups[0] member.'
+    template_source: '`duo_groups` (from user.department)'
     example_value: Example Employees
   - name: user.groups[1]
     type: String
-    description: '`user[''duo_groups'']` This field is the user.groups[1] member.'
-    template_source: '`user[''duo_groups'']`'
+    description: '`duo_groups` (from user.department) This field is the user.groups[1] member.'
+    template_source: '`duo_groups` (from user.department)'
     example_value: Example Headquarters

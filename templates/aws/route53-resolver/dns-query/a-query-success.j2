@@ -1,3 +1,8 @@
 {%- set client = registry.get_random_device() -%}
-{%- set answer = registry.get_service(client['hostname'] + '-answer') -%}
-{{- {'version': '1.100000', 'account_id': client['aws_account_id'], 'region': 'us-east-1', 'vpc_id': client['aws_vpc_id'], 'query_timestamp': now() | iso8601_utc, 'query_name': answer['dns_name'], 'query_type': 'A', 'query_class': 'IN', 'rcode': 'NOERROR', 'answers': [{'Rdata': answer['dns_answer_ipv4'], 'Type': 'A', 'Class': 'IN'}], 'srcaddr': client['ip_address'], 'srcport': fake.pyint(min_value=49152, max_value=65535) | string, 'transport': 'UDP', 'srcids': {'instance': client['aws_instance_id']}} | tojson -}}
+{%- set org_domain = registry.get_organization_field('domain') or 'example.com' -%}
+{%- set dns_name = fake.random_element(elements=['www', 'api', 'mail', 'cdn']) + '.' + org_domain + '.' -%}
+{%- set dns_answer_ipv4 = random_private_ip() -%}
+{%- set aws_account_id = fake.numerify(text='############') -%}
+{%- set aws_vpc_id = 'vpc-' + fake.bothify(text='?????????????????', letters='0123456789abcdef') -%}
+{%- set aws_instance_id = 'i-' + fake.bothify(text='?????????????????', letters='0123456789abcdef') -%}
+{{- {'version': '1.100000', 'account_id': aws_account_id, 'region': 'us-east-1', 'vpc_id': aws_vpc_id, 'query_timestamp': now() | iso8601_utc, 'query_name': dns_name, 'query_type': 'A', 'query_class': 'IN', 'rcode': 'NOERROR', 'answers': [{'Rdata': dns_answer_ipv4, 'Type': 'A', 'Class': 'IN'}], 'srcaddr': client['ip_address'], 'srcport': fake.pyint(min_value=49152, max_value=65535) | string, 'transport': 'UDP', 'srcids': {'instance': aws_instance_id}} | tojson -}}

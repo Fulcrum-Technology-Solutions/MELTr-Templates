@@ -1,5 +1,10 @@
 {%- autoescape false -%}
 {%- set client = registry.get_random_device() -%}
-{%- set rule = registry.get_service(fake.random_element(elements=['pfsense-pass', 'pfsense-block'])) -%}
-{{- [rule['rule_number'], '', '', rule['tracker'], rule['interface'], 'match', rule['filter_action'], 'in', '4', '0x0', '', '64', fake.pyint(min_value=0, max_value=65535), '0', 'DF', '6', 'tcp', '40', client['ip_address'], rule['destination_ipv4'], fake.pyint(min_value=49152, max_value=65535), rule['port'], '0', 'S', fake.pyint(min_value=0, max_value=4294967295), '', '65535', '', ''] | join(',') -}}
+{%- set filter_action = fake.random_element(elements=['pass', 'block']) -%}
+{%- set rule_number = 100000 if filter_action == 'pass' else 100001 -%}
+{%- set tracker = fake.pyint(min_value=1000000000, max_value=2000000000) -%}
+{%- set interface = fake.random_element(elements=['em0', 'em1', 'igb0']) -%}
+{%- set destination_ipv4 = random_public_ip() -%}
+{%- set port = fake.random_element(elements=[80, 443, 22, 3389]) -%}
+{{- [rule_number, '', '', tracker, interface, 'match', filter_action, 'in', '4', '0x0', '', '64', fake.pyint(min_value=0, max_value=65535), '0', 'DF', '6', 'tcp', '40', client['ip_address'], destination_ipv4, fake.pyint(min_value=49152, max_value=65535), port, '0', 'S', fake.pyint(min_value=0, max_value=4294967295), '', '65535', '', ''] | join(',') -}}
 {%- endautoescape -%}

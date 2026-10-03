@@ -1,5 +1,8 @@
 {%- set client = registry.get_random_device() -%}
-{%- set dns = registry.get_service(client['hostname'] + '-dns') -%}
+{%- set org_domain = registry.get_organization_field('domain') or 'example.com' -%}
+{%- set resolver_ipv4 = random_private_ip() -%}
+{%- set dns_name = fake.random_element(elements=['www', 'api', 'mail', 'cdn']) + '.' + org_domain -%}
+{%- set dns_answer_ipv4 = random_private_ip() -%}
 {%- set rtt = 0.06685185432434082 -%}
 {%- set observed = now() | unix_timestamp -%}
-{{- {'ts': observed - rtt, 'uid': 'C' + fake.hexify(text='^^^^^^^^^^^^^^^^'), 'id.orig_h': client['ip_address'], 'id.orig_p': fake.pyint(min_value=49152, max_value=65535), 'id.resp_h': dns['resolver_ipv4'], 'id.resp_p': dns['port'], 'proto': dns['protocol'] | lower, 'trans_id': fake.pyint(min_value=0, max_value=65535), 'rtt': rtt, 'query': dns['dns_name'], 'qclass': 1, 'qclass_name': 'C_INTERNET', 'qtype': 1, 'qtype_name': 'A', 'rcode': 0, 'rcode_name': 'NOERROR', 'AA': false, 'TC': false, 'RD': true, 'RA': true, 'Z': 0, 'answers': [dns['dns_answer_ipv4']], 'TTLs': [3600], 'rejected': false} | tojson -}}
+{{- {'ts': observed - rtt, 'uid': 'C' + fake.hexify(text='^^^^^^^^^^^^^^^^'), 'id.orig_h': client['ip_address'], 'id.orig_p': fake.pyint(min_value=49152, max_value=65535), 'id.resp_h': resolver_ipv4, 'id.resp_p': 53, 'proto': 'udp', 'trans_id': fake.pyint(min_value=0, max_value=65535), 'rtt': rtt, 'query': dns_name, 'qclass': 1, 'qclass_name': 'C_INTERNET', 'qtype': 1, 'qtype_name': 'A', 'rcode': 0, 'rcode_name': 'NOERROR', 'AA': false, 'TC': false, 'RD': true, 'RA': true, 'Z': 0, 'answers': [dns_answer_ipv4], 'TTLs': [3600], 'rejected': false} | tojson -}}

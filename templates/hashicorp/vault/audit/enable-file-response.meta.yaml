@@ -18,8 +18,7 @@ documentation:
     icon: 📋
     color_scheme: info
   overview:
-    summary: 'Independent response snapshot for sys/audit/file enable operation. Requires source-specific entities:
-      entities/hashicorp/vault/audit.yaml; example configuration: configs/hashicorp/vault/audit.yaml. Tested with
+    summary: 'Independent response snapshot for sys/audit/file enable operation. Uses schema-standard registry fields plus generated vendor-specific IDs. Works with the default MELTr entity sample.yaml; example configuration: configs/hashicorp/vault/audit.yaml. Tested with
       MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic
       registry preview entities are not sufficient.'
     when_generated:
