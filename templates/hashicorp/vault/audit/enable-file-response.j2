@@ -1,8 +1,12 @@
-{%- set profile = registry.get_random_service() -%}
-{%- set client = registry.get_device('vault-client') -%}
+{%- set client = registry.get_random_device() -%}
 {%- set clock = now() -%}
-{%- set token = 'hmac-sha256:' + fake.hexify(text='^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^') -%}
-{%- set accessor = 'hmac-sha256:' + fake.hexify(text='^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^') -%}
+{%- set digest_hex = '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^' -%}
+{%- set token = 'hmac-sha256:' + fake.hexify(text=digest_hex) -%}
+{%- set accessor = 'hmac-sha256:' + fake.hexify(text=digest_hex) -%}
+{%- set vault_client_id = fake.uuid4() -%}
+{%- set description_digest = 'hmac-sha256:' + fake.hexify(text=digest_hex) -%}
+{%- set path_digest = 'hmac-sha256:' + fake.hexify(text=digest_hex) -%}
+{%- set type_digest = 'hmac-sha256:' + fake.hexify(text=digest_hex) -%}
 {{- {
   "auth": {
     "accessor": accessor,
@@ -31,16 +35,16 @@
     "token_type": "service"
   },
   "request": {
-    "client_id": profile['vault_client_id'],
+    "client_id": vault_client_id,
     "client_token": token,
     "client_token_accessor": accessor,
     "data": {
-      "description": profile['description_digest'],
+      "description": description_digest,
       "local": false,
       "options": {
-        "file_path": profile['path_digest']
+        "file_path": path_digest
       },
-      "type": profile['type_digest']
+      "type": type_digest
     },
     "id": fake.uuid4(),
     "mount_accessor": "system_53409ed3",

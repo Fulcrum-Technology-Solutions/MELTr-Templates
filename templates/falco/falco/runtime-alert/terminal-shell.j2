@@ -1,17 +1,18 @@
 {%- set sensor = registry.get_random_device() -%}
-{%- set workload = registry.get_service(sensor['hostname'] + '-workload') -%}
 {%- set clock = now() -%}
 {# Integer civil-day arithmetic preserves nanoseconds without a floating-point epoch. #}
 {%- set offset = clock.utcoffset() -%}
 {%- set epoch_seconds = (clock.toordinal() - 719163) * 86400 + clock.hour * 3600 + clock.minute * 60 + clock.second - (offset.days * 86400 + offset.seconds) -%}
 {%- set fraction = clock.microsecond * 1000 + fake.pyint(min_value=0, max_value=999) -%}
 {%- set iso = (clock | iso8601_utc)[:19] + '.' + ('%09d' | format(fraction)) + 'Z' -%}
+{%- set container_id = fake.bothify(text='????????????????', letters='0123456789abcdef') -%}
+{%- set pod_name = 'alpine-' + fake.bothify(text='?????', letters='abcdefghijklmnopqrstuvwxyz0123456789') -%}
 {%- set fields = {
-    'container.id': workload['falco_container_id'],
+    'container.id': container_id,
     'container.image.repository': 'docker.io/library/alpine',
     'evt.time': epoch_seconds * 1000000000 + fraction,
     'k8s.ns.name': 'default',
-    'k8s.pod.name': workload['falco_pod_name'],
+    'k8s.pod.name': pod_name,
     'proc.cmdline': 'sh -c clear; (bash || ash || sh)',
     'proc.name': 'sh', 'proc.pname': 'runc', 'proc.tty': 34816,
     'user.loginuid': -1, 'user.name': 'root'

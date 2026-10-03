@@ -1,16 +1,17 @@
 {%- autoescape false -%}
 {%- set client = registry.get_random_device() -%}
-{%- set bucket = registry.get_service('s3-bucket') -%}
+{%- set canonical_owner = fake.bothify(text='????????????????????????????????????????????????????????????????', letters='0123456789abcdef') -%}
+{%- set bucket_name = 'mybucket-' + fake.bothify(text='????????', letters='0123456789abcdef') -%}
 {%- set clock = now() -%}
 {%- set months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'] -%}
 {%- set scenario = fake.random_element(elements=['logging-status','bucket-policy','put-object']) -%}
 {%- set request_id = fake.bothify(text='????????????????', letters='0123456789ABCDEF') -%}
 {%- set host_id = random_string(85, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/') + fake.random_element(elements=['A','Q','g','w']) + '==' -%}
 {%- if scenario == 'logging-status' -%}
-{{ bucket['canonical_owner'] }} {{ bucket['bucket_name'] }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ bucket['canonical_owner'] }} {{ request_id }} REST.GET.LOGGING_STATUS - "GET /{{ bucket['bucket_name'] }}?logging HTTP/1.1" 200 - 242 - 11 - "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-GCM-SHA256 AuthHeader {{ bucket['bucket_name'] }}.s3.us-west-1.amazonaws.com TLSV1.2 - - us-east-1
+{{ canonical_owner }} {{ bucket_name }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ canonical_owner }} {{ request_id }} REST.GET.LOGGING_STATUS - "GET /{{ bucket_name }}?logging HTTP/1.1" 200 - 242 - 11 - "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-GCM-SHA256 AuthHeader {{ bucket_name }}.s3.us-west-1.amazonaws.com TLSV1.2 - - us-east-1
 {%- elif scenario == 'bucket-policy' -%}
-{{ bucket['canonical_owner'] }} {{ bucket['bucket_name'] }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ bucket['canonical_owner'] }} {{ request_id }} REST.GET.BUCKETPOLICY - "GET /{{ bucket['bucket_name'] }}?policy HTTP/1.1" 404 NoSuchBucketPolicy 297 - 38 - "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-GCM-SHA256 AuthHeader {{ bucket['bucket_name'] }}.s3.us-west-1.amazonaws.com TLSV1.2 - Yes us-east-1
+{{ canonical_owner }} {{ bucket_name }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ canonical_owner }} {{ request_id }} REST.GET.BUCKETPOLICY - "GET /{{ bucket_name }}?policy HTTP/1.1" 404 NoSuchBucketPolicy 297 - 38 - "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-GCM-SHA256 AuthHeader {{ bucket_name }}.s3.us-west-1.amazonaws.com TLSV1.2 - Yes us-east-1
 {%- elif scenario == 'put-object' -%}
-{{ bucket['canonical_owner'] }} {{ bucket['bucket_name'] }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ bucket['canonical_owner'] }} {{ request_id }} REST.PUT.OBJECT s3-dg.pdf "PUT /{{ bucket['bucket_name'] }}/s3-dg.pdf HTTP/1.1" 200 - - 4406583 41754 28 "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-SHA AuthHeader {{ bucket['bucket_name'] }}.s3.us-west-1.amazonaws.com TLSV1.2 - Yes us-east-1
+{{ canonical_owner }} {{ bucket_name }} [{{ clock | strftime('%d') }}/{{ months[((clock | strftime('%m')) | int) - 1] }}/{{ clock | strftime('%Y:%H:%M:%S') }} +0000] {{ client['ip_address'] }} {{ canonical_owner }} {{ request_id }} REST.PUT.OBJECT s3-dg.pdf "PUT /{{ bucket_name }}/s3-dg.pdf HTTP/1.1" 200 - - 4406583 41754 28 "-" "S3Console/0.4" - {{ host_id }} SigV4 ECDHE-RSA-AES128-SHA AuthHeader {{ bucket_name }}.s3.us-west-1.amazonaws.com TLSV1.2 - Yes us-east-1
 {%- endif -%}
 {%- endautoescape -%}

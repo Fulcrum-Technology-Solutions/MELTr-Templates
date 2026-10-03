@@ -20,8 +20,7 @@ documentation:
     icon: 📋
     color_scheme: info
   overview:
-    summary: 'Built-in combined format with 200 responses and absent user/Referer. Requires source-specific entities:
-      entities/f5/nginx/access.yaml; example configuration: configs/f5/nginx/access.yaml. Tested with MELTr rc3
+    summary: 'Built-in combined format with 200 responses and absent user/Referer. Uses schema-standard registry fields plus generated vendor-specific IDs. Works with the default MELTr entity sample.yaml; example configuration: configs/f5/nginx/access.yaml. Tested with MELTr rc3
       commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic registry
       preview entities are not sufficient.'
     when_generated:

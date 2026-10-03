@@ -9,10 +9,15 @@
 {%- endfor -%}
 {%- endmacro -%}
 {%- set device = registry.get_random_device() -%}
-{%- set site = registry.get_service('nginx-site') -%}
-{%- set response = fake.random_element(elements=site['nginx_responses']) -%}
+{%- set response = fake.random_element(elements=[
+  {'path': '/', 'body': 'ok'},
+  {'path': '/index.html', 'body': '<html><body>ok</body></html>'},
+  {'path': '/health', 'body': 'healthy'},
+  {'path': '/api/status', 'body': '{"status":"ok"}'}
+]) -%}
+{%- set user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' -%}
 {%- set clock = now() -%}
 {%- set months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] -%}
 {%- set local_time = clock.strftime('%d/') + months[clock.month - 1] + clock.strftime('/%Y:%H:%M:%S %z') -%}
-{{- nginx_escape(device['ip_address']) }} - - [{{ local_time }}] "{{ nginx_escape('GET ' + response['path'] + ' HTTP/1.1') }}" 200 {{ response['body'].encode('utf-8') | length }} "-" "{{ nginx_escape(device['nginx_user_agent']) }}"
+{{- nginx_escape(device['ip_address']) }} - - [{{ local_time }}] "{{ nginx_escape('GET ' + response['path'] + ' HTTP/1.1') }}" 200 {{ response['body'].encode('utf-8') | length }} "-" "{{ nginx_escape(user_agent) }}"
 {%- endautoescape -%}

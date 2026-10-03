@@ -87,7 +87,7 @@
   "filesubtype": "None",
   "filetype": "None",
   "hostname": "{{ domain }}",
-  "location": "{{ device.custom_location | default(user.location) | default('Unknown') }}",
+  "location": "{{ user.location.city if user.location is defined and user.location.city is defined else 'Unknown' }}",
   "md5": "{{ random_string(32, '0123456789abcdef') if has_threat else 'None' }}",
   "mobappcat": "None",
   "mobappname": "None",

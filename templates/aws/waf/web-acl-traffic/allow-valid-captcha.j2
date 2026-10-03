@@ -1,18 +1,19 @@
 {%- set client = registry.get_random_device() -%}
-{%- set api = registry.get_service('waf-api') -%}
+{%- set webacl_id = 'arn:aws:wafv2:us-east-1:' + fake.numerify(text='############') + ':regional/webacl/ExampleWebACL/' + fake.uuid4() -%}
+{%- set http_source_id = fake.bothify(text='????????????????????', letters='0123456789abcdef') -%}
 {%- set clock = now() | unix_timestamp -%}
 {%- set seconds = clock | int -%}
 {%- set millis = (clock * 1000) | int -%}
 {{- {
   "timestamp": millis,
   "formatVersion": 1,
-  "webaclId": api['webacl_id'],
+  "webaclId": webacl_id,
   "terminatingRuleId": "Default_Action",
   "terminatingRuleType": "REGULAR",
   "action": "ALLOW",
   "terminatingRuleMatchDetails": [],
   "httpSourceName": "APIGW",
-  "httpSourceId": api['http_source_id'],
+  "httpSourceId": http_source_id,
   "ruleGroupList": [],
   "rateBasedRuleList": [],
   "nonTerminatingMatchingRules": [

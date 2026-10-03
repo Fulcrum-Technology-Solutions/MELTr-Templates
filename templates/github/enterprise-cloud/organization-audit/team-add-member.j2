@@ -1,7 +1,7 @@
 {%- set actor = registry.get_random_user() -%}
-{%- set target = registry.get_user(actor['github_target_username']) -%}
-{%- set org = registry.get_organization()['github_org'] -%}
-{%- set team = registry.get_service('github-audit-team')['github_team_slug'] -%}
+{%- set target = registry.get_random_user() -%}
+{%- set org_name = (registry.get_organization_field('name') or 'example').lower().replace(' ', '-') -%}
+{%- set team = fake.random_element(elements=['engineering', 'security', 'admins', 'developers']) -%}
 {%- set clock = now() -%}
 {%- set milliseconds = ((clock | unix_timestamp) | int) * 1000 + clock.microsecond // 1000 -%}
-{{- {'@timestamp': milliseconds, 'action': 'team.add_member', 'actor': actor['github_login'], 'created_at': milliseconds, '_document_id': fake.lexify(text='??????????????????????', letters='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'), 'org': org, 'team': org + '/' + team, 'user': target['github_login']} | tojson -}}
+{{- {'@timestamp': milliseconds, 'action': 'team.add_member', 'actor': actor['username'], 'created_at': milliseconds, '_document_id': fake.lexify(text='??????????????????????', letters='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_'), 'org': org_name, 'team': org_name + '/' + team, 'user': target['username']} | tojson -}}

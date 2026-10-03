@@ -1,17 +1,19 @@
 {%- set actor = registry.get_random_user() -%}
-{%- set node = registry.get_device(actor['tailscale_node_hostname']) -%}
-{%- set profile = registry.get_service('tailscale-audit-profile') -%}
+{%- set node = registry.get_random_device() -%}
 {%- set clock = now() -%}
-{%- set expires = clock + profile['tailscale_expiry_days'] * 86400 -%}
+{%- set expiry_days = fake.pyint(min_value=1, max_value=180) -%}
+{%- set expires = clock + expiry_days * 86400 -%}
+{%- set actor_id = fake.bothify(text='u???????????????????????', letters='abcdefghijklmnopqrstuvwxyz0123456789') -%}
+{%- set node_id = fake.bothify(text='n???????????????????????', letters='abcdefghijklmnopqrstuvwxyz0123456789') -%}
 {{- {
     'action': 'UPDATE',
-    'actor': {'displayName': actor['full_name'], 'id': actor['tailscale_id'], 'loginName': actor['email'], 'type': 'USER'},
+    'actor': {'displayName': actor['full_name'], 'id': actor_id, 'loginName': actor['email'], 'type': 'USER'},
     'deferredAt': '0001-01-01T00:00:00Z',
     'eventGroupID': fake.pyint(min_value=1000000000, max_value=2000000000) | string,
     'eventTime': clock | iso8601_utc,
     'new': expires | iso8601_utc,
     'old': '0001-01-01T00:00:00Z',
     'origin': 'NODE',
-    'target': {'id': node['tailscale_id'], 'name': node['fqdn'], 'property': 'KEY_EXPIRY_TIME', 'type': 'NODE'},
+    'target': {'id': node_id, 'name': node.get('fqdn') or (node['hostname'] + '.' + (registry.get_organization_field('domain') or 'example.com')), 'property': 'KEY_EXPIRY_TIME', 'type': 'NODE'},
     'type': 'CONFIG'
 } | tojson -}}

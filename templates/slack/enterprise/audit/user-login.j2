@@ -1,6 +1,9 @@
 {%- set user = registry.get_random_user() -%}
-{%- set client = registry.get_device(user['username'] + '-slack-client') -%}
+{%- set client = registry.get_random_device() -%}
 {%- set org = registry.get_organization() -%}
-{%- set browser = registry.get_service('slack-browser') -%}
-{%- set identity = {'id': user['slack_id'], 'name': user['full_name'], 'email': user['email']} -%}
-{{- {'id': fake.uuid4(), 'date_create': (now() | unix_timestamp) | int, 'action': 'user_login', 'actor': {'type': 'user', 'user': identity}, 'entity': {'type': 'user', 'user': identity}, 'context': {'location': {'type': 'enterprise', 'id': org['slack_enterprise_id'], 'name': org['name'], 'domain': org['slack_domain']}, 'ua': browser['user_agent'], 'session_id': fake.numerify(text='############'), 'ip_address': client['ip_address']}} | tojson -}}
+{%- set slack_id = 'U' + fake.bothify(text='??????????', letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') -%}
+{%- set slack_enterprise_id = 'E' + fake.bothify(text='??????????', letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') -%}
+{%- set slack_domain = (org.get('domain') or 'example.com').split('.')[0] -%}
+{%- set user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' -%}
+{%- set identity = {'id': slack_id, 'name': user['full_name'], 'email': user['email']} -%}
+{{- {'id': fake.uuid4(), 'date_create': (now() | unix_timestamp) | int, 'action': 'user_login', 'actor': {'type': 'user', 'user': identity}, 'entity': {'type': 'user', 'user': identity}, 'context': {'location': {'type': 'enterprise', 'id': slack_enterprise_id, 'name': org['name'], 'domain': slack_domain}, 'ua': user_agent, 'session_id': fake.numerify(text='############'), 'ip_address': client['ip_address']}} | tojson -}}

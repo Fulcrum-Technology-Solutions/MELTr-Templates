@@ -1,5 +1,5 @@
 {%- set client = registry.get_random_device() -%}
-{%- set server = registry.get_service(client['hostname'] + '-http') -%}
+{%- set server_ipv4 = random_private_ip() -%}
 {%- set duration = 0.25411510467529297 -%}
 {%- set ended = now() | unix_timestamp -%}
-{{- {'ts': ended - duration, 'uid': 'C' + fake.hexify(text='^^^^^^^^^^^^^^^^'), 'id.orig_h': client['ip_address'], 'id.orig_p': fake.pyint(min_value=49152, max_value=65535), 'id.resp_h': server['server_ipv4'], 'id.resp_p': server['port'], 'proto': server['protocol'] | lower, 'service': 'http', 'duration': duration, 'orig_bytes': 77, 'resp_bytes': 295, 'conn_state': 'SF', 'missed_bytes': 0, 'history': 'ShADadFf', 'orig_pkts': 6, 'orig_ip_bytes': 397, 'resp_pkts': 4, 'resp_ip_bytes': 511, 'ip_proto': 6} | tojson -}}
+{{- {'ts': ended - duration, 'uid': 'C' + fake.hexify(text='^^^^^^^^^^^^^^^^'), 'id.orig_h': client['ip_address'], 'id.orig_p': fake.pyint(min_value=49152, max_value=65535), 'id.resp_h': server_ipv4, 'id.resp_p': 80, 'proto': 'tcp', 'service': 'http', 'duration': duration, 'orig_bytes': 77, 'resp_bytes': 295, 'conn_state': 'SF', 'missed_bytes': 0, 'history': 'ShADadFf', 'orig_pkts': 6, 'orig_ip_bytes': 397, 'resp_pkts': 4, 'resp_ip_bytes': 511, 'ip_proto': 6} | tojson -}}
