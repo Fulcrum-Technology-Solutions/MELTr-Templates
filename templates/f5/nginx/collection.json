@@ -1,6 +1,6 @@
 {
     "name": "f5-nginx",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Sample-backed NGINX events with source-specific entities.",
     "maintainers": [
         {

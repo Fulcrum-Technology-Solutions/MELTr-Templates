@@ -1,6 +1,6 @@
 {
     "name": "microsoft-windows",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "description": "Microsoft Windows Event Log templates collection",
     "maintainers": [
         {
