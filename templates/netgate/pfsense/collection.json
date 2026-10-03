@@ -1,6 +1,6 @@
 {
     "name": "netgate-pfsense",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Sample-backed pfSense events with source-specific entities.",
     "maintainers": [
         {

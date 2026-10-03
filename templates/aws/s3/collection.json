@@ -1,6 +1,6 @@
 {
     "name": "aws-s3",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Sample-backed Amazon S3 events with source-specific entities.",
     "maintainers": [
         {
