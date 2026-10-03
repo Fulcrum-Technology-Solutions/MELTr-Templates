@@ -18,9 +18,7 @@ documentation:
     icon: 📋
     color_scheme: info
   overview:
-    summary: 'Narrow documented reference profile. Requires source-specific entities: entities/crowdstrike/falcon/api-activity-audit.yaml;
-      example configuration: configs/crowdstrike/falcon/api-activity-audit.yaml. Tested with MELTr rc3 commit 1e14e5defb66f6ac24decbe59c1c4f4e64877618.
-      Entity fixtures must be selected per source; generic registry preview entities are not sufficient.'
+    summary: 'Narrow documented reference profile. Uses schema-standard registry fields (user.email, device.ip_address/hostname) plus generated CrowdStrike IDs (CID, client/detection/group IDs). Works with the default entity sample.'
     when_generated:
     - logged
     frequency_notes: Local test rate only. Independent records; no lifecycle simulation.
@@ -35,8 +33,8 @@ documentation:
   fields:
   - name: metadata.customerIDString
     type: String
-    description: '`org[''crowdstrike_cid'']`'
-    template_source: '`org[''crowdstrike_cid'']`'
+    description: '`cid` (random_string 32 hex)'
+    template_source: '`cid` (random_string 32 hex)'
     example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   - name: metadata.offset
     type: Integer
@@ -90,13 +88,13 @@ documentation:
     example_value: '1790894870'
   - name: event.Attributes.APIClientID
     type: String
-    description: '`profile[''api_client_id'']`'
-    template_source: '`profile[''api_client_id'']`'
+    description: '`api_client_id` (random_guid)'
+    template_source: '`api_client_id` (random_guid)'
     example_value: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
   - name: event.Attributes.cid
     type: String
-    description: '`org[''crowdstrike_cid'']`'
-    template_source: '`org[''crowdstrike_cid'']`'
+    description: '`cid` (random_string 32 hex)'
+    template_source: '`cid` (random_string 32 hex)'
     example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   - name: event.Attributes.consumes
     type: String
@@ -210,8 +208,8 @@ documentation:
     example_value: APIClientID
   - name: event.AuditKeyValues[1].ValueString
     type: String
-    description: '`profile[''api_client_id'']`'
-    template_source: '`profile[''api_client_id'']`'
+    description: '`api_client_id` (random_guid)'
+    template_source: '`api_client_id` (random_guid)'
     example_value: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
   - name: event.AuditKeyValues[2].Key
     type: String
@@ -240,8 +238,8 @@ documentation:
     example_value: cid
   - name: event.AuditKeyValues[4].ValueString
     type: String
-    description: '`org[''crowdstrike_cid'']`'
-    template_source: '`org[''crowdstrike_cid'']`'
+    description: '`cid` (random_string 32 hex)'
+    template_source: '`cid` (random_string 32 hex)'
     example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   - name: event.AuditKeyValues[5].Key
     type: String

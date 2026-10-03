@@ -1,8 +1,8 @@
 {%- set user = registry.get_random_user() -%}
-{%- set device = registry.get_device(user['username'] + '-client') -%}
-{%- set org = registry.get_organization() -%}
-{%- set profile = registry.get_service('crowdstrike-profile') -%}
+{%- set device = registry.get_random_device() -%}
 {%- set clock = now() -%}
 {%- set sec = (clock | unix_timestamp) | int -%}
 {%- set ms = ((clock | unix_timestamp) * 1000) | int -%}
-{{- {'metadata': {'customerIDString': org['crowdstrike_cid'], 'offset': fake.pyint(min_value=1,max_value=2147483647), 'eventType': 'AuthActivityAuditEvent', 'eventCreationTime': ms, 'version': '1.0'}, 'event': {'UserId': user['email'], 'UserIp': device['ip_address'], 'OperationName': 'userAuthenticate', 'ServiceName': 'CrowdStrike Authentication', 'Success': True, 'UTCTimestamp': ms}} | tojson -}}
+{#- CrowdStrike CID is 32-char lowercase hex (not a dashed UUID) -#}
+{%- set cid = random_string(32, '0123456789abcdef') -%}
+{{- {'metadata': {'customerIDString': cid, 'offset': fake.pyint(min_value=1,max_value=2147483647), 'eventType': 'AuthActivityAuditEvent', 'eventCreationTime': ms, 'version': '1.0'}, 'event': {'UserId': user['email'], 'UserIp': device['ip_address'], 'OperationName': 'userAuthenticate', 'ServiceName': 'CrowdStrike Authentication', 'Success': True, 'UTCTimestamp': ms}} | tojson -}}

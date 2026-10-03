@@ -18,10 +18,7 @@ documentation:
     icon: 📋
     color_scheme: info
   overview:
-    summary: 'Narrow documented reference profile. Requires source-specific entities: entities/crowdstrike/falcon/remote-response-session.yaml;
-      example configuration: configs/crowdstrike/falcon/remote-response-session.yaml. Tested with MELTr rc3 commit
-      1e14e5defb66f6ac24decbe59c1c4f4e64877618. Entity fixtures must be selected per source; generic registry preview
-      entities are not sufficient.'
+    summary: 'Narrow documented reference profile. Uses schema-standard registry fields (user.email, device.ip_address/hostname) plus generated CrowdStrike IDs (CID, client/detection/group IDs). Works with the default entity sample.'
     when_generated:
     - RemoteResponseSessionEndEvent
     frequency_notes: Local test rate only. Independent records; no lifecycle simulation.
@@ -36,8 +33,8 @@ documentation:
   fields:
   - name: metadata.customerIDString
     type: String
-    description: '`org[''crowdstrike_cid'']`'
-    template_source: '`org[''crowdstrike_cid'']`'
+    description: '`cid` (random_string 32 hex)'
+    template_source: '`cid` (random_string 32 hex)'
     example_value: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
   - name: metadata.offset
     type: Integer
