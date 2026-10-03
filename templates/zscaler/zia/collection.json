@@ -1,6 +1,6 @@
 {
     "name": "zscaler-zia",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Zscaler Internet Access (ZIA) log templates for web security events",
     "maintainers": [
         {
