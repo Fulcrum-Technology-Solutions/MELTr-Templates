@@ -37,7 +37,7 @@
     "id": {{ random_int(10000, 99999) }},
     "isActive": true,
     "isBoundary": false,
-    "isEditable": {{ random_choice([true, false]) }},
+    "isEditable": {{ random_choice([true, false]) | tojson }},
     "isRepeating": false,
     "labels": {{ random_choice([['threats', 'value_pack'], ['security', 'network'], ['compliance', 'monitoring'], ['threats']]) | tojson }},
     "lastActiveChange": null,
@@ -93,11 +93,11 @@
         ['Network Mapper', 'Traffic Inspection', 'Knowledge Base'],
         ['Microsoft Intune', 'Microsoft Azure Active Directory', 'Traffic Inspection']
       ]) | tojson }},
-      "isCorporate": {{ random_choice([true, false]) }},
-      "isEncrypted": {{ random_choice([true, false]) }},
+      "isCorporate": {{ random_choice([true, false]) | tojson }},
+      "isEncrypted": {{ random_choice([true, false]) | tojson }},
       "displayTitle": "{{ registry.get_random_device().hostname }}",
       "isAccessPoint": false,
-      "isUnencrypted": {{ random_choice([true, false]) }},
+      "isUnencrypted": {{ random_choice([true, false]) | tojson }},
       "businessImpact": "{{ random_choice(['Unassigned', 'Low', 'Medium', 'High', 'Critical']) }}",
       "isNetworkBridge": false,
       "isShadowNetwork": false
@@ -125,8 +125,8 @@
   "destinations": [
     {
       "id": {{ random_int(10000, 999999) }},
-      "ip": {{ random_choice(['null', '"' + random_private_ip() + '"']) }},
-      "ipv6": {{ random_choice(['null', '"' + fake.ipv6() + '"']) }},
+      "ip": {{ random_choice([none, random_private_ip()]) | tojson }},
+      "ipv6": {{ random_choice([none, fake.ipv6()]) | tojson }},
       "name": "{{ random_choice([registry.get_random_device().hostname, 'Unknown device', random_hostname()]) }}",
       "site": {
         "name": "{{ random_choice(['FS-Charlotte', 'FS-Atlanta', 'Cumberland-MK', 'FS-Houston', 'Pennsylvania-PA', 'Northeast-NE']) }}",
@@ -151,11 +151,11 @@
         ['Active Directory', 'Traffic Inspection', 'Knowledge Base'],
         ['Network Mapper', 'Traffic Inspection']
       ]) | tojson }},
-      "isCorporate": {{ random_choice([true, false]) }},
-      "isEncrypted": {{ random_choice([true, false]) }},
+      "isCorporate": {{ random_choice([true, false]) | tojson }},
+      "isEncrypted": {{ random_choice([true, false]) | tojson }},
       "displayTitle": "{{ random_choice(['Personal Computer', 'Network Device', registry.get_random_device().hostname, 'Unknown Device']) }}",
       "isAccessPoint": false,
-      "isUnencrypted": {{ random_choice([true, false]) }},
+      "isUnencrypted": {{ random_choice([true, false]) | tojson }},
       "businessImpact": "{{ random_choice(['Unassigned', 'Low', 'Medium', 'High']) }}",
       "isNetworkBridge": false,
       "isShadowNetwork": false
@@ -192,11 +192,11 @@
         ['Network Mapper', 'Knowledge Base'],
         ['Microsoft Intune', 'Traffic Inspection']
       ]) | tojson }},
-      "isCorporate": {{ random_choice([true, false]) }},
-      "isEncrypted": {{ random_choice([true, false]) }},
+      "isCorporate": {{ random_choice([true, false]) | tojson }},
+      "isEncrypted": {{ random_choice([true, false]) | tojson }},
       "displayTitle": "{{ registry.get_random_device().hostname }}",
       "isAccessPoint": false,
-      "isUnencrypted": {{ random_choice([true, false]) }},
+      "isUnencrypted": {{ random_choice([true, false]) | tojson }},
       "businessImpact": "{{ random_choice(['Unassigned', 'Low', 'Medium', 'High']) }}",
       "isNetworkBridge": false,
       "isShadowNetwork": false

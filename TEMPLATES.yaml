@@ -29,7 +29,7 @@ packages:
     product: Armis Security Platform
     description: MELTr templates for Armis Security Platform alerts including policy
       violations, threat detections, and device security events
-    version: 1.1.0
+    version: 1.1.1
     templates:
     - policy-violation/system_policy_violation
     tags:

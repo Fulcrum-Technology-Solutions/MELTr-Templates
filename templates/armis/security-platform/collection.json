@@ -1,6 +1,6 @@
 {
     "name": "armis-security-platform",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "MELTr templates for Armis Security Platform alerts including policy violations, threat detections, and device security events",
     "maintainers": [
         {
