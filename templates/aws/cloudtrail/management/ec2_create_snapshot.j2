@@ -15,6 +15,14 @@
 {%- set current_region = aws_regions | random -%}
 {%- set role_names = ['EC2AdminRole', 'BackupRole', 'DataEngineerRole', 'DevOpsRole', 'okta_adm_role'] -%}
 {%- set role_name = role_names | random -%}
+{%- set id_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' -%}
+{%- set role_id = 'AROA' ~ random_string(17, id_alphabet) -%}
+{%- set iam_user_id = 'AIDA' ~ random_string(17, id_alphabet) -%}
+{%- set session_name = username ~ '@' ~ domain -%}
+{%- set principal_id = iam_user_id if identity_type == 'IAMUser' else (role_id ~ ':' ~ session_name) -%}
+{%- set event_dt = current_timestamp() -%}
+{%- set start_time_ms = (event_dt | unix_timestamp | int) * 1000 -%}
+{%- set creation_date = (event_dt | subtract_seconds(random_int(1800, 28800)) | iso8601_utc(false)) | replace('-', '') | replace(':', '') -%}
 {%- set tag_scenarios = [
   [{"key": "Name", "value": "backup-" ~ (current_timestamp() | unix_timestamp | int | string)}],
   [{"key": "Environment", "value": ["prod", "staging", "dev", "test"] | random}, {"key": "Team", "value": ["devops", "data", "security", "platform"] | random}],
@@ -32,16 +40,14 @@
   'APN/1.0 HashiCorp/1.0 Terraform/1.1.2 (+https://www.terraform.io) terraform-provider-aws/3.76.1 stratus-red-team_' ~ random_string(36, '0123456789abcdef-')
 ] -%}
 {%- set user_agent = user_agents | random -%}
-{%- set principal_id = random_string(21, 'AIDA') if identity_type == 'IAMUser' else random_string(21, 'ARO') -%}
 {%- set access_key_prefix = 'AKIA' if identity_type == 'IAMUser' else 'ASIA' -%}
-{%- set access_key_id = access_key_prefix ~ random_string(16, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') -%}
-{%- set start_time = current_timestamp() * 1000 -%}
+{%- set access_key_id = access_key_prefix ~ random_string(16, id_alphabet) -%}
 {
   "eventVersion": "{{ eventVersion }}",
   "userIdentity": {
     "type": "{{ identity_type }}",
     "principalId": "{{ principal_id }}",
-    "arn": "arn:aws:{{ 'iam' if identity_type == 'IAMUser' else 'sts' }}::{{ account_id }}:{{ 'user' if identity_type == 'IAMUser' else 'assumed-role' }}/{{ username if identity_type == 'IAMUser' else role_name }}{% if identity_type == 'AssumedRole' %}/{{ username }}@{{ domain }}{% endif %}",
+    "arn": "arn:aws:{{ 'iam' if identity_type == 'IAMUser' else 'sts' }}::{{ account_id }}:{{ 'user' if identity_type == 'IAMUser' else 'assumed-role' }}/{{ username if identity_type == 'IAMUser' else role_name }}{% if identity_type == 'AssumedRole' %}/{{ session_name }}{% endif %}",
     "accountId": "{{ account_id }}",
     "accessKeyId": "{{ access_key_id }}",
     {% if identity_type == 'IAMUser' -%}
@@ -50,20 +56,20 @@
     "sessionContext": {
       "sessionIssuer": {
         "type": "Role",
-        "principalId": "{{ random_string(21, 'AROA') }}",
+        "principalId": "{{ role_id }}",
         "arn": "arn:aws:iam::{{ account_id }}:role/{{ role_name }}",
         "accountId": "{{ account_id }}",
         "userName": "{{ role_name }}"
       },
       "webIdFederationData": {},
       "attributes": {
-        "creationDate": "{{ (current_timestamp() | subtract_seconds(random_int(1800, 28800))) | timestamp_to_iso }}",
+        "creationDate": "{{ creation_date }}",
         "mfaAuthenticated": "{{ ['true', 'false'] | random }}"
       }
     }
     {%- endif %}
   },
-  "eventTime": "{{ current_timestamp() | timestamp_to_iso }}",
+  "eventTime": "{{ event_dt | iso8601_utc(false) }}",
   "eventSource": "ec2.amazonaws.com",
   "eventName": "CreateSnapshot",
   "awsRegion": "{{ current_region }}",
@@ -93,7 +99,7 @@
     "snapshotId": "{{ snapshot_id }}",
     "volumeId": "{{ volume_id }}",
     "status": "pending",
-    "startTime": {{ start_time }},
+    "startTime": {{ start_time_ms }},
     "ownerId": "{{ account_id }}",
     "volumeSize": "{{ volume_size }}",
     "encrypted": {{ encrypted | tojson }}{% if tags | length > 0 %},

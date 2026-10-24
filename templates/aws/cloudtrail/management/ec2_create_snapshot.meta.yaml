@@ -138,13 +138,30 @@ documentation:
         - value: "stratus-red-team_*"
           description: "Security testing tool"
 
+    - name: "eventTime"
+      type: "String"
+      required: true
+      description: "UTC time the API call completed"
+      example_value: "2023-03-20T22:31:18Z"
+      format: "yyyy-MM-ddTHH:mm:ssZ"
+      template_source: "current_timestamp() as UTC"
+
     - name: "responseElements.startTime"
       type: "Integer"
       required: false
-      description: "Timestamp when snapshot creation started"
+      description: "Snapshot start time as Unix epoch milliseconds"
       example_value: "1679351478226"
       format: "Unix timestamp in milliseconds"
-      template_source: "Current timestamp in milliseconds"
+      template_source: "eventTime converted to epoch milliseconds"
+      notes: "CloudTrail logs this as a JSON number. A datetime string is not valid here."
+
+    - name: "userIdentity.principalId"
+      type: "String"
+      required: true
+      description: "IAM unique id. AssumedRole values are the role id, a colon, and the session name."
+      example_value: "AROAIDPPEZS35WEXAMPLE:mwaddams@initech.com"
+      template_source: "AIDA or AROA prefix plus 17 characters. AssumedRole appends the session name."
+      notes: "sessionIssuer.principalId is the same role id without the session name."
 
     - name: "awsRegion"
       type: "String"
@@ -175,6 +192,12 @@ documentation:
 
   resources:
     documentation:
+      - title: "CloudTrail record contents"
+        url: "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-record-contents.html"
+        type: "official"
+      - title: "CloudTrail userIdentity element"
+        url: "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html"
+        type: "official"
       - title: "AWS EC2 CreateSnapshot API Reference"
         url: "https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CreateSnapshot.html"
         type: "official"
