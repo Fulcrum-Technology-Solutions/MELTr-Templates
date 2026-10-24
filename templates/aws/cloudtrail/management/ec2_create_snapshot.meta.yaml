@@ -93,7 +93,7 @@ documentation:
     - name: "responseElements.encrypted"
       type: "Boolean"
       required: false
-      description: "Whether the snapshot is encrypted"
+      description: "Whether the snapshot is encrypted. Encrypted snapshots include responseElements.kmsKeyId."
       example_value: "true"
       template_source: "Random boolean (encryption adoption varies)"
 
@@ -110,15 +110,14 @@ documentation:
       description: "Error code when snapshot creation fails"
       example_value: "Client.InvalidVolume.NotFound"
       template_source: "Random selection when error occurs (1 in 8 chance)"
+      notes: "EC2 Query API faults are logged with the Client prefix. requestID matches responseElements.requestId on success."
       possible_values:
         - value: "Client.InvalidVolume.NotFound"
           description: "Volume does not exist"
         - value: "Client.IncorrectState"
           description: "Volume not in snapshotable state"
-        - value: "UnauthorizedOperation"
+        - value: "Client.UnauthorizedOperation"
           description: "Insufficient permissions"
-        - value: "Client.InvalidVolume.ZoneMismatch"
-          description: "Volume in wrong availability zone"
 
     - name: "userAgent"
       type: "String"
@@ -185,10 +184,10 @@ documentation:
     - name: "tlsDetails"
       type: "Object"
       required: false
-      description: "TLS connection details for HTTPS calls"
+      description: "TLS connection details for the service API call"
       example_value: '{"tlsVersion": "TLSv1.2", "cipherSuite": "ECDHE-RSA-AES128-GCM-SHA256"}'
-      template_source: "Generated for Console and Terraform user agents"
-      notes: "Only present for HTTPS API calls"
+      template_source: "tlsVersion 1.2 uses an ECDHE-RSA cipher. tlsVersion 1.3 uses a TLS_AES cipher."
+      notes: "Present on eventVersion 1.08 and later. clientProvidedHostHeader is the regional EC2 endpoint. sourceIPAddress is a public address, so vpcEndpointId is omitted."
 
   resources:
     documentation:

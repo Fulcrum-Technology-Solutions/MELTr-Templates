@@ -1,4 +1,4 @@
-{%- set eventVersion = ['1.05', '1.08', '1.09'] | random -%}
+{%- set eventVersion = ['1.08', '1.09'] | random -%}
 {%- set identity_type = ['IAMUser', 'AssumedRole'] | random -%}
 {%- set account_id = random_int(100000000000, 999999999999) -%}
 {%- set user = registry.get_random_user() -%}
@@ -9,7 +9,7 @@
 {%- set volume_size = [1, 8, 10, 20, 50, 100, 500, 1000] | random -%}
 {%- set encrypted = [true, false] | random -%}
 {%- set has_error = random_int(0, 8) -%}
-{%- set error_codes = ['Client.InvalidVolume.NotFound', 'Client.IncorrectState', 'UnauthorizedOperation', 'Client.InvalidVolume.ZoneMismatch'] -%}
+{%- set error_codes = ['Client.InvalidVolume.NotFound', 'Client.IncorrectState', 'Client.UnauthorizedOperation'] -%}
 {%- set error_code = error_codes | random if has_error == 1 else '' -%}
 {%- set aws_regions = ['us-east-1', 'us-east-2', 'us-west-1', 'us-west-2', 'eu-west-1', 'eu-central-1', 'ap-southeast-1'] -%}
 {%- set current_region = aws_regions | random -%}
@@ -42,6 +42,10 @@
 {%- set user_agent = user_agents | random -%}
 {%- set access_key_prefix = 'AKIA' if identity_type == 'IAMUser' else 'ASIA' -%}
 {%- set access_key_id = access_key_prefix ~ random_string(16, id_alphabet) -%}
+{%- set request_id = random_guid() -%}
+{%- set kms_key_id = "arn:aws:kms:" ~ current_region ~ ":" ~ account_id ~ ":key/" ~ random_guid() -%}
+{%- set tls_version = ['TLSv1.2', 'TLSv1.3'] | random -%}
+{%- set tls_cipher = (['ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES256-GCM-SHA384'] if tls_version == 'TLSv1.2' else ['TLS_AES_128_GCM_SHA256', 'TLS_AES_256_GCM_SHA384']) | random -%}
 {
   "eventVersion": "{{ eventVersion }}",
   "userIdentity": {
@@ -73,11 +77,11 @@
   "eventSource": "ec2.amazonaws.com",
   "eventName": "CreateSnapshot",
   "awsRegion": "{{ current_region }}",
-  "sourceIPAddress": "{{ random_private_ip() if random_int(0, 4) == 0 else random_public_ip() }}",
+  "sourceIPAddress": "{{ random_public_ip() }}",
   "userAgent": "{{ user_agent }}",
   {% if has_error == 1 -%}
   "errorCode": "{{ error_code }}",
-  "errorMessage": "{% if error_code == 'Client.InvalidVolume.NotFound' %}The volume '{{ volume_id }}' does not exist{% elif error_code == 'Client.IncorrectState' %}Volume '{{ volume_id }}' is not in a state from which snapshots can be created{% elif error_code == 'UnauthorizedOperation' %}You are not authorized to perform this operation{% elif error_code == 'Client.InvalidVolume.ZoneMismatch' %}Volume '{{ volume_id }}' is not in the correct availability zone{% endif %}",
+  "errorMessage": "{% if error_code == 'Client.InvalidVolume.NotFound' %}The volume '{{ volume_id }}' does not exist{% elif error_code == 'Client.IncorrectState' %}Volume '{{ volume_id }}' is not in a state from which snapshots can be created{% elif error_code == 'Client.UnauthorizedOperation' %}You are not authorized to perform this operation{% endif %}",
   {%- endif %}
   "requestParameters": {
     "volumeId": "{{ volume_id }}"{% if tags | length > 0 %},
@@ -95,14 +99,15 @@
     }{% endif %}
   },
   "responseElements": {% if has_error == 1 %}null{% else %}{
-    "requestId": "{{ random_guid() }}",
+    "requestId": "{{ request_id }}",
     "snapshotId": "{{ snapshot_id }}",
     "volumeId": "{{ volume_id }}",
     "status": "pending",
     "startTime": {{ start_time_ms }},
     "ownerId": "{{ account_id }}",
     "volumeSize": "{{ volume_size }}",
-    "encrypted": {{ encrypted | tojson }}{% if tags | length > 0 %},
+    "encrypted": {{ encrypted | tojson }}{% if encrypted %},
+    "kmsKeyId": "{{ kms_key_id }}"{% endif %}{% if tags | length > 0 %},
     "tagSet": {
       "items": [
         {% for tag in tags -%}
@@ -111,16 +116,16 @@
       ]
     }{% endif %}
   }{% endif %},
-  "requestID": "{{ random_guid() }}",
+  "requestID": "{{ request_id }}",
   "eventID": "{{ random_guid() }}",
   "readOnly": false,
   "eventType": "AwsApiCall",
   "managementEvent": true,
   "recipientAccountId": "{{ account_id }}",
-  "eventCategory": "Management"{% if user_agent == 'console.ec2.amazonaws.com' or 'terraform' in user_agent.lower() %},
+  "eventCategory": "Management",
   "tlsDetails": {
-    "tlsVersion": "{{ ['TLSv1.2', 'TLSv1.3'] | random }}",
-    "cipherSuite": "{{ ['ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES256-GCM-SHA384', 'TLS_AES_128_GCM_SHA256'] | random }}",
+    "tlsVersion": "{{ tls_version }}",
+    "cipherSuite": "{{ tls_cipher }}",
     "clientProvidedHostHeader": "ec2.{{ current_region }}.amazonaws.com"
-  }{% endif %}
+  }
 }
