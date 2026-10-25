@@ -1,7 +1,7 @@
 vendor: aws
 product: cloudtrail
 data_source: management
-description: "AWS CloudTrail DeleteTrail API call event in OCSF format"
+description: "AWS CloudTrail DeleteTrail management event"
 format: "JSON"
 frequency: "low"
 is_generator: true
@@ -29,7 +29,7 @@ documentation:
       - "compliance"
 
   overview:
-    summary: "Records when an AWS CloudTrail trail is deleted via the DeleteTrail API operation. This is a critical management event that should be monitored for compliance and security purposes."
+    summary: "Records when an AWS CloudTrail trail is deleted via the DeleteTrail API. The event is the native CloudTrail management record. DeleteTrail returns an empty body, so responseElements is null."
     when_generated:
       - "When a user or service deletes a CloudTrail trail via AWS Console"
       - "When DeleteTrail API is called programmatically"
@@ -45,101 +45,101 @@ documentation:
     frequency_notes: "Low frequency event - trail deletions are typically infrequent administrative actions"
 
   fields:
-    - name: "metadata.uid"
+    - name: "eventVersion"
       type: "String"
       required: true
-      description: "Unique identifier for this event record"
-      example_value: "123e4567-e89b-12d3-a456-426614174000"
-      format: "UUID"
-      template_source: "random_guid()"
-
-    - name: "time"
-      type: "Integer"
-      required: true
-      description: "Event timestamp in Unix epoch format"
-      example_value: "1703123456"
-      format: "Unix timestamp"
-      template_source: "current_timestamp()"
-
-    - name: "cloud.region"
-      type: "String"
-      required: true
-      description: "AWS region where the API call was made"
-      example_value: "us-east-1"
-      template_source: "Random selection from common AWS regions"
+      description: "CloudTrail event format version"
+      example_value: "1.08"
+      template_source: "1.08 or 1.10, the versions in published DeleteTrail records. Both include eventCategory and tlsDetails."
       possible_values:
-        - value: "us-east-1"
-          description: "US East (N. Virginia)"
-        - value: "us-west-2"
-          description: "US West (Oregon)"
-        - value: "eu-west-1"
-          description: "Europe (Ireland)"
+        - value: "1.08"
+          description: "DeleteTrail sample with TLSv1.2"
+        - value: "1.10"
+          description: "DeleteTrail sample with TLSv1.3"
 
-    - name: "api.operation"
+    - name: "userIdentity.principalId"
       type: "String"
       required: true
-      description: "The CloudTrail API operation being performed"
+      description: "Unique identifier for the principal"
+      example_value: "AIDAYTOGP2RLEHRX5YWNV"
+      template_source: "IAM user is AIDA plus 17 characters. Assumed role is AROA plus 17 characters, a colon, and the session name."
+      notes: "eventTime is UTC with a Z suffix. creationDate is yyyyMMddTHHmmssZ."
+
+    - name: "eventName"
+      type: "String"
+      required: true
+      description: "The CloudTrail API operation name"
       example_value: "DeleteTrail"
       template_source: "Static value"
 
-    - name: "actor.user.uid"
+    - name: "requestParameters.name"
       type: "String"
       required: true
-      description: "ARN of the IAM user or role performing the action"
-      example_value: "arn:aws:sts::123456789012:assumed-role/AdminRole/user@example.com"
-      template_source: "Constructed from random account ID and role"
+      description: "Name of the trail sent to DeleteTrail. The API also accepts a trail ARN. Published records use the trail name."
+      example_value: "redatomictesttrail"
+      template_source: "Random selection from common trail names"
 
-    - name: "actor.user.account.uid"
-      type: "String"
+    - name: "responseElements"
+      type: "Object"
       required: true
-      description: "AWS account ID where the action was performed"
-      example_value: "123456789012"
-      template_source: "random_int(100000000000, 999999999999)"
+      description: "DeleteTrail returns HTTP 200 with an empty body, so this is null on success and on error."
+      example_value: "null"
+      template_source: "Static null"
 
-    - name: "src_endpoint.ip"
+    - name: "errorCode"
       type: "String"
-      required: true
-      description: "Source IP address of the API caller"
-      example_value: "203.0.113.42"
-      template_source: "random_public_ip()"
-
-    - name: "api.request.data"
-      type: "String"
-      required: true
-      description: "JSON string containing the API request parameters"
-      example_value: '{"name":"arn:aws:cloudtrail:us-east-1:123456789012:trail/test"}'
-      template_source: "Constructed trail ARN with random account and trail name"
-
-    - name: "status"
-      type: "String"
-      required: true
-      description: "Success or failure status of the API call"
-      example_value: "Success"
-      template_source: "Random selection weighted toward Success"
-      possible_values:
-        - value: "Success"
-          description: "API call completed successfully"
-        - value: "Failure"
-          description: "API call failed due to permissions or other error"
-
-    - name: "actor.session.is_mfa"
-      type: "Boolean"
       required: false
-      description: "Whether multi-factor authentication was used for this session"
+      description: "Error code when the delete fails"
+      example_value: "TrailNotFoundException"
+      template_source: "Random selection when an error occurs"
+      possible_values:
+        - value: "TrailNotFoundException"
+          description: "The named trail does not exist"
+        - value: "InvalidTrailNameException"
+          description: "The trail name is not valid"
+        - value: "AccessDenied"
+          description: "The caller is not allowed to delete the trail"
+
+    - name: "awsRegion"
+      type: "String"
+      required: true
+      description: "Region where DeleteTrail was called. The call must be made in the trail home region."
+      example_value: "us-west-2"
+      template_source: "Random commercial region"
+
+    - name: "sourceIPAddress"
+      type: "String"
+      required: true
+      description: "IP address of the API caller"
+      example_value: "192.184.242.57"
+      template_source: "Public address. vpcEndpointId is omitted."
+
+    - name: "tlsDetails"
+      type: "Object"
+      required: false
+      description: "TLS details for a direct client call"
+      example_value: '{"tlsVersion": "TLSv1.2", "cipherSuite": "ECDHE-RSA-AES128-GCM-SHA256", "clientProvidedHostHeader": "cloudtrail.us-west-2.amazonaws.com"}'
+      template_source: "tlsVersion 1.2 uses an ECDHE-RSA cipher. tlsVersion 1.3 uses a TLS_AES cipher."
+      notes: "Omitted when sessionCredentialFromConsole is true. clientProvidedHostHeader is the regional CloudTrail endpoint."
+
+    - name: "managementEvent"
+      type: "Boolean"
+      required: true
+      description: "DeleteTrail is a management event"
       example_value: "true"
-      template_source: "Random boolean value"
+      template_source: "Static true"
 
   resources:
     documentation:
-      - title: "AWS CloudTrail API Reference"
-        url: "https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/"
+      - title: "CloudTrail record contents"
+        url: "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-record-contents.html"
         type: "official"
-      - title: "CloudTrail DeleteTrail Documentation"
+      - title: "DeleteTrail API"
         url: "https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DeleteTrail.html"
         type: "official"
-      - title: "OCSF Schema Documentation"
-        url: "https://schema.ocsf.io/"
-        type: "reference"
+      - title: "CloudTrail userIdentity element"
+        url: "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-user-identity.html"
+        type: "official"
 
     tools:
       - name: "AWS CloudTrail Console"
