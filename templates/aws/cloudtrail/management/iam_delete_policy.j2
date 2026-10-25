@@ -1,18 +1,22 @@
-{%- set eventVersion = ['1.05', '1.08', '1.09'] | random -%}
+{%- set eventVersion = ['1.08', '1.09'] | random -%}
 {%- set identity_type = ['IAMUser', 'AssumedRole'] | random -%}
 {%- set account_id = random_int(100000000000, 999999999999) -%}
-{%- set principal_id = random_string(21, 'AIDA') if identity_type == 'IAMUser' else random_string(21, 'ARO') -%}
 {%- set user = registry.get_random_user() -%}
 {%- set username = user.username if user else "admin" -%}
 {%- set domain = registry.get_organization_field('domain') | default("example.com") -%}
+{%- set id_alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' -%}
+{%- set role_id = 'AROA' ~ random_string(17, id_alphabet) -%}
+{%- set iam_user_id = 'AIDA' ~ random_string(17, id_alphabet) -%}
+{%- set session_name = username ~ '@' ~ domain -%}
+{%- set principal_id = iam_user_id if identity_type == 'IAMUser' else (role_id ~ ':' ~ session_name) -%}
 {%- set role_name = ['AdminRole', 'PowerUserRole', 'DeveloperRole', 'SecurityRole', 'AuditRole'] | random -%}
 {%- set policy_name = ['AtomicRedTeam', 'VulnerablePolicy', 'Privesc2', 'AdminPolicy', 'ReadOnlyAccess', 'CustomS3Policy', 'TempTestPolicy'] | random -%}
 {%- set has_error = random_int(0, 3) -%}
 {%- set error_code = ['NoSuchEntityException', 'DeleteConflictException', 'AccessDenied'] | random if has_error == 1 else '' -%}
-{%- set user_arn = "arn:aws:" ~ ("iam::" ~ account_id ~ ":user/" ~ username if identity_type == 'IAMUser' else "sts::" ~ account_id ~ ":assumed-role/" ~ role_name ~ "/" ~ username ~ "@" ~ domain) -%}
+{%- set user_arn = "arn:aws:" ~ ("iam::" ~ account_id ~ ":user/" ~ username if identity_type == 'IAMUser' else "sts::" ~ account_id ~ ":assumed-role/" ~ role_name ~ "/" ~ session_name) -%}
 {%- set policy_arn = "arn:aws:iam::" ~ account_id ~ ":policy/" ~ policy_name -%}
-{%- set aws_regions = ['us-east-1', 'us-west-2', 'eu-west-1', 'ap-southeast-1', 'ap-northeast-1', 'eu-central-1'] -%}
-{%- set current_region = aws_regions | random -%}
+{%- set event_dt = current_timestamp() -%}
+{%- set creation_date = (event_dt | subtract_seconds(random_int(300, 7200)) | iso8601_utc(false)) | replace('-', '') | replace(':', '') -%}
 {%- set user_agents = [
   'aws-cli/2.0.62 Python/3.9.2 Darwin/19.6.0 source/x86_64 command/iam.delete-policy',
   'aws-cli/2.1.34 Python/3.8.5 Linux/5.4.0-74-generic source/x86_64 command/iam.delete-policy',
@@ -21,6 +25,12 @@
   'console.amazonaws.com',
   'aws-sdk-python/1.26.0 Python/3.9.7 Linux/5.4.0-81-generic botocore/1.29.0'
 ] -%}
+{%- set user_agent = user_agents | random -%}
+{%- set from_console = user_agent == 'console.amazonaws.com' -%}
+{%- set access_key_prefix = 'AKIA' if identity_type == 'IAMUser' else 'ASIA' -%}
+{%- set access_key_id = access_key_prefix ~ random_string(16, id_alphabet) -%}
+{%- set tls_version = ['TLSv1.2', 'TLSv1.3'] | random -%}
+{%- set tls_cipher = (['ECDHE-RSA-AES128-GCM-SHA256', 'ECDHE-RSA-AES256-GCM-SHA384'] if tls_version == 'TLSv1.2' else ['TLS_AES_128_GCM_SHA256', 'TLS_AES_256_GCM_SHA384']) | random -%}
 {
   "eventVersion": "{{ eventVersion }}",
   "userIdentity": {
@@ -28,14 +38,14 @@
     "principalId": "{{ principal_id }}",
     "arn": "{{ user_arn }}",
     "accountId": "{{ account_id }}",
-    "accessKeyId": "{{ random_string(20, 'AKIA') }}",
+    "accessKeyId": "{{ access_key_id }}",
     {% if identity_type == 'IAMUser' -%}
     "userName": "{{ username }}"
     {%- else -%}
     "sessionContext": {
       "sessionIssuer": {
         "type": "Role",
-        "principalId": "{{ random_string(21, 'AROA') }}",
+        "principalId": "{{ role_id }}",
         "arn": "arn:aws:iam::{{ account_id }}:role/{{ role_name }}",
         "accountId": "{{ account_id }}",
         "userName": "{{ role_name }}"
@@ -43,17 +53,17 @@
       "webIdFederationData": {},
       "attributes": {
         "mfaAuthenticated": "{{ ['true', 'false'] | random }}",
-        "creationDate": "{{ (current_timestamp() | subtract_seconds(random_int(300, 7200))) | timestamp_to_iso }}"
+        "creationDate": "{{ creation_date }}"
       }
     }
     {%- endif %}
   },
-  "eventTime": "{{ current_timestamp() | timestamp_to_iso }}",
+  "eventTime": "{{ event_dt | iso8601_utc(false) }}",
   "eventSource": "iam.amazonaws.com",
   "eventName": "DeletePolicy",
-  "awsRegion": "{{ current_region }}",
-  "sourceIPAddress": "{{ random_private_ip() if random_int(0, 2) == 0 else random_public_ip() }}",
-  "userAgent": "{{ user_agents | random }}",
+  "awsRegion": "us-east-1",
+  "sourceIPAddress": "{{ random_public_ip() }}",
+  "userAgent": "{{ user_agent }}",
   {% if has_error == 1 -%}
   "errorCode": "{{ error_code }}",
   "errorMessage": "{% if error_code == 'NoSuchEntityException' %}Policy {{ policy_arn }} was not found.{% elif error_code == 'DeleteConflictException' %}{{ ['Cannot delete a policy attached to entities.', 'This policy has more than one version. Before you delete a policy, you must delete the policy versions. The default version is deleted with the policy.'] | random }}{% elif error_code == 'AccessDenied' %}User: {{ user_arn }} is not authorized to perform: iam:DeletePolicy on resource: policy {{ policy_arn }} with an explicit deny{% endif %}",
@@ -61,22 +71,27 @@
   "requestParameters": {
     "policyArn": "{{ policy_arn }}"
   },
-  "responseElements": {% if has_error == 1 %}null{% else %}{}{% endif %},
+  "responseElements": null,
   "requestID": "{{ random_guid() }}",
   "eventID": "{{ random_guid() }}",
   "readOnly": false,
   "eventType": "AwsApiCall",
   "managementEvent": true,
-  "eventCategory": "Management",
   "recipientAccountId": "{{ account_id }}",
-  "serviceEventDetails": {
-    "responseElements": {% if has_error == 1 %}null{% else %}{}{% endif %}
-  }{% if identity_type == 'AssumedRole' %},
+  "eventCategory": "Management",
   "resources": [
     {
       "accountId": "{{ account_id }}",
       "type": "AWS::IAM::Policy",
       "ARN": "{{ policy_arn }}"
     }
-  ]{% endif %}
+  ]{% if from_console %},
+  "sessionCredentialFromConsole": "true"
+  {% else %},
+  "tlsDetails": {
+    "tlsVersion": "{{ tls_version }}",
+    "cipherSuite": "{{ tls_cipher }}",
+    "clientProvidedHostHeader": "iam.amazonaws.com"
+  }
+  {% endif %}
 }

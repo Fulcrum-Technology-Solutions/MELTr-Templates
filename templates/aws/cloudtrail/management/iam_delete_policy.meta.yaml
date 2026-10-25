@@ -52,14 +52,12 @@ documentation:
       required: true
       description: "CloudTrail event format version"
       example_value: "1.08"
-      template_source: "Random selection from valid CloudTrail versions"
+      template_source: "1.08 or 1.09. Both include eventCategory."
       possible_values:
-        - value: "1.05"
-          description: "Older CloudTrail format version"
         - value: "1.08"
-          description: "Current CloudTrail format version"
+          description: "CloudTrail format that introduced tlsDetails"
         - value: "1.09"
-          description: "Latest CloudTrail format version"
+          description: "CloudTrail format used by later DeletePolicy samples"
 
     - name: "userIdentity.type"
       type: "String"
@@ -78,7 +76,8 @@ documentation:
       required: true
       description: "Unique identifier for the principal"
       example_value: "AIDACKCEVSQ6C2EXAMPLE"
-      template_source: "Random string with appropriate prefix (AIDA for users, ARO for roles)"
+      template_source: "IAM user is AIDA plus 17 characters. Assumed role is AROA plus 17 characters, a colon, and the session name."
+      notes: "sessionIssuer.principalId is the role id without the session name. eventTime is UTC with a Z suffix. creationDate is yyyyMMddTHHmmssZ."
 
     - name: "eventName"
       type: "String"
@@ -120,7 +119,7 @@ documentation:
       required: true
       description: "IP address of the API caller"
       example_value: "203.0.113.42"
-      template_source: "Random mix of private and public IPs"
+      template_source: "Public address. vpcEndpointId is omitted."
 
     - name: "userAgent"
       type: "String"
@@ -151,7 +150,8 @@ documentation:
       required: true
       description: "AWS region where the API call was made"
       example_value: "us-east-1"
-      template_source: "Random selection from common AWS regions"
+      template_source: "IAM is global, so CloudTrail records the event in us-east-1."
+      notes: "DeletePolicy returns no data, so responseElements is null. Console calls set sessionCredentialFromConsole and omit tlsDetails. Other clients include tlsDetails for iam.amazonaws.com."
 
     - name: "managementEvent"
       type: "Boolean"
