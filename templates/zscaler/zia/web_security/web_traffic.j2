@@ -50,11 +50,13 @@
 {%- set rulelabel = 'URL_Filtering_1' if has_threat else 'None' -%}
 {%- set location = user.location.city if user.location is defined and user.location.city is defined else 'Headquarters' -%}
 {%- set ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36' -%}
+{#- int64 values exceed the JSON number safe range; keep every digit as text. -#}
+{%- set record_id = random_int(1000000000000000000, 9223372036854775807) | string -%}
 {{- {
   'time': time_str,
   'tz': 'UTC',
   'epochtime': epoch,
-  'recordid': random_int(1000000000000000000, 9223372036854775807),
+  'recordid': record_id,
   'login': user['email'],
   'dept': user.get('department') or 'Default Department',
   'cip': device['ip_address'],
