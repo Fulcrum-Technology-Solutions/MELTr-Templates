@@ -13,7 +13,8 @@
     <Execution ProcessID='{{ random_int(500, 2000) }}' ThreadID='{{ random_int(600, 1000) }}'/>
     <Channel>System</Channel>
     <Computer>{{ registry.get_random_device().hostname | default(random_hostname()) }}</Computer>
-    <Security UserID='S-1-5-18'/>
+    {%- set actor_sid = (registry.get_random_user() or {}).get('sid') -%}
+    <Security{% if actor_sid is string and actor_sid.startswith('S-1-') %} UserID='{{ actor_sid }}'{% endif %}/>
   </System>
   <EventData>
     <Data Name='ServiceName'>{{ random_choice([
