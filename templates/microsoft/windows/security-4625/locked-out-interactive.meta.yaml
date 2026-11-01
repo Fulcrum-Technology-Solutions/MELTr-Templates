@@ -81,8 +81,8 @@ documentation:
     required: true
   - name: System/TimeCreated/@SystemTime
     type: String
-    description: One now() UTC clock via strftime; microsecond precision and Z suffix.
-    template_source: One now() UTC clock via strftime; microsecond precision and Z suffix.
+    description: now() converted to UTC, then one Z. The organization offset is not left on the timestamp.
+    template_source: clock | iso8601_utc
     required: true
   - name: System/EventRecordID
     type: String

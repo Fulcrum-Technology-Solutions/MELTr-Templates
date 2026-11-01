@@ -97,11 +97,11 @@ documentation:
 
     - name: "UserID"
       type: "String"
-      required: true
-      description: "SID of the process that logged the event. Service Control Manager runs as Local System."
+      required: false
+      description: "SID of the logging principal, included only when the entity supplies one. A missing or null SID omits UserID."
       example_value: "S-1-5-18"
       format: "Windows SID format"
-      template_source: "Static S-1-5-18"
+      template_source: "registry user sid when it starts with S-1-. Otherwise <Security/>."
 
     - name: "ServiceName"
       type: "String"
