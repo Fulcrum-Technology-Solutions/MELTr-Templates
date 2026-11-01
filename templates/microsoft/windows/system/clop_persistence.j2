@@ -7,13 +7,13 @@
     <Task>0</Task>
     <Opcode>0</Opcode>
     <Keywords>0x8080000000000000</Keywords>
-    <TimeCreated SystemTime='{{ current_timestamp() | timestamp_to_iso }}Z'/>
+    <TimeCreated SystemTime='{{ current_timestamp() | iso8601_utc }}'/>
     <EventRecordID>{{ random_int(100000, 999999) }}</EventRecordID>
     <Correlation/>
     <Execution ProcessID='{{ random_int(500, 2000) }}' ThreadID='{{ random_int(600, 1000) }}'/>
     <Channel>System</Channel>
     <Computer>{{ registry.get_random_device().hostname | default(random_hostname()) }}</Computer>
-    <Security UserID='{{ registry.get_random_user().sid | default("S-1-5-21-" + random_int(1000000000, 9999999999) | string + "-" + random_int(1000000000, 9999999999) | string + "-" + random_int(1000000000, 9999999999) | string + "-500") }}'/>
+    <Security UserID='S-1-5-18'/>
   </System>
   <EventData>
     <Data Name='ServiceName'>{{ random_choice([
@@ -30,20 +30,15 @@
       "C:\\Program Files\\" + random_string(5, "abcdefghijklmnopqrstuvwxyz") + "\\" + random_string(8, "abcdefghijklmnopqrstuvwxyz") + ".exe",
       "%SystemRoot%\\System32\\" + random_string(7, "abcdefghijklmnopqrstuvwxyz") + ".exe"
     ]) }}</Data>
-    <Data Name='ServiceType'>{{ random_choice([
+    {%- set service_type = random_choice([
       "user mode service",
-      "kernel driver",
-      "file system driver",
-      "user mode service - own process",
-      "user mode service - share process"
-    ]) }}</Data>
-    <Data Name='StartType'>{{ random_choice([
-      "auto start",
-      "demand start",
-      "disabled",
-      "boot start",
-      "system start"
-    ]) }}</Data>
+      "kernel mode driver",
+      "file system driver"
+    ]) -%}
+    {%- set user_start_types = ["auto start", "demand start", "disabled"] -%}
+    {%- set driver_start_types = ["boot start", "system start", "auto start", "demand start", "disabled"] -%}
+    <Data Name='ServiceType'>{{ service_type }}</Data>
+    <Data Name='StartType'>{{ (driver_start_types if service_type != "user mode service" else user_start_types) | random }}</Data>
     <Data Name='AccountName'>{{ random_choice([
       "LocalSystem",
       "LocalService",
